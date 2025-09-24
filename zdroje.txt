@@ -1,0 +1,15 @@
+https://prolog.readthedocs.io/en/latest/implementation.html
+    prolog gramatika
+
+https://en.wikipedia.org/wiki/Prolog#ISO_Prolog
+    prolog wiki
+
+https://www.swi-prolog.org/download/stable/doc/SWI-Prolog-5.10.2.pdf
+    swi prolog dokumentacia
+    204 SWI-prolog gramatika
+
+https://www.iso.org/standard/21413.html
+    iso standard prolog
+
+https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_45.html
+    nejaka sicstus gramatika
