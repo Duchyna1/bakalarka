@@ -1,0 +1,4 @@
+Zadefinovať vhodnú verziu prologu. Následne pre danú verziu prologu skonštruovať bezkontextovú gramatiku. Navrhnúť a implementovať kompilátor z prologu do relačnej algebry.
+Nejak to overiť. TODO sformulovať
+
+Implementovať nejaké rozšírenie do tej algebry?
