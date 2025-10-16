@@ -1,4 +1,5 @@
-Zadefinovať vhodnú verziu prologu. Následne pre danú verziu prologu skonštruovať bezkontextovú gramatiku. Navrhnúť a implementovať kompilátor z prologu do relačnej algebry.
-Nejak to overiť. TODO sformulovať
+Kompilátor Datalogu s funkčnými symbolmi do relačnej algebry
 
-Implementovať nejaké rozšírenie do tej algebry?
+Definovať rozšírenie Datalogu o funkčné symboly. Skonštruovať vhodnú
+formálnu gramatiku v syntaxi ANTLR. Implementovať kompilátor do relačnej
+algebry. Overiť funkčnosť na vhodných vstupoch.
