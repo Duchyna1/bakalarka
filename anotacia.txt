@@ -2,4 +2,4 @@ Kompilátor Datalogu s funkčnými symbolmi do relačnej algebry
 
 Definovať rozšírenie Datalogu o funkčné symboly. Skonštruovať vhodnú
 formálnu gramatiku v syntaxi ANTLR. Implementovať kompilátor do relačnej
-algebry. Overiť funkčnosť na vhodných vstupoch.
+algebry. Integrovať s kompilátorom relačnej algebry. Overiť funkčnosť na vhodných vstupoch.

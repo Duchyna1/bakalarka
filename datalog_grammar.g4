@@ -12,7 +12,7 @@ MLC_START           : '/*';
 MLC_END             : '*/';
 EOL                 : '.';
 NOT                 : '\\+';
-BUILD_IN            : '$';
+BUILT_IN            : '$';
 
 program
     : (clause | definition)* query? (clause | definition)*
@@ -36,12 +36,12 @@ body
 
 predicate
     : normal_predicate
-    | build_in_predicate
+    | built_in_predicate
     ;
 
 negative_predicate
     : NOT normal_predicate
-    | NOT build_in_predicate
+    | NOT built_in_predicate
     ;
 
 normal_predicate
@@ -49,9 +49,9 @@ normal_predicate
     | name '(' term_list ')'
     ;
 
-build_in_predicate
-    : BUILD_IN name
-    | BUILD_IN name '(' term_list ')'
+built_in_predicate
+    : BUILT_IN name
+    | BUILT_IN name '(' term_list ')'
     ;
 
 term_list
