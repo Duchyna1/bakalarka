@@ -1,2 +1,4 @@
 .antlr
 praca/main.synctex.gz
+target
+.vscode

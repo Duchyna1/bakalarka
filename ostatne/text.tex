@@ -1,0 +1,67 @@
+\documentclass[11pt]{article}
+\usepackage[slovak]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{watermark}
+\usepackage{framed}
+\usepackage{shuffle}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\geometry{
+  a4paper,
+  top=25mm,
+  bottom=18mm,
+  right=21mm,
+  left=22mm
+}
+
+\newcommand{\eps}{\varepsilon}
+
+\pagestyle{plain}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+\setlist{topsep=0pt}
+
+\begin{document}
+
+\begin{lstlisting}
+    operator : operator_name '(' ')'
+             | operator_name '(' parameter (',' parameter)* ')'
+             ;
+    
+    parameter : '[' parameter (',' parameter)* ']'
+              | operator
+              | term
+              | relation
+              | string
+              ;
+    
+    term : function_name '(' ')'
+         | function_name '(' term (',' term)* ')'
+         | variable
+         | constant
+         ;
+\end{lstlisting}
+
+Po minulej konzultácii sme došli na to, že gramatika algebry by mala vyzerať nejak takto. Je to z dôvodu, lebo v datalogu chceme podporovať predikáty ako napríklad $subtotal$, ktoré berú ďalšie predikáty ako parametre. Taktiež chceme mať možnosť podporovať ľubovoľný operátor, ktorý si uživateľ naprogramuje. Ako základné operátory algebry zoberieme klasické $JOIN$, $ANTIJOIN$, $UNION$ a $REC$ a budeme musieť ešte pridať operátor $RELATION$\footnote{Paremetre by moholi byť napríklad niekoľko listov konštát.}, ktorý vytvorí dočasnú reláciu.
+
+Z týchto dôvodov veríme, že jednotný \textit{interface parametrov} pre operátory nie je možný
+ale zároveň nie je ani potrebný. \textit{Loader} bude fungovať nasledovne. Pri spracovávaní konkrétneho operátora, dostane od ANTLeru takzvaný \href{https://stackoverflow.com/questions/24185887/understanding-the-context-data-structure-in-antlr4}{\lstinline{contex}}\footnote{https://stackoverflow.com/questions/24185887/understanding-the-context-data-structure-in-antlr4}, v ktorom bude konkréty \lstinline{operator_name} a konkrétne objekty parametrov. Pomocov týchto informácií sa rozhodne, ako (respektíve či vôbec) zavolá konkrétnu javovskú funkciu databázy.
+\end{document}
+
