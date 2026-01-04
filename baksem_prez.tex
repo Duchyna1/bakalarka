@@ -1,0 +1,135 @@
+\documentclass[11pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[slovak]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\title{Kompilátor Datalogu s funkčnými symbolmi do relačnej algebry}
+\author{Matúš Duchyňa}
+\institute{
+    Fakulta matematiky, fyziky a informatiky \\
+    Univerzita Komenského v Bratislave
+    \vspace{0.5em} % Pridanie malého priestoru
+    \\
+    Vedúci práce: doc. Mgr. Tomáš Plachetka, Dr.
+}
+\date{\today}
+    
+\newcommand{\customfootertitle}{Kompilátor Datalog s funkčnými symbolmi -> Relačná algebra}
+
+\setbeamertemplate{footline}{%
+    \leavevmode%
+    \begin{beamercolorbox}[wd=\paperwidth,sep=0.4em]{section in foot}%
+        \insertshortauthor \hspace*{0.5em} | \hspace*{0.5em}
+        \customfootertitle
+        \hfill%
+        \insertshortdate \hspace*{0.5em} | \hspace*{0.5em}
+        \insertframenumber/\inserttotalframenumber\hspace*{1em}
+    \end{beamercolorbox}%
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    language=Java,
+    showstringspaces=false,
+    commentstyle=\color{gray},
+    keywordstyle=\color{blue},
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Motivácia}
+\framesubtitle{Bežné databázy}
+
+\begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+        Bežné databázy
+        \begin{itemize}
+            \item SQL
+            \item Compilátor -> exekučný plán
+            \item Vykonávanie
+        \end{itemize}
+        
+        Ťažko sa mení/ovplyvňuje aký exekučný plán sa zvolí    
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        Naša databáza
+        \begin{itemize}
+            \item Relačná algebra
+            \item Funkčné symboly
+            \item Vstavané funkcie
+        \end{itemize}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivácia}
+\framesubtitle{Relačná algebra}
+\begin{itemize}
+    \item Umožňuje priamo definovať exekučný plán
+    \item Relatívne zložitá
+    \item Zložitý syntax
+    \item Veľa operácií
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivácia}
+\framesubtitle{Datalog}
+    \begin{itemize}
+        \item Veľmi jednoduchý
+        \item V podstate iba $\land, \lor, \neg, \Rightarrow$
+        \item Osobná preferencia
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Obsah práce}
+\framesubtitle{Dalalog}
+\begin{itemize}
+    \item Definovať datalog s funkčnými symbolmi
+    \item Definovať syntax
+    \item Spraviť gramatiku pre ANTLR
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Obsah práce}
+\framesubtitle{Relačná algebra (nadstavba na minulý rok)}
+\begin{itemize}
+    \item Identifikovať aké operácie potrebujeme
+    \item Definovať syntax
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Obsah práce}
+\framesubtitle{Kód}
+Pri dobre zvládnutých predošlých krokoch priamočiara robota
+\begin{itemize}
+    \item Samotný kompilátor
+    \item Tester lexera
+    \item Tester parsera
+    \item Overiť funkčnosť
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Priestor na otázky}
+\begin{center}
+\Huge
+Ďakujem za pozornosť!
+\end{center}
+\end{frame}
+
+\end{document}

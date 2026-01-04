@@ -1,3 +1,14 @@
-\chapter{Úvod}
-\input{01motivacia.tex}
-\input{02model.tex}
+\addcontentsline{toc}{chapter}{Úvod}
+\chapter*{Úvod}
+
+Táto bakalárska práca je jednou zo série prác pod vedením docenta Plachetku, ktoré sa zaoberajú experimentálnym databázovým systémom.
+
+Klasické moderné databázové systémy poskytujú používateľom na vytváranie dotazov zväčša deklaratívne jazyky, ako napríklad SQL. Výhodou deklaratívneho jazyka, akým je SQL, je to, že používateľ sa nemusí zaoberať samotným algoritmom materializácie dotazu. Súčasťou klasických databázových modelov je tzv. \textit{optimalizér}. Tento komponent za pomoci rôznych metadát o tabuľkách a samotného SQL dotazu vytvorí \textit{vykonávací plán}, ktorý konkrétne popisuje postup databázového systému pri materializácii dotazu. Aj napriek snahe vývojárov jednotlivých systémov však optimalizér nie vždy vytvorí \textit{optimálny} vykonávací plán. Prinútiť databázový systém používať konkrétny vykonávací plán nie je väčšinou jednoduché. Preto existujú experti, ktorí sa zaoberajú výlučne touto problematikou. Klasické postupy optimalizácie zahŕňajú používanie \textit{hintov}, prepisovanie dotazu na iný ekvivalentný dotaz alebo explicitné nariadenie použitia konkrétneho plánu. Vykonávacie plány však väčšinou používajú veľké množstvo komplikovaných operácií s množstvom parametrov a bez kvalitnej dokumentácie. Kvôli tomu je písanie konkrétneho plánu neprektické a neefektívne.
+
+Náš databázový systém\footnote{Pod \textit{naším} databázovým systémom myslím experimentálny systém, na ktorom pracuje alebo pracovali môj školiteľ a kolegovia pod jeho vedením.} používa ako dotazovací jazyk relačnú algebru. Konkrétne ide o relačnú algebru s piatimi operátormi a podporou funkčných symbolov. Viac o nej je uvedené v kapitole \ref{chap:algebra}. Relačná algebra nám priamo umožňuje špecifikovať algoritmus materializácie dotazu. Pri jej návrhu sme sa zamerali na jednoduchosť, čo sa však odrazilo na veľkosti dotazov. \textit{Loader}\footnote{Kompilátor} z relačnej algebry do programovacieho jazyka Java a implementáciu jednotlivých funkcií v jazyku Java vytvorili kolegovia Biriukova \cite{RAcompilator} a Magát \cite{JAVAimple}.
+
+Cieľom mojej bakalárskej práce je pridať datalog s funkčnými symbolmi ako ďalší dotazovací jazyk do nášho systému. Konkrétne ide o vytvorenie kompilátora z datalogu do relačnej algebry tak, aby bol použiteľný aj samostatne, bez väzby na konkrétny databázový systém.
+
+Datalog je deklaratívny logický jazyk, ktorý umožňuje efektívne špecifikovať dotazy vrátane rekurzívnych. Na rozdiel od relačnej algebry alebo SQL sú dotazy v datalogu často stručné, čitateľné a intuitívne.
+
+Práca je rozdelená na tri časti. V kapitole \ref{chap:datalog} bližšie popisujeme datalog ako jazyk logiky a definujeme jeho rozšírenie o funkčné symboly. Pri snahe osamostatniť náš kompilátor od nášho databázového systému sme identifikovali požiadavky na relačnú algebru. Tieto zmeny zároveň viedli k ďalším požiadavkám, pretože bolo potrebné upraviť loader. Taktiež chceme umožniť relatívne jednoduché pridávanie vlastných vstavaných funkcií v budúcnosti, čo generuje ďalšie požiadavky. Všetky zmeny\footnote{Oproti relačnej algebre definovanej v \cite{RAcompilator}.} a ich odôvodnenia sú popísané v kapitole \ref{chap:algebra}. V záverečnej kapitole \ref{chap:kompilator} popisujeme samotný kompilátor, jeho jednotlivé časti vrátane gramatiky nášho datalogu a algoritmu prekladu.
