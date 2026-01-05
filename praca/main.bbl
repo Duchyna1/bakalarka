@@ -9,4 +9,9 @@ Diana Biriukova.
 Tomáš Magát.
 \newblock Todo, 2026.
 
+\bibitem{WellFounded}
+Allen Van~Gelder, Kenneth~A. Ross, and John~S. Schlipf.
+\newblock The well-founded semantics for general logic programs.
+\newblock {\em Journal of the ACM}, 38(3):620--650, July 1991.
+
 \end{thebibliography}
