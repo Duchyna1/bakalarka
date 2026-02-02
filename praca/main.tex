@@ -6,6 +6,7 @@
 \usepackage[T1]{fontenc}
 
 \usepackage[slovak]{babel}
+\usepackage{enumitem}
 
 \linespread{1.25}
 
@@ -18,6 +19,29 @@
 % na nastavenie najcastejsie pouzivaneho prog. jazyka
 % takisto sa da zapnut cislovanie riadkov
 \lstset{frame=lines}
+
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\newcommand{\unknown}{?}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+\newtheoremstyle{defstyle}% name
+  {}% Space above
+  {}% Space below
+  {\normalfont}% Body font
+  {}% Indent amount
+  {\bfseries}% Head font
+  {.}% Punctuation after head
+  { }% Space after head
+  {}% Head spec
+
+\theoremstyle{defstyle}
+\newtheorem{definition}{Definícia}[section]
+\newtheorem{lema}{Lema}
+\newtheorem{theorem}{Tvrdenie}
+\newtheorem{note}{Poznámka}
 
 \usepackage{graphicx}
 \usepackage{pdfpages}

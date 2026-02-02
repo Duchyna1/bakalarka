@@ -1,2 +1,122 @@
+\newcommand{\inter}{\mathcal{I}}
+
 \section{Datalog ako jazyk logiky}
-Ako prvé definujeme datalog ako jazyk logiky a popíšeme \textit{well-founded model} \cite{WellFounded}.
+\begin{note}
+    $\true$ označuje pravdu (hodnotu \textit{true}). $\false$ označuje nepravdu (hodnotu \textit{false}). $\unknown$ označuje hodnotu \textit{unknown}.
+\end{note}
+
+Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku definícií.
+
+\begin{definition}
+    \textbf{$n$-árna relácia} $r$ je definovaná ako $r \subseteq D_1 \times D_2 \times \dots \times D_n$. Jednotlivé prvky relácie $r$ nazývame \textit{tuples}, \textit{záznamy} alebo \textit{usporiadané $n$-tice}. Jednotlivým zložkám $n$-tíc hovoríme \textit{atribúty} relácie. Množinám $D_1, D_2, \dots, D_n$ sa hovorí \textit{domény} (alebo \textit{typy}) atribútov relácie $r$. 
+\end{definition}
+
+\begin{definition}
+    \textbf{$n$-árny predikát $p$} prislúchajúci $n$-árnej relácii $r \subseteq D_1 \times D_2 \times \dots \times D_n$ je funkcia $p: D_1 \times D_2 \times \dots \times D_n \to \{\true, \false\}$ definovaná nasledovne:
+    $$p(x_1, x_2, \dots , x_n) = \true \Leftrightarrow (x_1, x_2, \dots, x_n) \in r$$
+    $$p(x_1, x_2, \dots , x_n) = \false \Leftrightarrow (x_1, x_2, \dots, x_n) \not\in r$$
+\end{definition}
+
+\begin{definition}
+    \label{znaky_jazyka_1}
+    \textbf{Jazyk logiky} pozostáva z
+    \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+        \item predikátových symbolov
+        \item symbolov pre premenné
+        \item symbolov pre konštanty (reprezentujú prvky z domén)
+        \item logických symbolov ($\land, \lnot$)
+        \item symbolov všeobecných kvantifikátorov ($\forall$)
+        \item symbolov pre definície ($\Rightarrow$)
+        \item čiarok (\texttt{,})
+        \item a zátvoriek (\texttt{(}, \texttt{)}).
+    \end{enumerate}
+\end{definition}
+
+\begin{samepage}
+    \begin{definition}
+        Do \textbf{formúl} patria:
+        \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+            \item \textit{atomické formuly} $p(t_1, t_2, \dots t_n)$, kde $p$ je $n$-árny predikát a $t_1, t_2, \dots t_n$ sú konštanty alebo premenné
+            \item ak $A$ a $B$ sú formuly, tak potom aj $A \land B$ a $\lnot A$ sú formuly
+            \item nič iné nie je formula
+        \end{enumerate}
+    \end{definition}
+\end{samepage}
+
+\begin{definition}
+    $A \Rightarrow B$ je \textbf{implikácia}, ak $A$ je klauzula a $B$ je atomická klauzula.
+\end{definition}
+
+\begin{definition}
+    $\forall X \iota $ sa nazýva \textbf{kvantifikovaná implikácia}, kde $X$ je premenná a $\iota$ je implikácia. Ak je kvantifikovaná každá premenná v kvantifikovanej implikácií, nazývame ju \textbf{klauzula}.
+\end{definition}
+
+\begin{definition}
+    $K_1 \land K_2 \land \dots \land K_n$ nazývame \textbf{teóriou}, kde $K_1, K_2, \dots, K_n$ sú klauzuly.
+\end{definition}
+
+\begin{definition}
+    \label{ohodnotenie_premennych_1}
+    \textbf{Ohodnotenie premenných} je funkcia, ktorá priradí každej premenne konštantu. Ohodnotenie $o$, ktoré premennej $X_i$ priradí konštantu $k_i$ (pre $i \leq n$) označujeme $o(X_1 | k_1, \dots , X_n | k_n)$. Keď vo formule $A$ resp. implikácií $\iota$ resp. teórií $K_1\land \dots \land K_n$ nahradíme všetky premenné podľa ohodnotenia $o$, výslednú formulu označujeme ako $A[o]$ resp. $\iota[o]$ resp. $K_1\land \dots \land K_n[o]$.
+\end{definition}
+
+\begin{definition}
+    \textbf{Interpretácia jazyka} je funkcia, ktorá každej formule priradí jednu z hodnôt $\true, \false, \unknown$.
+\end{definition}
+
+\begin{definition}
+    \label{interpretacia_1}
+    Nech $\inter$ je interpretácia jazyka, $\varphi$ je formula a $o$ je ohodnotenie premenných. Potom $\inter \models_\true \varphi[o]$ resp. $\inter \models_\false \varphi[o]$ resp. $\inter \models_\unknown \varphi[o]$ označuje, že formula $\varphi[o]$ je pravdivá resp. neprevdivá resp. \textit{unknown} vzhľadom na interpretáciu jazyka $\inter$.
+    
+    Pravdivosť formuly definujeme nasledovne:
+    \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+        \item ${}$\\
+        $\inter \models_\true \lnot \varphi[o]$ ak $\inter \models_\false \varphi[o]$.\\
+        $\inter \models_\false \lnot \varphi[o]$ ak $\inter \models_\true \varphi[o]$.\\
+        $\inter \models_\unknown \lnot \varphi[o]$ ak $\inter \models_\unknown \varphi[o]$.
+        \item ${}$\\
+        $\inter \models_\true \varphi[o] \land \phi[o]$ ak $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$.\\
+        $\inter \models_\false \varphi[o] \land \phi[o]$ ak $\inter \models_\false \varphi[o]$ alebo $\inter \models_\false \phi[o]$.\\
+        $\inter \models_\unknown \varphi[o] \land \phi[o]$ v ostatných prípadoch.
+        \newpage
+        \item ${}$\\
+        $\inter \models_\true (\varphi \Rightarrow \phi)[o]$ ak platí
+        \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+            \item $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$,
+            \item $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$,
+            \item $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\unknown \phi[o]$,
+            \item $\inter \models_\false \varphi[o]$.
+        \end{enumerate}
+        $\inter \models_\false (\varphi \Rightarrow \phi)[o]$ ak $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\false \phi[o]$.\\
+        $\inter \models_\unknown (\varphi \Rightarrow \phi)[o]$ ak $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\false \phi[o]$.
+        \item Pre kvantifikovaná implikácia $\forall X \iota$ platí:\\
+        $\inter \models_\true \forall X \iota$ ak pre \textit{ľubovoľnú} konštantu $c$ platí $\inter \models_\true \iota[X|c]$,\\
+        $\inter \models_\false \forall X \iota$ ak pre \textit{niektorú} konštantu $c$ platí $\inter \models_\false \iota[X|c]$,\\
+        inak $\inter \models_\unknown \forall X \iota$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    Interpretáciu $\inter$ teórie $K_1 \land \dots \land K_n$ nazývame \textbf{model}, ak pre všetky $i \in \{1, \dots, n\}$ platí $\inter \models_\true K_i$.
+\end{definition}
+
+\begin{definition}
+    Majme teóriu $K_1 \land \dots \land K_n$ a atomickú formulu $Q$. Potom teóriu $K_1 \land \dots \land K_n \land Q$ nazývame \textbf{teóriu s dotazom $Q$}.
+\end{definition}
+
+\begin{definition}
+    Majme teóriu s dotazom $K_1 \land \dots \land K_n \land Q$, kde $X_1, \dots, X_k$ sú premenné v dotaze $Q$. \textbf{Výsledkom dotazu} (vzhľadom na model $\inter$ teórie $K_1 \land \dots \land K_n$) nazývame množinu usporiadaných $k$-tic
+    $$\{(c_1, c_2, \dots, c_k) \, | \, \inter \models_\true Q[X_1|c_1, X_2|c_2, \dots , X_k|c_k]\}$$.
+    
+    Ak dotaz $Q$ neobsahuje žiadnu premennú a platí $\inter \models_\true Q$, výsledkom dotazu je $\true$, inak je výsledkom $\false$.
+\end{definition}
+
+\begin{note}
+    Môžeme si všimnúť, že dotazom sa vieme pýtať ina otázky typu \textit{platí dotaz $p(K_1, \dots, K_n)$?} (kde $K_1, \dots, K_n$ sú konštanty). Nevieme sa pýtať na opak (\textit{neplatí...}).
+    
+    Týmto dokážeme odpovedať na niektoré dotazy pre teórie, ktoré nemajú model. Ako príklad môžeme zobrať teóriu
+    $$\mathcal{T} = \left(\lnot p() \Rightarrow q()\right)\\
+    \land\\
+    \left(\lnot q() \Rightarrow p()\right)$$
+    Jediná validná interpretácia $\inter_V$ je $\inter_V \models_\unknown p()$ a $\inter_V \models_\unknown q()$ (ak by sme zobrali ľubovoľnú inú interpretáciu $\inter$, došli by sme k sporu $\inter \models_\true p() \, \land \, \inter \not\models_\true p()$ resp. $\inter \models_\false p() \, \land \, \inter \not\models_\false p()$). Ak by sme sa vedeli pýtať na záporné dotazy, dostali by sme pre teórie s dotazom $\mathcal{T} \land p()$ a $\mathcal{T} \land \lnot p()$ výsledok dotazu $\false$. S našim prístupom dostaneme pre dotaz \uv{\textit{platí $p()$}} $\false$. Z čoho potom musí platiť, že $p()$ je nepravdivé.
+\end{note}

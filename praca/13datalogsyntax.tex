@@ -1,2 +1,24 @@
 \section{Syntax rozšíreného datalogu}
-Datalog používa skrátený zápis skorej popísaných logických výrazov. V tejto časti si ich priblížime.
+Zoberme si formálny zápis relatívne jednoduchej teórie s dotazom:
+\begin{align*}
+    & [\forall X, Y \, (\text{parent}(X, Y) \Rightarrow \text{ancestor}(X, Y))] \, \land\\
+    & [\forall X, Y, Z \, ((\text{parent}(X, Z) \land \text{ancestor}(Z, Y)) \Rightarrow \text{ancestor}(X, Y))] \, \land\\
+    & [\forall X, Y \, (\text{ancestor}(X, Y))]
+\end{align*}
+
+Tento zápis sa rýchlo stáva neprehľadným a dlhým. Preto Datalog používa skrátený zápis. 
+
+Klauzula
+% $$\forall X_1, \dots, X_k [\left(p_1(t_{1, 1}, \dots, t_{1, k_1}) \land p_2(t_{2, 1}, \dots, t_{2, k_2}) \land \cdots \land p_n(t_{n, 1}, \dots, t_{n, k_n}) \right) \Rightarrow q(t_1, \dots, t_{k_q})]$$
+$$\forall X_1, X_2, \dots, X_k [\left(p_1(t_{1, 1}, t_{1, 2}, \dots, t_{1, k_1}) \land  \cdots \land p_n(t_{n, 1}, t_{n, 2}, \dots, t_{n, k_n}) \right) \Rightarrow q(t_1, t_2, \dots, t_{k_q})]\text{,}$$
+kde $X_1, X_2, \dots, X_k$ sú všetky premenné vyskytujúce sa v jednotlivých termoch, sa v skrátenom zápise zapíše ako
+$$q(t_1, t_2, \dots, t_{k_q}) \leftarrow p_1(t_{1, 1}, t_{1, 2}, \dots, t_{1, k_1}), p_2(t_{2, 1}, t_{2, 2}, \dots, t_{2, k_2}), \dots, p_n(t_{n, 1}, t_{n, 2}, \dots, t_{n, k_n}).$$
+
+Teórii s dotazom $K_1 \land K_2 \land \cdots \land K_n \land Q$ zodpovedá $D_1 D_2 \dots D_n ? Q$, kde $D_i$ je skrátený zápis klauzuly $K_i$.
+
+Skorej spomenutá teória je reprezentovaná skráteným zápisom:
+\begin{align*}
+    \text{ancestor}(X, Y) & \leftarrow \text{parent}(X, Y).\\
+    \text{ancestor}(X, Y) & \leftarrow \text{parent}(X, Z), \text{ancestor}(Z, Y).\\
+    & ? \, \text{ancestor}(X, Y)
+\end{align*}
