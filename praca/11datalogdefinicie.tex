@@ -1,6 +1,8 @@
 \newcommand{\inter}{\mathcal{I}}
 
 \section{Definície}
+V nasledujúcej kapitole formálne definujeme Datalog vo forme, v ktorej s ním budeme vo zvyšku práce pracovať.
+
 \begin{note}
     $\true$ označuje pravdu (hodnotu \textit{true}). $\false$ označuje nepravdu (hodnotu \textit{false}). $\unknown$ označuje hodnotu \textit{unknown}.
 \end{note}
@@ -70,16 +72,16 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
     
     Pravdivosť formuly definujeme nasledovne:
     \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
-        \item ${}$\\
+        \item
         $\inter \models_\true \lnot \varphi[o]$ ak $\inter \models_\false \varphi[o]$.\\
         $\inter \models_\false \lnot \varphi[o]$ ak $\inter \models_\true \varphi[o]$.\\
         $\inter \models_\unknown \lnot \varphi[o]$ ak $\inter \models_\unknown \varphi[o]$.
-        \item ${}$\\
+        \item
         $\inter \models_\true \varphi[o] \land \phi[o]$ ak $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$.\\
         $\inter \models_\false \varphi[o] \land \phi[o]$ ak $\inter \models_\false \varphi[o]$ alebo $\inter \models_\false \phi[o]$.\\
         $\inter \models_\unknown \varphi[o] \land \phi[o]$ v ostatných prípadoch.
         \newpage
-        \item ${}$\\
+        \item
         $\inter \models_\true (\varphi \Rightarrow \phi)[o]$ ak platí
         \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
             \item $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$,
@@ -106,17 +108,17 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
 
 \begin{definition}
     Majme teóriu s dotazom $K_1 \land \dots \land K_n \land Q$, kde $X_1, \dots, X_k$ sú premenné v dotaze $Q$. \textbf{Výsledkom dotazu} (vzhľadom na model $\inter$ teórie $K_1 \land \dots \land K_n$) nazývame množinu usporiadaných $k$-tic
-    $$\{(c_1, c_2, \dots, c_k) \, | \, \inter \models_\true Q[X_1|c_1, X_2|c_2, \dots , X_k|c_k]\}$$.
+    $$\{(c_1, c_2, \dots, c_k) \, | \, \inter \models_\true Q[X_1|c_1, X_2|c_2, \dots , X_k|c_k]\}\text{.}$$
     
     Ak dotaz $Q$ neobsahuje žiadnu premennú a platí $\inter \models_\true Q$, výsledkom dotazu je $\true$, inak je výsledkom $\false$.
 \end{definition}
 
 \begin{note}
-    Môžeme si všimnúť, že dotazom sa vieme pýtať ina otázky typu \textit{platí dotaz $p(K_1, \dots, K_n)$?} (kde $K_1, \dots, K_n$ sú konštanty). Nevieme sa pýtať na opak (\textit{neplatí...}).
+    Môžeme si všimnúť, že dotazom sa vieme pýtať ina otázky typu \textit{platí dotaz $p(K_1, \dots, K_n)$?}, kde $K_1, \dots, K_n$ sú konštanty. Nevieme sa pýtať na opak (\textit{neplatí...}).
     
     Týmto dokážeme odpovedať na niektoré dotazy pre teórie, ktoré nemajú model. Ako príklad môžeme zobrať teóriu
     $$\mathcal{T} = \left(\lnot p() \Rightarrow q()\right)\\
     \land\\
-    \left(\lnot q() \Rightarrow p()\right)$$
+    \left(\lnot q() \Rightarrow p()\right)\text{.}$$
     Jediná validná interpretácia $\inter_V$ je $\inter_V \models_\unknown p()$ a $\inter_V \models_\unknown q()$ (ak by sme zobrali ľubovoľnú inú interpretáciu $\inter$, došli by sme k sporu $\inter \models_\true p() \, \land \, \inter \not\models_\true p()$ resp. $\inter \models_\false p() \, \land \, \inter \not\models_\false p()$). Ak by sme sa vedeli pýtať na záporné dotazy, dostali by sme pre teórie s dotazom $\mathcal{T} \land p()$ a $\mathcal{T} \land \lnot p()$ výsledok dotazu $\false$. S našim prístupom dostaneme pre dotaz \uv{\textit{platí $p()$}} $\false$. Z čoho potom musí platiť, že $p()$ je nepravdivé.
 \end{note}
