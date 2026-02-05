@@ -2,3 +2,7 @@
 praca/main.synctex.gz
 target
 .vscode
+zdroje
+*.nav
+*.snm
+*.synctex.gz

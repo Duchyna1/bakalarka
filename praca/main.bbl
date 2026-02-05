@@ -15,9 +15,4 @@ Tomáš Magát.
 \newblock \url{https://souffle-lang.github.io/translate}, 2024.
 \newblock [Online; navštívené 7. januára 2026].
 
-\bibitem{WellFounded}
-Allen Van~Gelder, Kenneth~A. Ross, and John~S. Schlipf.
-\newblock The well-founded semantics for general logic programs.
-\newblock {\em Journal of the ACM}, 38(3):620--650, July 1991.
-
 \end{thebibliography}
