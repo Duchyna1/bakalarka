@@ -1,45 +1,61 @@
 \section{Syntax rozšíreného datalogu}
 Zoberme si formálny zápis relatívne jednoduchej teórie s dotazom:
-\begin{align*}
-    & [\forall X, Y \, (\text{parent}(X, Y) \Rightarrow \text{ancestor}(X, Y))] \, \land\\
-    & [\forall X, Y, Z \, ((\text{parent}(X, Z) \land \text{ancestor}(Z, Y)) \Rightarrow \text{ancestor}(X, Y))] \, \land\\
-    & [\forall X, Y \, (\text{ancestor}(X, Y))]
-\end{align*}
+\begin{priklad}
+    \begin{align*}
+        & [\forall X, Y \, (\text{parent}(X, Y) \Rightarrow \text{ancestor}(X, Y))] \, \land\\
+        & [\forall X, Y, Z \, ((\text{parent}(X, Z) \land \text{ancestor}(Z, Y)) \Rightarrow \text{ancestor}(X, Y))] \, \land\\
+        & [\forall X, Y \, (\text{ancestor}(X, Y))]
+    \end{align*}
+\end{priklad}
 
 Tento zápis sa rýchlo stáva neprehľadným a dlhým. Preto Datalog používa skrátený zápis. 
 
 Klauzula
 % $$\forall X_1, \dots, X_k [\left(p_1(t_{1, 1}, \dots, t_{1, k_1}) \land p_2(t_{2, 1}, \dots, t_{2, k_2}) \land \cdots \land p_n(t_{n, 1}, \dots, t_{n, k_n}) \right) \Rightarrow q(t_1, \dots, t_{k_q})]$$
-$$\forall X_1, \dots, X_k ((P_1 \land \cdots \land P_i \land \lnot P_{i+1} \land \cdots \land \lnot P_n) \Rightarrow Q)$$
-, kde $X_1, \dots, X_k$ sú všetky premenné vyskytujúce sa v termoch použitých v predikátoch $P_1, \dots, P_n$ a $Q$, sa v skrátenom zápise zapíše ako
+$$\forall X_1, \dots, X_k ((P_1 \land \cdots \land P_i \land \lnot P_{i+1} \land \cdots \land \lnot P_n) \Rightarrow Q)\text{,}$$
+kde $X_1, \dots, X_k$ sú všetky premenné vyskytujúce sa v termoch použitých v predikátoch $P_1, \dots, P_n$ a $Q$, sa v skrátenom zápise zapíše ako
 $$Q \leftarrow P_1, \dots, P_i, \lnot P_{i+1}, \dots, \lnot P_n.$$
 
-Teórii s dotazom $K_1 \land K_2 \land \cdots \land K_n \land Q$ zodpovedá $D_1 D_2 \dots D_n ? Q$, kde $D_i$ je skrátený zápis klauzuly $K_i$.
+Teórii s dotazom $K_1 \land K_2 \land \cdots \land K_n \land Q$ zodpovedá $D_1 \, D_2 \, \dots \, D_n \, ? Q$, kde $D_i$ je skrátený zápis klauzuly $K_i$.
 
 Skorej spomenutá teória je reprezentovaná skráteným zápisom:
-\begin{align*}
-    \text{ancestor}(X, Y) & \leftarrow \text{parent}(X, Y).\\
-    \text{ancestor}(X, Y) & \leftarrow \text{parent}(X, Z), \text{ancestor}(Z, Y).\\
-    & ? \, \text{ancestor}(X, Y)
-\end{align*}
+\begin{priklad}
+    \begin{align*}
+        \text{ancestor}(X, Y) & \leftarrow \text{parent}(X, Y).\\
+        \text{ancestor}(X, Y) & \leftarrow \text{parent}(X, Z), \text{ancestor}(Z, Y).\\
+        & ? \, \text{ancestor}(X, Y)
+    \end{align*}
+\end{priklad}
 
 \begin{note}
     So znakom \tp, resp. \fp budeme označovať 0-árny predikát pre ktorý, pre každú interpretáciu $\inter$, platí $\inter \models_\true \tp$, resp. $\inter \models_\false \fp$.
 \end{note}
 
 \begin{definition}
-    Klauzulu typu $p(t_1, \dots, t_n) \leftarrow \tp.$, kde $p$ je $n$-árny predikát a $t_1, \dots, t_n$ sú termy, nazývame \textbf{fakt}. Skrátene ich zapisujeme ako $p(t_1, \dots, t_n).$ (zdôrazňujem, že bodka na konci je súčasťou skráteného zápisu).
+    Klauzulu typu $p(t_1, \dots, t_n) \leftarrow \tp.$, kde $p$ je $n$-árny predikát a $t_1, \dots, t_n$ sú termy, nazývame \textbf{fakt}. Klasicky ich skrátene zapisujeme ako $p(t_1, \dots, t_n).$ (zdôrazňujem, že bodka na konci je súčasťou skráteného zápisu). Keďže ale často potrebujeme vyjadriť pre jeden predikát viacero faktov, zvolíme nasledujúci zápis. Fakty 
+    $$p(t_{1, 1}, \dots, t_{1, n}).$$
+    $$\vdots$$
+    $$p(t_{k, 1}, \dots, t_{k, n}).$$
+    zapíšem ako
+    $$p = \{(t_{1, 1}, \dots, t_{1, n}), \dots, (t_{k, 1}, \dots, t_{k, n})\}.$$
+    (opäť zdôrazňujem, že bodka na konci je súčasťou zápisu).
 \end{definition}
 
-Pre jednoduchší zápis datalogových programov na počítači sa používajú alternatívne znaky, konkrétne:
-\begin{itemize}
-    \item $\leftarrow \rightsquigarrow$ \texttt{:-}
-    \item $\lnot \rightsquigarrow$ \texttt{\textbackslash+}
-    \item Na označenie dotazov sa namiesto ? používa \texttt{?-}.
-\end{itemize}
+V ASCII zápise datalogových programov a dotazov sa používajú alternatívne znaky, konkrétne:
+\begin{priklad}
+    \begin{itemize}
+        \item $\leftarrow \rightsquigarrow$ \texttt{:-}
+        \item $\lnot \rightsquigarrow$ \texttt{\textbackslash+}
+        \item Na označenie dotazov sa namiesto ? používa \texttt{?-}.
+    \end{itemize}    
+\end{priklad}
 
-Doteraz spomínaná teória (rozšírená o jeden fakt) by potom bola zapísaná ako:
-\verb|ancestor(jozo, fero).|\\
-\verb|ancestor(X, Y) :- parent(X, Y).|\\
-\verb|ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).|\\
-\verb|?-ancestor(X, Y).|
+Doteraz spomínaná teória (rozšírená o fakty) by potom bola zapísaná ako:
+\begin{priklad}
+\begin{verbatim}
+ancestor = {(jozo, fero), (fero, sano)}.
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+?- ancestor(X, Y).
+\end{verbatim}
+\end{priklad}

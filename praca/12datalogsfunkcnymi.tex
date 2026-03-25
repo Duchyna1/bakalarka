@@ -1,21 +1,23 @@
 \section{Rozšírenie datalogu o funkčné symboly}
 Doteraz sme dosádzali do predikátov iba konštanty a premenné. Rozšírime jazyk logiky o tzv. funkčné symboly. Funkčný symbol $f$ (s aritou $n$) reprezentuje ľubovoľnú funkciu $f: D_1 \times D_2 \times \dots \times D_n \to D$.
 
-\begin{note}
-    Možno doplniť niečo o tom, prečo chceme funkčné symboli.
-\end{note}
+\begin{todo}
+    Doplniť niečo o tom, prečo chceme funkčné symboli.
+\end{todo}
 
 \begin{definition}
     Za \textbf{term} považujeme:
     \begin{itemize}
-        \item ľubovoľný 0-árny funkčný symbol (ktoré považujeme za \textit{konštanty}, môžeme zapisovať aj bez zátvoriek),
+        \item ľubovoľný 0-árny funkčný symbol (ktorý považujeme za \textit{konštantu}, môžeme zapisovať aj bez zátvoriek),
         \item ľubovoľnú premennú (väčšinou budeme značiť veľkými písmenami latinskej abecedy),
         \item ak $f$ je $n$-árny funkčný symbol a $t_1, t_2, \dots, t_n$ sú termy, potom $f(t_1, t_2, \dots, t_n)$ je term.
     \end{itemize}
     Dôležité je, že term pozostáva z konečného množstva symbolov.
 \end{definition}
 
-Rozširime definíciu jazyka logiky (\ref{znaky_jazyka_1}) o symboli označujúce funkčné symboly. Do predikátov potom nedopĺňame premenné a konštanty, ale termy.
+Rozširime definíciu jazyka logiky (\ref{znaky_jazyka_1}) o symboly označujúce funkčné symboly. Do predikátov
+% TODO link na def
+potom nedosadzujeme premenné a konštanty, ale termy.
 
 \begin{definition}
     \textbf{Ground term} je ľubovoľný term, v ktorom sa nevyskytujú premenné.
@@ -24,7 +26,7 @@ Rozširime definíciu jazyka logiky (\ref{znaky_jazyka_1}) o symboli označujúc
 V definícii pre ohodnotenie premenných (\ref{ohodnotenie_premennych_1}) sa daná funkcia predefinuje na funkciu, ktorá priradí každej premennej nie konštantu, ale \textit{ground term}. Taktiež v definícii interpretácie jazyka (\ref{interpretacia_1}) prepíšeme 4. časť na:
 
 \begin{quote}
-    Pre kvantifikovaná implikácia $\forall X \iota$ platí:\\
+    Pre kvantifikovanú implikáciu $\forall X \iota$ platí:\\
     $\inter \models_\true \forall X \iota$ ak pre \textit{ľubovoľný} \textbf{ground term} $c$ platí $\inter \models_\true \iota[X|c]$,\\
     $\inter \models_\false \forall X \iota$ ak pre \textit{niektorý} \textbf{ground term} $c$ platí $\inter \models_\false \iota[X|c]$,\\
     inak $\inter \models_\unknown \forall X \iota$. 

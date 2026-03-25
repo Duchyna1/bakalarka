@@ -1,2 +1,355 @@
 \section{Definície}
-Ako bolo spomenuté v úvode, v tejto časti predefinujeme relačnú algebru z \cite{RAcompilator} aby spĺňala nové požiadavky.
+V tejto časti sa inšpirujeme relačnou algebrou z \cite{RAcompilator} a klasickou \textit{učebnicovou} relačnou algebrou a definujeme našu vlastnú.
+
+\subsection{Učebnicová relačná algebra}
+Klasická relačná algebra pracuje s reláciami, ktoré majú väčšinou jednotlivé atribúty pomenované. Potom ich vieme jednoducho reprezentovať pomocou tabuliek.
+
+\begin{priklad}
+    \[
+    \begin{array}{c c}
+        \begin{aligned}
+            R &\in \textbf{Meno} \times \textbf{Výška} \\
+            R &= \{(\text{Adam}, 175), (\text{Boris}, 183), (\text{Cecil}, 192)\}
+        \end{aligned}
+        &
+        \begin{array}{c|c}
+            \multicolumn{2}{c}{R} \\ \hline
+            \textbf{Meno}  & \textbf{Výška} \\ \hline
+            \text{Adam}  & 175 \\
+            \text{Boris} & 183 \\
+            \text{Cecil} & 192
+        \end{array}
+    \end{array}
+    \]
+\end{priklad}
+
+Na manipuláciu s týmito reláciami existuje niekoľko operátorov:
+\begin{itemize}
+    \item \textbf{Množinové operátory} \\ 
+    zjednotenie množín $\cup$, rozdiel množín $-$, (prienik množín $\cap$, ale ten sa dá vyjadriť aj za pomoci rodielu $A \cap B = A - (A-B)$)
+    
+    Pre relácie, na ktoré aplikujeme tieto operátory musí platiť, že majú identické domény atribútov. Pred tým, ako aplikujeme operátor na dve relácie, musíme usporiadať ich atribúty v jednotlivých záznamoch do rovnakého poradia.
+    
+    \item \textbf{Karteziánsky súčin $\times$} \\
+    $R \times S$, kde $R$ a $S$ sú relácie. Výsledná relácia sa dá matematicky zapísať nasledovne: 
+    $$R \times S = \{(a_1, \dots, a_n, b_1, \dots, b_m) \, | \,  (a_1, \dots, a_n) \in R, (b_1, \dots, b_m) \in S)\}$$
+    \begin{priklad}
+    \begin{center}
+        \[
+        \begin{array}{c c c}
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{R} \\ \hline
+            \textbf{X} & \textbf{Y} \\ \hline
+            A & a\\
+            B & b \\
+            C & c
+            \end{array}
+            &
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{S} \\ \hline
+            \textbf{Y} & \textbf{Z} \\ \hline
+            1 & 10\\
+            2 & 20\\
+            3 & 30
+            \end{array}
+            &
+            \begin{array}{c|c|c|c}
+            \multicolumn{4}{c}{R\times S} \\ \hline
+            \textbf{X} & \textbf{R.Y} & \textbf{S.Y} & \textbf{Z} \\ \hline
+            A & a & 1 & 10\\
+            B & b & 1 & 10\\
+            C & c & 1 & 10\\
+            A & a & 2 & 20\\
+            B & b & 2 & 20\\
+            C & c & 2 & 20\\
+            A & a & 3 & 30\\
+            B & b & 3 & 30\\
+            C & c & 3 & 30
+            \end{array}
+        \end{array}
+        \]
+    \end{center}
+    \end{priklad}
+    
+    \item \textbf{Projekcia $\Pi$} \\
+    $\Pi_{a_1, \dots, a_n}(R)$, kde $a_1, \dots, a_n$ sú názvy atribútov relácie $R$ vráti novú reláciu, ktorá obsahuje \uv{iba stĺpce} $a_1, \dots, a_n$. Výsledok je stále relácie (čiže aj množina), takže neobsahuje duplicitné záznamy.
+    \begin{priklad}
+    \begin{center}
+        \[
+        \begin{array}{c c c}
+            \begin{array}{c|c|c}
+            \multicolumn{3}{c}{R} \\ \hline
+            \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
+            \text{Adam}   & \text{Bratislava} & \text{Pes} \\
+            \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
+            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
+            \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
+            \text{Fero}   & \text{Košice}     & \text{Mačka} \\
+            \end{array}
+            &
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{\Pi_{\textbf{Meno}, \textbf{Zviera}}(R)} \\ \hline
+            \textbf{Meno} & \textbf{Zviera} \\ \hline
+            \text{Adam}   & \text{Pes} \\
+            \text{Boris}  & \text{Mačka} \\
+            \text{Cecil}  & \text{Pes} \\
+            \text{Dano}   & \text{Zajac} \\
+            \text{Erik}   & \text{Kôň} \\
+            \text{Fero}   & \text{Mačka} \\
+            \end{array}
+            &
+            \begin{array}{c}
+            \multicolumn{1}{c}{\Pi_{\textbf{Mesto}}(R)} \\ \hline
+            \textbf{Mesto}   \\ \hline
+            \text{Bratislava}\\
+            \text{Košice}    \\
+            \text{Lučenec}   \\
+            \text{Poprad}    \\
+            \end{array}
+        \end{array}
+        \]
+    \end{center}
+    \end{priklad}
+    
+    \item \textbf{Selekcia $\sigma$} \\
+    $\sigma_C(R)$, kde $C$ je podmienka, ktorá obsahuje atribúty relácie $R$. Výsledná relácie je podmnožina relácie $R$ obsahujúca iba tie záznamy, ktoré splňujú podmienku $C$.
+    \begin{priklad}
+    \begin{center}
+        \[
+        \begin{array}{c c}
+            \begin{array}{c|c|c}
+            \multicolumn{3}{c}{R} \\ \hline
+            \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
+            \text{Adam}   & \text{Bratislava} & \text{Pes} \\
+            \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
+            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
+            \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
+            \text{Fero}   & \text{Košice}     & \text{Mačka} \\
+            \end{array}
+            &
+            \begin{array}{c|c|c}
+            \multicolumn{3}{c}{\sigma_{\textbf{Mesto} = \text{Bratislava} \lor \textbf{Zviera} = \text{Mačka}}(R)} \\ \hline
+            \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
+            \text{Adam}   & \text{Bratislava} & \text{Pes} \\
+            \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
+            \text{Fero}   & \text{Košice}     & \text{Mačka} \\
+            \end{array}
+        \end{array}
+        \]
+    \end{center}
+    \end{priklad}
+    
+    \item \textbf{Prirodzený (natural) join $\Join$} \\
+    $R \Join S$, kde $R$ a $S$ sú relácie. Podobne ako v karteziánskom súčine, párujeme záznamy z dvoch relácíí, ale párujeme iba tie záznamy z $R$ a $S$, ktoré sa zhodujú na tých atribútoch, ktoré sú spoločné v $R$ a $S$. V množinovom zápise:
+    \begin{align*}
+        R          &= A_1 \times \cdots \times A_n \times C_1 \times \cdots \times C_k\\
+        S          &= B_1 \times \cdots \times B_n \times C_1 \times \cdots \times C_k\\
+        R \times S &= \{(a_1, \dots, a_n, c_1, \dots, c_k, b_1, \dots, b_m) \, | \, &&(a_1, \dots, a_n, c_1, \dots, c_k) \in R, \\
+        &                                                                &&(b_1, \dots, b_m, c'_1, \dots, c'_k) \in S, \\
+        &                                                                &&\ c_1 = c'_1, \dots, c_k = c'_k\}
+    \end{align*}
+    \begin{priklad}
+        \begin{center}
+            TODO
+        \end{center}
+    \end{priklad}
+    
+    \item \textbf{Antijoin $\Antijoin$} \\
+    $R \Antijoin S$, kde $R$ a $S$ sú relácie. Vo výslednej relácií sú tie záznami z $R$, pre ktoré neexistuje záznam v $S$, s ktorým by sa zhodovali na spoločných atribútoch. V množinovom zápise: 
+    \begin{align*}
+        R          &= A_1 \times \cdots \times A_n \times C_1 \times \cdots \times C_k\\
+        S          &= B_1 \times \cdots \times B_n \times C_1 \times \cdots \times C_k\\
+        R \times S &= \{(a_1, \dots, a_n, c_1, \dots, c_k) \in R \, | \, \forall (b_1, \dots, b_m, c'_1, \dots, c'_k) \in S: c_1 \neq c'_1, \dots, c_k \neq c'_k\}
+    \end{align*}
+    \begin{priklad}
+        \begin{center}
+            TODO
+        \end{center}
+    \end{priklad}
+    
+    \item \textbf{Theta-join $\Join_C$} \\
+    $R \Join_C S$, kde $R$ a $S$ sú relácie a $C$ je podmienka, v ktorej sa vyskytujú atribúty z $R$ a $S$. Natural join nám povolil spojiť dva záznamy iba ak ich spoločné atribúty boli rovnaké. Theta-join popáruje každú dvoji záznamov z $R$ a $S$, ktoré spĺňajú podmienku $C$.
+    \begin{priklad}
+    \begin{center}
+        TODO
+    \end{center}
+    \end{priklad}
+    
+    \item \textbf{Premenovanie $\rho$}\\
+    $\rho_{A/ B} (R)$, kde $R$ je relácie, $A$ je názov atribútu z relácie $R$ a $B$ je nový názov atribútu. Výsledkom bude relácia s rovnakými záznamami, iba atribút $A$ a premenuje na $B$.
+    \begin{priklad}
+    \begin{center}
+        \[
+        \begin{array}{c c}
+            \begin{array}{c|c|c}
+            \multicolumn{3}{c}{R} \\ \hline
+            \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
+            \text{Adam}   & \text{Bratislava} & \text{Pes} \\
+            \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
+            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
+            \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
+            \text{Fero}   & \text{Košice}     & \text{Mačka} \\
+            \end{array}
+            &
+            \begin{array}{c|c|c}
+            \multicolumn{3}{c}{\rho_{\textbf{Mesto} / \textbf{Obec}}(R)} \\ \hline
+            \textbf{Meno} & \textbf{Obec}     & \textbf{Zviera} \\ \hline
+            \text{Adam}   & \text{Bratislava} & \text{Pes} \\
+            \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
+            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
+            \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
+            \text{Fero}   & \text{Košice}     & \text{Mačka} \\
+            \end{array}
+        \end{array}
+        \]
+    \end{center}
+    \end{priklad}
+    
+    \item \textbf{Iné join-y} \\
+    V niektorých knihách sa spomínajú aj iné variácie join-ov ako \textit{left outer join}, \textit{right outer join} alebo \textit{full outer join}. My sa s nimi nebudeme zaoberať, keďže sa dajú vyskladať z predchádzajúcich operátorov.
+    Pre ich správne fungovanie treba ale zaviesť špeciálnu konštantu, ktorá sa v literatúre označuje ako $\omega$, $\varepsilon$, \verb|null| alebo \verb|none|.
+\end{itemize}
+
+\subsection{Naša relačná algebra}
+Pre jednoduchší preklad datalogu do relačnej algebry sme si zvolili nasledujúcu algebru s piatimi operátormi (inšpirovaná algebrou z \cite{RAcompilator}). Tiež pracuje s reláciami, ale nepotrebuje vopred pomenované atribúty. Vždy, keď potrebuje pracovať s \uv{názvamy stĺpcov}, sú explicitne vymenované.
+
+\begin{itemize}
+    \item
+    {
+        $\UNION([R_1, \dots, R_n])$, kde $R_1, \dots, R_n$ sú relácie. Výsledná relácia bude obsahovať všetky záznamy z každej relácie $R_1$ až $R_n$.
+    
+        \begin{priklad}
+        \begin{center}
+            \[
+        \begin{array}{c c c c}
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{A} \\ \hline
+            11 & a \\
+            12 & b \\
+            13 & c
+            \end{array}
+            &
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{B} \\ \hline
+            21 & a \\
+            22 & b \\
+            23 & c
+            \end{array}
+            &
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{C} \\ \hline
+            31 & a \\
+            32 & b \\
+            33 & c
+            \end{array}
+            &
+            \begin{array}{c|c}
+            \multicolumn{2}{c}{\UNION([A, B, C])} \\ \hline
+            11 & a \\
+            12 & b \\
+            13 & c \\
+            21 & a \\
+            22 & b \\
+            23 & c \\
+            31 & a \\
+            32 & b \\
+            33 & c 
+            \end{array}
+        \end{array}
+        \]
+        \end{center}
+        \end{priklad}
+    } 
+    
+    \item
+    {
+        $\JOIN([R_1, \dots, R_n], [[T_{1, 1}, \dots, T_{1, a_1}], \dots, [T_{n, 1}, T_{n, a_n}]], [T_1, \dots, T_k])$,
+         kde $R_i$ je relácia s aritou $a_i$, $T_{i, j}$ sú \textit{vstupné} termy a $T_l$ sú \textit{výstupné} termy.
+        
+        Výsledná relácia bude nasledujúca. Nech $P_1, \dots, P_p$ sú všetky premenné vyskytujúce sa v termoch $T_{1, 1}, \dots, T_{1, a_1}, T_{2, 1}, \dots, T_{n, a_n}$. Nech mnoňina $M$ obsahuje všetky $(c_1, \dots, c_p)$ také, pre ktoré platí 
+        $$(T_{i, 1}[P_1|c_1, \dots, P_p|c_p], \dots, T_{i, a_i}[P_1|c_1, \dots, P_p|c_p]) \in R_i, \, \forall i \in \{1, \dots, n\}\text{.}$$
+        Potom vo výslednej relácií $R$ budú záznamy 
+        $$R = \{(T_1[P_1|k_1, \dots, P_p|k_p], \dots, T_k[P_1|k_1, \dots, P_p|K_p]) \, | \, (k_1, \dots, k_p) \in M\} \text{.}$$
+        
+        \begin{priklad}
+        \begin{center}
+            \[
+            \begin{array}{c c}
+                \begin{array}{c|c}
+                    \multicolumn{2}{c}{G} \\ \hline
+                    1 & 2 \\
+                    2 & 3 \\
+                    3 & 4 \\
+                    3 & 5 \\
+                \end{array}
+                &
+                \begin{array}{c|c}
+                    \multicolumn{2}{c}{\JOIN([G, G], [[X, Z], [Z, Y]], [X, Y])} \\ \hline
+                    1 & 3 \\
+                    2 & 4 \\
+                    2 & 5 \\
+                \end{array}
+            \end{array}
+            \]
+        \end{center}
+        \end{priklad}
+    }
+        
+    \item
+    {
+        $\ANTIJOIN([R_1, \dots, R_n], [[T_{1, 1}, \dots, T_{1, a_1}], \dots, [T_{n, 1}, T_{n, a_n}]], [T_1, \dots, T_k])$,
+        kde $R_i$ je relácia s aritou $a_i$, $T_{i, j}$ sú \textit{vstupné} termy a $T_l$ sú \textit{výstupné} termy.
+        
+        Výsledná relácia bude nasledujúca. Nech $P_1, \dots, P_p$ sú všetky premenné vyskytujúce sa v termoch $T_{1, 1}, \dots, T_{1, a_1}, T_{2, 1}, \dots, T_{n, a_n}$. Nech mnoňina $M$ obsahuje všetky $(c_1, \dots, c_p)$ také, pre ktoré platí 
+        $$(T_{1, 1}[P_1|c_1, \dots, P_p|c_p], \dots, T_{1, a_1}[P_1|c_1, \dots, P_p|c_p]) \in R_1$$
+        a zároveň pre aspoň jedno $i \in \{2, \dots, n\}$ platí
+        $$(T_{i, 1}[P_1|c_1, \dots, P_p|c_p], \dots, T_{i, a_i}[P_1|c_1, \dots, P_p|c_p]) \notin R_i\text{.}$$
+        Potom vo výslednej relácií $R$ budú záznamy 
+        $$R = \{(T_1[P_1|k_1, \dots, P_p|k_p], \dots, T_k[P_1|k_1, \dots, P_p|K_p]) \, | \, (k_1, \dots, k_p) \in M\} \text{.}$$
+        \begin{priklad}
+        \begin{center}
+            TODO
+        \end{center}
+        \end{priklad}
+    }
+        
+    \item 
+    {
+        $\REC(N, R)$, kde $N$ je názov relácie a $R$ je relácia. Tento operátor definuje reláciu s názvom $N$ a dovoľuje použiť v relácií $R$ odkaz na ňu.
+        \begin{priklad}
+        \begin{center}
+            $$\REC
+            (
+                t, 
+                \UNION
+                (
+                    [
+                        \$s,
+                        \JOIN
+                        (
+                            [t, t],
+                            [[X, Z], [Z, Y]],
+                            [X, Y]
+                        )
+                    ]
+                )
+            )$$
+            Relácia $t$ je tranzitívny uzáver vstavanej relácie $s$.
+        \end{center}
+        \end{priklad}
+    }
+    
+    \item
+    {
+        $\DEF([[T_{1, 1}, \dots, T_{1, n}], \dots, [T_{k, 1}, \dots, T_{k, n}]])$, kde $T_{1, 1}, \dots, T_{k, n}$ sú termy \textbf{bez} premenných. Výsledok bude relácia $R = \{(T_{i, 1}, \dots, T_{i, n}) \, | \, i \in \{1, \dots, k\}\}$
+        \begin{priklad}
+        \begin{center}
+            TODO
+        \end{center}
+        \end{priklad}
+    }
+\end{itemize}

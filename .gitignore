@@ -6,3 +6,6 @@ zdroje
 *.nav
 *.snm
 *.synctex.gz
+compiler/tests/*
+!compiler/tests/000*
+compiler/src/main/java/Test*

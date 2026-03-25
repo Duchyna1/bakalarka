@@ -22,7 +22,13 @@
 
 \newcommand{\true}{\top}
 \newcommand{\false}{\bot}
-\newcommand{\unknown}{?}
+\newcommand{\unknown}{\Cup}
+\newcommand{\Antijoin}{\triangleright}
+\newcommand{\UNION}{\textbf{UNION}}
+\newcommand{\JOIN}{\textbf{JOIN}}
+\newcommand{\ANTIJOIN}{\textbf{ANTIJOIN}}
+\newcommand{\REC}{\textbf{REC}}
+\newcommand{\DEF}{\textbf{DEF}}
 \newcommand{\tp}{\textbf{t}\space}
 \newcommand{\fp}{\textbf{f}\space}
 
@@ -45,6 +51,24 @@
 \newtheorem{lema}{Lema}
 \newtheorem{theorem}{Tvrdenie}
 \newtheorem{note}{Poznámka}
+\newtheorem{todo}{TODO}
+
+\newcounter{priklad}[chapter]
+\renewcommand{\thepriklad}{\thechapter.\arabic{priklad}}
+
+\newenvironment{priklad}
+{
+\refstepcounter{priklad}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+}
+{
+\centering
+\textit{Príklad \thepriklad}
+\end{minipage}
+\end{center}
+\medskip
+}
 
 \usepackage{graphicx}
 \usepackage{pdfpages}

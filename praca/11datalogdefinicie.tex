@@ -1,38 +1,45 @@
 \newcommand{\inter}{\mathcal{I}}
 
 \section{Definície}
-V nasledujúcej kapitole formálne definujeme Datalog vo forme, v ktorej s ním budeme vo zvyšku práce pracovať.
+V nasledujúcej kapitole formálne definujeme Datalog vo forme, v akej s ním budeme vo zvyšku práce pracovať.
 
 \begin{note}
     $\true$ označuje pravdu (hodnotu \textit{true}). $\false$ označuje nepravdu (hodnotu \textit{false}). $\unknown$ označuje hodnotu \textit{unknown}.
 \end{note}
 
-Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku definícií.
+\begin{todo}
+    Vstavané funkcie a predikáty.
+\end{todo}
 
 \begin{definition}
-    \textbf{$n$-árna relácia} $r$ je definovaná ako $r \subseteq D_1 \times D_2 \times \dots \times D_n$. Jednotlivé prvky relácie $r$ nazývame \textit{tuples}, \textit{záznamy} alebo \textit{usporiadané $n$-tice}. Jednotlivým zložkám $n$-tíc hovoríme \textit{atribúty} relácie. Množinám $D_1, D_2, \dots, D_n$ sa hovorí \textit{domény} (alebo \textit{typy}) atribútov relácie $r$. 
+    \textbf{$n$-árna relácia} $r$ je definovaná ako $r \subseteq D_1 \times D_2 \times \dots \times D_n$. Jednotlivé prvky relácie $r$ nazývame \textbf{tuples}, \textbf{záznamy} alebo \textbf{usporiadané $n$-tice}. Jednotlivým zložkám $n$-tíc hovoríme \textbf{atribúty} relácie. Množinám $D_1, D_2, \dots, D_n$ sa hovorí \textbf{domény} (alebo \textbf{typy}) atribútov relácie $r$. 
 \end{definition}
 
 \begin{definition}
+    TODO prepísať to pre interpretáciu
+    
+        
     \textbf{$n$-árny predikát $p$} prislúchajúci $n$-árnej relácii $r \subseteq D_1 \times D_2 \times \dots \times D_n$ je funkcia $p: D_1 \times D_2 \times \dots \times D_n \to \{\true, \false\}$ definovaná nasledovne:
     $$p(x_1, x_2, \dots , x_n) = \true \Leftrightarrow (x_1, x_2, \dots, x_n) \in r$$
     $$p(x_1, x_2, \dots , x_n) = \false \Leftrightarrow (x_1, x_2, \dots, x_n) \not\in r$$
 \end{definition}
 
-\begin{definition}
-    \label{znaky_jazyka_1}
-    \textbf{Jazyk logiky} pozostáva z
-    \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
-        \item predikátových symbolov
-        \item symbolov pre premenné
-        \item symbolov pre konštanty (reprezentujú prvky z domén)
-        \item logických symbolov ($\land, \lnot$)
-        \item symbolov všeobecných kvantifikátorov ($\forall$)
-        \item symbolov pre definície ($\Rightarrow$)
-        \item čiarok (\texttt{,})
-        \item a zátvoriek (\texttt{(}, \texttt{)}).
-    \end{enumerate}
-\end{definition}
+\begin{samepage}
+    \begin{definition}
+        \label{znaky_jazyka_1}
+        \textbf{Jazyk logiky} pozostáva z
+        \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+            \item predikátových symbolov
+            \item symbolov pre premenné
+            \item symbolov pre konštanty (reprezentujú prvky z domén)
+            \item logických symbolov ($\land, \lnot$)
+            \item symbolov všeobecných kvantifikátorov ($\forall$)
+            \item symbolov pre definície ($\Rightarrow$)
+            \item čiarok (\texttt{,})
+            \item a zátvoriek (\texttt{(}, \texttt{)}).
+        \end{enumerate}
+    \end{definition}
+\end{samepage}
 
 \begin{samepage}
     \begin{definition}
@@ -46,11 +53,11 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
 \end{samepage}
 
 \begin{definition}
-    $A \Rightarrow B$ je \textbf{implikácia}, ak $A$ je klauzula a $B$ je atomická klauzula.
+    $A \Rightarrow B$ je \textbf{implikácia}, ak $A$ je formula a $B$ je atomická formula.
 \end{definition}
 
 \begin{definition}
-    $\forall X \iota $ sa nazýva \textbf{kvantifikovaná implikácia}, kde $X$ je premenná a $\iota$ je implikácia. Ak je kvantifikovaná každá premenná v kvantifikovanej implikácií, nazývame ju \textbf{klauzula}.
+    $\forall X \iota $ sa nazýva \textbf{kvantifikovaná implikácia}, kde $X$ je premenná a $\iota$ je implikácia. Ak je kvantifikovaná každá premenná v kvantifikovanej implikácii, nazývame ju \textbf{klauzula}.
 \end{definition}
 
 \begin{definition}
@@ -59,11 +66,11 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
 
 \begin{definition}
     \label{ohodnotenie_premennych_1}
-    \textbf{Ohodnotenie premenných} je funkcia, ktorá priradí každej premenne konštantu. Ohodnotenie $o$, ktoré premennej $X_i$ priradí konštantu $k_i$ (pre $i \leq n$) označujeme $o(X_1 | k_1, \dots , X_n | k_n)$. Keď vo formule $A$ resp. implikácií $\iota$ resp. teórií $K_1\land \dots \land K_n$ nahradíme všetky premenné podľa ohodnotenia $o$, výslednú formulu označujeme ako $A[o]$ resp. $\iota[o]$ resp. $K_1\land \dots \land K_n[o]$.
+    \textbf{Ohodnotenie premenných} je funkcia, ktorá priradí každej premennej konštantu. Ohodnotenie $o$, ktoré premennej $X_i$ priradí konštantu $k_i$ (pre $i \leq n$) označujeme $o(X_1 | k_1, \dots , X_n | k_n)$. Keď vo formule $A$ resp. implikácii $\iota$ resp. teórii $K_1\land \dots \land K_n$ nahradíme všetky premenné podľa ohodnotenia $o$, výslednú formulu označujeme ako $A[o]$ resp. $\iota[o]$ resp. $K_1\land \dots \land K_n[o]$.
 \end{definition}
 
 \begin{definition}
-    \textbf{Interpretácia jazyka} je funkcia, ktorá každej formule priradí jednu z hodnôt $\true, \false, \unknown$.
+    \textbf{Interpretácia jazyka} je funkcia, ktorá každej atomickej formule priradí jednu z hodnôt $\true, \false, \unknown$.
 \end{definition}
 
 \begin{definition}
@@ -91,7 +98,7 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
         \end{enumerate}
         $\inter \models_\false (\varphi \Rightarrow \phi)[o]$ ak $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\false \phi[o]$.\\
         $\inter \models_\unknown (\varphi \Rightarrow \phi)[o]$ ak $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\false \phi[o]$.
-        \item Pre kvantifikovaná implikácia $\forall X \iota$ platí:\\
+        \item Pre kvantifikovanú implikáciu $\forall X \iota$ platí:\\
         $\inter \models_\true \forall X \iota$ ak pre \textit{ľubovoľnú} konštantu $c$ platí $\inter \models_\true \iota[X|c]$,\\
         $\inter \models_\false \forall X \iota$ ak pre \textit{niektorú} konštantu $c$ platí $\inter \models_\false \iota[X|c]$,\\
         inak $\inter \models_\unknown \forall X \iota$.
@@ -103,7 +110,7 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
 \end{definition}
 
 \begin{definition}
-    Majme teóriu $K_1 \land \dots \land K_n$ a atomickú formulu $Q$. Potom teóriu $K_1 \land \dots \land K_n \land Q$ nazývame \textbf{teóriu s dotazom $Q$}.
+    Majme teóriu $K_1 \land \dots \land K_n$ a atomickú formulu $Q$. Potom teóriu $K_1 \land \dots \land K_n \land Q$ nazývame \textbf{teória s dotazom $Q$}.
 \end{definition}
 
 \begin{definition}
@@ -114,11 +121,15 @@ Note: Definície 1.1.1. a 1.1.2. sú asi zbytočné a nezapadajú moc do zvyšku
 \end{definition}
 
 \begin{note}
-    Môžeme si všimnúť, že dotazom sa vieme pýtať ina otázky typu \textit{platí dotaz $p(K_1, \dots, K_n)$?}, kde $K_1, \dots, K_n$ sú konštanty. Nevieme sa pýtať na opak (\textit{neplatí...}).
+    Môžeme si všimnúť, že dotazom sa vieme pýtať ina otázky typu \textit{platí $p(K_1, \dots, K_n)$?}, kde $K_1, \dots, K_n$ sú konštanty. Nevieme sa pýtať na opak (otázky typu \textit{neplatí... ?}).
     
-    Týmto dokážeme odpovedať na niektoré dotazy pre teórie, ktoré nemajú model. Ako príklad môžeme zobrať teóriu
-    $$\mathcal{T} = \left(\lnot p() \Rightarrow q()\right)\\
+    Týmto dokážeme odpovedať na niektoré dotazy pre teórie, ktoré nemajú dvojhodnotový model. Ako príklad môžeme zobrať teóriu
+    $$\mathcal{T} = \left(\lnot p \Rightarrow q\right)\\
     \land\\
-    \left(\lnot q() \Rightarrow p()\right)\text{.}$$
-    Jediná validná interpretácia $\inter_V$ je $\inter_V \models_\unknown p()$ a $\inter_V \models_\unknown q()$ (ak by sme zobrali ľubovoľnú inú interpretáciu $\inter$, došli by sme k sporu $\inter \models_\true p() \, \land \, \inter \not\models_\true p()$ resp. $\inter \models_\false p() \, \land \, \inter \not\models_\false p()$). Ak by sme sa vedeli pýtať na záporné dotazy, dostali by sme pre teórie s dotazom $\mathcal{T} \land p()$ a $\mathcal{T} \land \lnot p()$ výsledok dotazu $\false$. S našim prístupom dostaneme pre dotaz \uv{\textit{platí $p()$}} $\false$. Z čoho potom musí platiť, že $p()$ je nepravdivé.
+    \left(\lnot q \Rightarrow p\right)\text{.}$$
+    Jediná validná interpretácia $\inter_V$ je $\inter_V \models_\unknown p$ a $\inter_V \models_\unknown q$ (ak by sme zobrali ľubovoľnú inú interpretáciu $\inter$, došli by sme k sporu $\inter \models_\true p \, \land \, \inter \not\models_\true p$ resp. $\inter \models_\false p \, \land \, \inter \not\models_\false p$). Ak by sme sa vedeli pýtať na záporné dotazy, dostali by sme pre teórie s dotazom $\mathcal{T} \land p$ a $\mathcal{T} \land \lnot p$ výsledok dotazu $\false$. S našim prístupom dostaneme pre dotaz \uv{\textit{platí $p$?}} $\false$.
 \end{note}
+
+\begin{todo}
+    bezpečné pravidlá
+\end{todo}

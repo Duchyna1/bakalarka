@@ -13,7 +13,7 @@ EOL: '.';
 NOT: '\\+';
 BUILT_IN: '$';
 
-program: (clause | definition)* query? (clause | definition)*;
+program: (clause | definition)* query;
 
 query: QUERY_MARKER (normal_predicate | normal_built_in_predicate) EOL;
 
@@ -39,9 +39,9 @@ definition: name '(' arity ')' BODY_HEAD_SEPARATOR '{' term_tuple (',' term_tupl
 
 term_tuple: '(' term (',' term)* ')';
 
-term: function '(' ')' |
-      function '(' term (',' term)* ')' |
-      variable;
+term: variable |
+      function '(' ')' |
+      function '(' term (',' term)* ')';
 
 name: TOKEN;
 function: TOKEN;
@@ -52,8 +52,8 @@ fragment UPPER: [A-Z]+;
 fragment LOWER: [a-z]+;
 fragment NUMBER: [0-9]+;
 
-TOKEN: (UPPER | LOWER | NUMBER | '_')+;
 NUMBER_TOKEN: NUMBER;
+TOKEN: (UPPER | LOWER | NUMBER | '_')+;
 WS: [ \t\r\n]+ -> skip;
 COMMENT: SLC ~[\n\r]* ([\n\r] | EOF) -> channel(HIDDEN);
 MULTILINE_COMMENT:
