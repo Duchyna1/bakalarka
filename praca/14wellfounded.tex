@@ -1,5 +1,21 @@
 \section{Sémantika datalogu}
+Zober me si veľmi jednoduchú teóriu.
 
-\begin{todo}
-    V prezentácií príklady na minimálny 3-hodnotový stabilný vysvetlenie.
-\end{todo}
+\begin{verbatism}
+    p = {(1)}.
+\end{verbatism}
+
+Pre túto teóriu existuje niekoľko modelov (dokonca ich je nekonečne veľa). Najjednoduchší z nich je $\inter \models_\true p(1)$ a pre všetky ostatné formul je interpretácia nepravdivá. Ďalšie modely ale možu byť napríklad:
+\begin{itemize}
+    \item $\iter' \models_\true p(i), \forall i \in \mathbb{N}$ a pre všetky ostatné formoly je interpretácia nepravdivá,
+    \item $\iter'' \models_\true p(i), \forall i \in \mathbb{R}$ a pre všetky ostatné formoly je interpretácia nepravdivá,
+    \item $\iter''' \models_\true p(1), \iter''' \models_\true p(\text{Pes}), \iter''' \models_\true p(47), \iter''' \models_\true p(\text{Štvorec})$ a pre všetky ostatné formuly je interpretácia nepravdivá.
+\end{itemize}
+
+My budeme za sémantiku našich datalogových programov uvažovať \textit{well-founded model}. Well-founded model je minimálny stabilný trojhodnotový model.
+
+Trojhodnodový model znamená, že interpretácia priraďuje atomickým formulám hodnoty \textit{true} $\true$, \textit{false} $\false$ a \textit{unknown} $\unknown$.
+
+Stabilný model znamená, že ostane rovnaký po tzv. \textit{Gelfond-Lifschitz Transformation}. Aplikácia GLT funguje nasledovne: TODO
+
+Minimálny model znamená, že TODO
