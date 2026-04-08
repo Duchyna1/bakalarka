@@ -1,21 +1,158 @@
 \section{Sémantika datalogu}
-Zober me si veľmi jednoduchú teóriu.
+Zoberme si veľmi jednoduchú teóriu: 
+\begin{verbatim}
+    p = {(1)}.    
+\end{verbatim}
 
-\begin{verbatism}
-    p = {(1)}.
-\end{verbatism}
-
-Pre túto teóriu existuje niekoľko modelov (dokonca ich je nekonečne veľa). Najjednoduchší z nich je $\inter \models_\true p(1)$ a pre všetky ostatné formul je interpretácia nepravdivá. Ďalšie modely ale možu byť napríklad:
+Pre túto teóriu existuje niekoľko modelov (dokonca ich je nekonečne veľa). Najjednoduchší z nich je
+$\inter \models_\true \verb|p|(1)$ a pre všetky ostatné formuly je interpretácia nepravdivá. Ďalšími
+modelmi môžu byť napríklad:
 \begin{itemize}
-    \item $\iter' \models_\true p(i), \forall i \in \mathbb{N}$ a pre všetky ostatné formoly je interpretácia nepravdivá,
-    \item $\iter'' \models_\true p(i), \forall i \in \mathbb{R}$ a pre všetky ostatné formoly je interpretácia nepravdivá,
-    \item $\iter''' \models_\true p(1), \iter''' \models_\true p(\text{Pes}), \iter''' \models_\true p(47), \iter''' \models_\true p(\text{Štvorec})$ a pre všetky ostatné formuly je interpretácia nepravdivá.
+\item $\inter' \models_\true \verb|p|(i), \forall i \in \mathbb{N}$ a pre všetky ostatné formuly je
+interpretácia nepravdivá,
+\item $\inter'' \models_\true \verb|p|(i), \forall i \in \mathbb{R}$ a pre všetky ostatné formuly je
+interpretácia nepravdivá,
+\item $\inter''' \models_\true \verb|p|(1), \inter''' \models_\true \verb|p|(\text{Pes}), \inter'''
+\models_\true p(47), \inter''' \models_\true \verb|p|(\text{Štvorec})$ a pre všetky ostatné formuly
+je interpretácia nepravdivá.
 \end{itemize}
 
-My budeme za sémantiku našich datalogových programov uvažovať \textit{well-founded model}. Well-founded model je minimálny stabilný trojhodnotový model.
+Ako sémantiku našich datalogových programov budeme uvažovať \textit{well-founded model}.
+Well-founded model je minimálny stabilný trojhodnotový model.
 
-Trojhodnodový model znamená, že interpretácia priraďuje atomickým formulám hodnoty \textit{true} $\true$, \textit{false} $\false$ a \textit{unknown} $\unknown$.
+\subsubsection{}
+\textit{Trojhodnotový} model znamená, že interpretácia priraďuje atomickým formulám hodnoty
+\textit{true} $\true$, \textit{false} $\false$ a \textit{unknown} $\unknown$.
 
-Stabilný model znamená, že ostane rovnaký po tzv. \textit{Gelfond-Lifschitz Transformation}. Aplikácia GLT funguje nasledovne: TODO
+\subsubsection{}
+\textit{Stabilný} model znamená, že zostane rovnaký po tzv. \textit{Gelfond-Lifschitz
+Transformation}. Aplikácia GLT funguje nasledovne: zoberieme aktuálnu interpretáciu a pomocou nej z
+programu odstránime tie pravidlá, ktorých negované podmienky sú podľa danej interpretácie pravdivé.
+Z ostatných pravidiel potom odstránime negácie. Tým dostaneme program bez negácie, pre ktorý vieme
+zostrojiť minimálny model. Ak sa tento minimálny model zhoduje s interpretáciou, z ktorej sme
+vychádzali, hovoríme, že ide o stabilný model.
 
-Minimálny model znamená, že TODO
+Zoberme si program
+\begin{verbatim}
+    a.
+    b :- \+ c.
+    c :- \+ b.
+    d :- a, \+ c.
+\end{verbatim}
+
+a kandidátnu interpretáciu $\inter$, pre ktorú platí
+$$\inter \models_\true \verb|a|, \inter \models_\true \verb|b|, \inter \models_\false \verb|c|,
+\inter \models_\true \verb|d|\text{.}$$
+
+Pri aplikácii GLT najprv odstránime tie pravidlá, ktorých negované podmienky sú podľa $\inter$
+pravdivé. Pravidlo \verb|c :- \+ b.| sa preto odstráni, keďže \verb|b| je v interpretácii $\inter$
+pravdivé. V ostatných pravidlách potom odstránime negácie, a dostaneme program
+\begin{verbatim}
+    a.
+    b.
+    d :- a.
+\end{verbatim}
+
+Minimálny model takto upraveného programu obsahuje práve atómy \verb|a|, \verb|b| a \verb|d|. Keďže
+sa zhoduje s interpretáciou, z ktorej sme vychádzali, daná interpretácia je stabilný model pôvodného
+programu.
+
+\subsubsection{}
+\textit{Minimálny} model znamená, že spomedzi všetkých modelov vyberáme ten, ktorý obsahuje najmenej
+pravdivých atómov. Intuitívne teda nechceme odvodiť viac faktov, než je nutné. Ak existuje viac
+modelov, uprednostníme ten najmenší.
+
+Príklad minimálneho modelu pre teóriu
+\begin{verbatim}
+    p = {(1)}.
+\end{verbatim}
+je modelom napríklad interpretácia, v ktorej platí iba $p(1)$. Modelom je aj interpretácia, v ktorej
+platí $p(1)$, $p(2)$ a $p(3)$. Minimálny model je však ten prvý, pretože obsahuje najmenej
+pravdivých atómov.
+
+\subsubsection{}
+\textit{Well-founded} model môžeme chápať ako niečo, čo je spoločné pre všetky stabilné modely.
+Atómy, ktoré sú pravdivé vo všetkých stabilných modeloch, označíme ako $\true$, atómy, ktoré sú
+nepravdivé vo všetkých stabilných modeloch, označíme ako $\false$, a atómy, pri ktorých sa stabilné
+modely rozchádzajú, ponecháme ako $\unknown$.
+
+V nasledujúcom príklade ukážeme, ako sa dá nájsť well-founded model teórie. Nejde o formálny dôkaz.
+Pre viacej o well-fouded model odporúčam prečítať \cite{WellFounded} a \cite{SemanticsQueries}. 
+
+Budeme postupovať iteratívne. Začneme interpretáciou, v ktorej sú všetky
+atómy nepravdivé, a budeme opakovane aplikovať GLT. Po každom kroku vezmeme minimálny model
+získaného programu a ten použijeme ako novú interpretáciu. Keď sa interpretácia prestane meniť,
+dostaneme výsledný model.
+
+Príklad nájdenia well-founded modelu:
+\begin{verbatim}
+    a.
+    b :- a.
+    p :- \+ q.
+    q :- \+ p.
+    u :- v.
+\end{verbatim}
+
+Budeme uvažovať atómy \verb|a|, \verb|b|, \verb|p|, \verb|q|, \verb|u| a \verb|v|. Na začiatku
+zoberieme interpretáciu $\inter_0$, v ktorej sú všetky tieto atómy nepravdivé.
+
+Pri aplikácii GLT na $\inter_0$ sa neodstráni žiadne pravidlo, pretože v $\inter_0$ nie je pravdivý
+ani \verb|p|, ani \verb|q|. Po odstránení negácií dostaneme program
+\begin{verbatim}
+    a.
+    b :- a.
+    p.
+    q.
+    u :- v.
+\end{verbatim}
+Jeho minimálny model je interpretácia $\inter_1$, v ktorej platí
+$$\inter_1 \models_\true \verb|a|, \inter_1 \models_\true \verb|b|, \inter_1 \models_\true \verb|p|,
+\inter_1 \models_\true \verb|q|, \inter_1 \models_\false \verb|u|, \inter_1 \models_\false \verb|v|\text{.}$$
+
+Teraz aplikujeme GLT na interpretáciu $\inter_1$. Keďže v nej sú \verb|p| aj \verb|q| pravdivé,
+pravidlá \verb|p :- \+ q.| aj \verb|q :- \+ p.| sa odstránia. Po odstránení negácií dostaneme program
+\begin{verbatim}
+    a.
+    b :- a.
+    u :- v.
+\end{verbatim}
+Jeho minimálny model je interpretácia $\inter_2$, v ktorej platí
+$$\inter_2 \models_\true \verb|a|, \inter_2 \models_\true \verb|b|, \inter_2 \models_\false \verb|p|,
+\inter_2 \models_\false \verb|q|, \inter_2 \models_\false \verb|u|, \inter_2 \models_\false \verb|v|\text{.}$$
+
+Ak teraz ešte raz aplikujeme GLT na interpretáciu $\inter_2$, obe pravidlá s negáciou opäť zostanú,
+a preto znovu dostaneme program
+\begin{verbatim}
+    a.
+    b :- a.
+    p.
+    q.
+    u :- v.
+\end{verbatim}
+Jeho minimálny model je opäť $\inter_1$. Dostali sme teda cyklus
+$$\inter_0 \rightarrow \inter_1 \rightarrow \inter_2 \rightarrow \inter_3 \equiv \inter_1 \rightarrow \inter_2 \rightarrow \cdots$$
+
+Vidíme, že atómy \verb|a| a \verb|b| sú pravdivé v každom kroku od $\inter_1$ ďalej, a preto im vo
+well-founded modeli priradíme hodnotu $\true$. Atómy \verb|u| a \verb|v| nie sú pravdivé v žiadnom
+kroku, a preto im priradíme hodnotu $\false$. Naopak, pri atómoch \verb|p| a \verb|q| sa interpretácie
+striedajú: raz sú pravdivé a raz nepravdivé. Tým pádom ich nevieme jednoznačne určiť, a vo
+well-founded modeli dostanú hodnotu $\unknown$.
+
+Výsledný well-founded model tejto teórie je teda daný hodnotami
+$$\verb|a| = \true, \qquad \verb|b| = \true, \qquad \verb|u| = \false, \qquad \verb|v| = \false, \qquad \verb|p| = \unknown, \qquad \verb|q| = \unknown\text{.}$$
+
+Prehľadne to môžeme zapísať aj do tabuľky:
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c}
+Atóm & $\inter_0$ & $\inter_1$ & $\inter_2$ & $\inter_3$ & $\inter$ \\
+\hline
+\verb|a| & $\false$ & $\true$ & $\true$ & $\true$ & $\true$ \\
+\verb|b| & $\false$ & $\true$ & $\true$ & $\true$ & $\true$ \\
+\verb|u| & $\false$ & $\false$ & $\false$ & $\false$ & $\false$ \\
+\verb|v| & $\false$ & $\false$ & $\false$ & $\false$ & $\false$ \\
+\verb|p| & $\false$ & $\true$ & $\false$ & $\true$ & $\unknown$ \\
+\verb|q| & $\false$ & $\true$ & $\false$ & $\true$ & $\unknown$ \\
+\end{tabular}
+\end{center}
+

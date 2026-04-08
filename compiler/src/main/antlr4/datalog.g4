@@ -45,7 +45,7 @@ term: variable |
 
 name: TOKEN;
 function: TOKEN;
-variable: TOKEN;
+variable: (TOKEN | NUMBER_TOKEN);
 arity: NUMBER_TOKEN;
 
 fragment UPPER: [A-Z]+;

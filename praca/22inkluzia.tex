@@ -1,1 +1,76 @@
 \section{Inklúzia medzi učebnicovou a našou relačnou algebrou}
+
+V nasledujúcej kapitole sa pokúsime ukázať, že naša relačná algebra má aspoň takú výpočtovú silu ako
+učebnicová relačná algebra. To znamená, že každý výraz v učebnicovej relačnej algebre môžeme
+vyjadriť pomocou výrazov v našej relačnej algebre. Dôkazy nebudú úplne formálne správne, ale mali by
+byť dostatočne jasné a zrozumiteľné, aby bolo zrejmé, ako by sa mal ľubovoľný program v učebnicovej
+relačnej algebre prepísať do našej algebry. Pre viac informácií o našej relačnej algebre odporúčame
+pozrieť \cite{RAcompilator} a \cite{JAVAimple}.
+
+\subsection*{Množinové operátory}
+Zjednotenie množín (relacií) $R \cup S$ vieme prepísať ako $\UNION([R, S])$. Rozdiel množín $R - S$
+prepíšeme ako $$\ANTIJOIN([R, S], [[A_1, A_2, \dots, A_n], [A_1, A_2, \dots, A_n]], [A_1, A_2,
+\dots, A_n])\text{.}$$ Keďže prienik vieme vyjadriť pomocou rozdielu, budeme ho vedieť zapísať
+pomocou $\ANTIJOIN$.
+
+\subsection*{Karteziánsky súčin $\times$}
+Karteziánsky súčin $R \times S$ vieme prepísať pomocou $\JOIN$. Jednoducho vymenujeme všetky
+atribúty z $R$ a $S$ ako vstupné termy a výstupné termy. 
+$$R \times S \approx \JOIN([R, S], [[A_1, A_2, \dots, A_n], [B_1, B_2, \dots, B_m]], [A_1, A_2,
+\dots, A_n, B_1, B_2, \dots, B_m])$$
+
+\subsection*{Projekcia $\Pi$}
+Projekcia je už zakomponovaná v $\JOIN$ a $\ANTIJOIN$. Ak ale chceme vyjadriť iba projekciu, môžeme
+použiť $\JOIN$ s pomenovanými vstupnými termami a vymenovanými výstupnými termami, ktoré sú
+podmnožinou vstupných termov. Napríklad $\Pi_{A_1, A_3}(R)$ prepíšeme ako $$\JOIN([R], [[A_1, A_2,
+A_3, \dots, A_n]], [A_1, A_3])\text{.}$$ Treba si ale dávať pozor, že v našej algebre záleží na
+poradí atribútov a v učebnicovej algebre záleží iba na ich názvoch. Preto je rozdiel medzi 
+$$\JOIN([R], [[A_\textit{1}, A_2, A_\textbf{3}]], [A_\textit{1}, A_\textbf{3}])\text{,}$$
+$$\JOIN([R], [[A_\textit{1}, A_\textbf{3}, A_2]], [A_\textit{1}, A_\textbf{3}])\text{ a}$$
+$$\JOIN([R], [[A_\textit{1}, A_2, A_\textbf{3}]], [A_\textbf{3}, A_\textit{1}])\text{.}$$
+
+\subsection*{Selekcia $\sigma$}
+Pre selekciu využijeme veľkú výpočtovú silu funkčných symbolov. Zoberme si selekciu $\sigma_C(R)$.
+Skonštruujeme funkčný symbol $f_C$ tak, že $f_C(p_1, p_2, \dots, p_n) = \tp$ práve vtedy, keď
+podmienka $C$ platí pre záznam $(p_1, p_2, \dots, p_n)$. Pre všetky ostatné vstupy bude $f_C$ vracať
+$\fp$. Potom môžeme selekciu $\sigma_C(R)$ prepísať ako
+$$\JOIN([R, \$true], [[p_1, p_2, \dots, p_n], [f_C(p_1, p_2, \dots, p_n)]], [p_1, p_2, \dots, p_n,
+\tp])\text{.}$$ Výsledná relácia má ale o jeden atribút viac, preto ju treba ešte \textit{obaliť}
+projekciou (joinom), ktorá nám tento atribút odstráni.
+
+\subsection*{Prirodzený (natural) join $\Join$}
+Opäť si musíme dávať pozor na poradie atribútov. Preklad $R \Join S$ bude ale potom priamočiary.
+Ukážeme na príklade, keď relácie $R$ a $S$ majú spoločné atribúty $C_1, C_2, \dots, C_k$ \textit{na
+konci}.
+\begin{align*}
+    R \Join S \approx \JOIN(&[R, S], \\
+                            &[[A_1, \dots, A_n, C_1, \dots, C_k], [B_1, \dots, B_m, C_1, \dots, C_k]], \\
+                            &[A_1, \dots, A_n, C_1, \dots, C_k, B_1, \dots, B_m])
+\end{align*}
+
+\subsection*{Antijoin $\Antijoin$}
+Antijoin $R \Antijoin S$ prepíšeme v podstate rovnako ako natural join. Znovu predpokladáme, že
+spoločné atribúty $C_1, C_2, \dots, C_k$ sú \textit{na konci}.
+\begin{align*}
+    R \Antijoin S \approx \ANTIJOIN(&[R, S], \\
+                            &[[A_1, \dots, A_n, C_1, \dots, C_k], [B_1, \dots, B_m, C_1, \dots, C_k]], \\
+                            &[A_1, \dots, A_n, C_1, \dots, C_k])
+\end{align*}
+
+\subsection*{Theta-join $\Join_C$}
+Ako pri selekcii, aj tu využijeme funkčné symboly. Zoberme si theta-join $R \Join_C S$.
+Skonštruujeme funkčný symbol $f_C$ tak, že $f_C(p_1, p_2, \dots, p_n, q_1, q_2, \dots, q_m) = \tp$
+práve vtedy, keď podmienka $C$ platí pre záznam $(p_1, p_2, \dots, p_n)$ z relácie $R$ a záznam
+$(q_1, q_2, \dots, q_m)$ z relácie $S$. Pre všetky ostatné vstupy bude $f_C$ vracať $\fp$. Potom
+dokážeme theta-join $R \Join_C S$ prepísať ako
+\begin{align*}
+    \JOIN(&[R, S, \$true], \\
+          &[[A_1, \dots, A_n], [B_1, \dots, B_m], [f_C(A_1, \dots, A_n, B_1, \dots, B_m)]], \\
+          &[A_1, \dots, A_n, B_1, \dots, B_m, \tp])
+\end{align*}
+Výsledná relácia má ale znovu o jeden atribút viac, preto ju znovu treba \textit{obaliť} projekciou
+(joinom), pomocou ktorej tento atribút odstránime.
+
+\subsection*{Premenovanie $\rho$}
+Keďže v $\JOIN$ a $\ANTIJOIN$ zakaždým explicitne vymenujeme všetky vstupné a výstupné termy,
+premenovanie $\rho$ nepredstavuje žiaden problém.

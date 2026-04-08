@@ -1,24 +1,40 @@
 % ---------- Delta function (transition) ----------
 % delta(CurrentState, ReadSymbol, NextState, WriteSymbol, Move)
-delta(5):- {(q0, n0, qf, n0, stay), (q0, n1, qf, n1, stay)}.
+delta(5):- {(q0, 0, qf, 0, stay), (q0, 1, qf, 1, stay)}.
 
 % config(State, Head, Position, Symbol, Time)
-config(5) :- {(q0, n0, n0, n0, n0)}.
+config(5) :- {(q0, 0, 0, 0, 0)}.
 config(Q2, I, I, S2, s(T)) :-
-     config(Q, I, I, S, T),
-     delta(Q, S, Q2, S2, stay).
+      config(Q, I, I, S, T),
+      delta(Q, S, Q2, S2, stay).
 
 config(Q2, I, s(I), S2, s(T)) :-
-     config(Q, s(I), s(I), S, T),
-     delta(Q, S, Q2, S2, left).
+      config(Q, s(I), s(I), S, T),
+      delta(Q, S, Q2, S2, left).
 
 config(Q2, s(I), I, S2, s(T)) :-
-     config(Q, I, I, S, T),
-     delta(Q, S, Q2, S2, right).
+      config(Q, I, I, S, T),
+      delta(Q, S, Q2, S2, right).
 
-config(Q, I, I2, S, s(T)) :-
-     config(Q, I, I2, S, T),
-     \+ $eq(I, I2),
-     \+ $eq(Q, qf).
+config(Q2, IH, I, S, s(T)) :-
+      config(Q, IH, I, S, T),
+      config(Q, IH, IH, SH, T),
+      delta(Q, SH, Q2, NS, stay),
+      \+ $eq(I, IH),
+      \+ $eq(Q, qf).
 
- ?- config(qf, H, P, S, T).
+config(Q2, IH, I, S, s(T)) :-
+      config(Q, s(IH), I, S, T),
+      config(Q, s(IH), s(IH), SH, T),
+      delta(Q, SH, Q2, NS, left),
+      \+ $eq(I, s(IH)),
+      \+ $eq(Q, qf).
+
+config(Q2, s(IH), I, S, s(T)) :-
+      config(Q, IH, I, S, T),
+      config(Q, IH, IH, SH, T),
+      delta(Q, SH, Q2, NS, right),
+      \+ $eq(I, IH),
+      \+ $eq(Q, qf).
+
+?- config(qf, H, P, S, T).
