@@ -1,6 +1,12 @@
 \newcommand{\noopsort}[1]{} \newcommand{\printfirst}[2]{#1} \newcommand{\singleletter}[1]{#1} \newcommand{\switchargs}[2]{#2#1}
 \begin{thebibliography}{1}
 
+\bibitem{antlrDoc}
+{ANTLR Project}.
+\newblock Antlr 4 documentation.
+\newblock \url{https://github.com/antlr/antlr4/blob/master/doc/index.md}, 2026.
+\newblock [Online; navštívené 21. apríla 2026].
+
 \bibitem{RAcompilator}
 Diana Biriukova.
 \newblock Compiler of relational algebra expressions, 2025.
@@ -14,6 +20,24 @@ Tomáš Plachetka and Ján Šturc.
 \newblock Semantics of queries.
 \newblock Prednáškové slajdy ku kurzu Databases, Fakulta matematiky, fyziky a informatiky Univerzity Komenského v Bratislave, February 2026.
 \newblock Summer 2025--2026. Dostupné na: \url{http://www.dcs.fmph.uniba.sk/~plachetk/TEACHING/RLDB2026/index.html}.
+
+\bibitem{rovan2013definicie}
+Branislav Rovan and Michal Forišek.
+\newblock Definície.
+\newblock Vo: Formálne jazyky a automaty, 2013.
+\newblock s. 7. -- 12. FMFI UK, Bratislava.
+
+\bibitem{rovan2013regex}
+Branislav Rovan and Michal Forišek.
+\newblock Regulárne výrazy.
+\newblock Vo: Formálne jazyky a automaty, 2013.
+\newblock s. 28. FMFI UK, Bratislava.
+
+\bibitem{rovan2013syntakticka}
+Branislav Rovan and Michal Forišek.
+\newblock Syntaktická analýza.
+\newblock Vo: Formálne jazyky a automaty, 2013.
+\newblock s. 102. -- 114. FMFI UK, Bratislava.
 
 \bibitem{souffle_translate}
 {Souffl{\'e} Language Team}.

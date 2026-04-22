@@ -7,6 +7,7 @@
 
 \usepackage[slovak]{babel}
 \usepackage{enumitem}
+\usepackage{qtree}
 
 \linespread{1.25}
 
@@ -39,10 +40,10 @@
 
 \theoremstyle{defstyle}
 \newtheorem{definition}{Definícia}[section]
-\newtheorem{lema}{Lema}
-\newtheorem{theorem}{Tvrdenie}
-\newtheorem{note}{Poznámka}
-\newtheorem{todo}{TODO}
+\newtheorem{lema}{Lema}[section]
+\newtheorem{theorem}{Tvrdenie}[section]
+\newtheorem{note}{Poznámka}[section]
+\newtheorem{todo}{TODO}[section]
 
 \newcounter{priklad}[chapter]
 \renewcommand{\thepriklad}{\thechapter.\arabic{priklad}}
@@ -256,6 +257,7 @@ Abstract in the English language (translation of the abstract in the Slovak lang
 \clearpage
 \addcontentsline{toc}{chapter}{Literatúra}
 \bibliographystyle{plain}
+\nocite{*}
 \bibliography{literatura} 
 
 % Prípadne môžete napísať literatúru priamo tu \begin{thebibliography}{5}

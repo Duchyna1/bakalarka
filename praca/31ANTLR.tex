@@ -1,2 +1,334 @@
 \section{ANTLR}
-Náš kompilátor používa generátor \textit{parserov} \textbf{AN}other \textbf{T}ool for \textbf{L}anguage \textbf{R}ecognition. V tejto časti si priblížime ako \textit{ANTLR} funguje a čo motivovalo zmeny v relačnej algebre.
+Náš kompilátor používa generátor \textit{parserov} \textbf{AN}other \textbf{T}ool for
+\textbf{L}anguage \textbf{R}ecognition. V tejto časti si priblížime, ako \textit{ANTLR} funguje.
+
+\subsection{Rýchlokurz formálnych jazykov}
+
+\begin{definition}
+    Pod \textbf{abecedou} rozumieme ľubovoľnú \textit{neprázdnu konečnú} množinu symbolov (znakov).
+\end{definition}
+
+\begin{definition}
+    \textbf{Slovo} je \textit{konečná} postupnosť znakov (z nejakej abecedy $\Sigma$). Prázdne slovo
+    sa označuje $\varepsilon$.
+\end{definition}
+
+\begin{definition}
+    \textbf{Jazyk} nad abecedou $\Sigma$ je ľubovoľná množina slov nad $\Sigma$.
+\end{definition}
+
+\begin{definition}
+    \textbf{Zreťazením slov} $w_1 = a_1\dots a_n$, $w_2 = b_1\dots b_m$,\\
+    $a_1, \dots, a_n, b_1, \dots, b_m \in \Sigma$ dostaneme slovo $w_1 \cdot w_2 = w_1w_2 = a_1 \dots
+    a_n b_1 \dots b_m$.
+\end{definition}
+
+\begin{definition}
+    \textbf{Mocnina slova} je definovaná ako $w^0 = \varepsilon, w^{n+1} = w^n w$, $\forall n \in
+    \mathbb{N}$.
+\end{definition}
+
+\begin{note}
+    Abecedu $\Sigma$ vieme chápať aj ako množinu všetkých jednoznakových slov nad $\Sigma$.
+\end{note}
+
+\begin{definition}
+    \textbf{Zreťazenie jazykov} $L_1$ (nad abecedou $\Sigma_1$) a $L_2$ (nad abecedou $\Sigma_2$) je
+    jazyk $L_1 \cdot L_2 = L_1 L_2 = \{w_1 w_2 \, | \, w_1 \in L_1, w_2 \in L_2\}$ nad abecedou
+    $\Sigma_1 \cup \Sigma_2$.
+\end{definition}
+
+\begin{definition}
+    \textbf{Mocnina jazyka} $L$ je definovaná ako $L^0 = \{\varepsilon\}, L^{n+1} = L^nL$, $\forall
+    n \in \mathbb{N}$.
+    
+    $L^+ = \bigcup\limits_{n > 0} L^n$
+    
+    $L^* = \bigcup\limits_{n \geq 0} L^n$
+\end{definition}
+
+\begin{definition}
+    \textbf{Regulárna gramatika} je štvorica $G = (N, T, P, \sigma)$, kde $N$ je abeceda
+    neterminálov, $T$ je abeceda terminálov, $P \subseteq_{kon} N \times (T^* \cup T^*N)$ je
+    \textit{konečná} množina prepisovacích pravidiel a $\sigma \in N$ je počiatočný neterminál.
+    Prepisovacie pravidlá teda prepisujú jeden neterminál na ľubovoľné slovo z terminálov za ktorým
+    môže, ale nemusí, nasledovať jeden neterminál.
+\end{definition}
+
+\begin{definition}
+    \textbf{Bezkontextová gramatika} je štvorica $G = (N, T, P, \sigma)$, kde $N$ je abeceda
+    neterminálov, $T$ je abeceda terminálov, $P \subseteq_{kon} N \times (N \cup T)^*$ je
+    \textit{konečná} množina prepisovacích pravidiel a $\sigma \in N$ je počiatočný neterminál.
+    Prepisovacie pravidlá teda prepisujú jeden neterminál na ľubovoľné slovo z terminálov a
+    neterminálov.
+\end{definition}
+
+\begin{note}
+    Pravidlá z $P$ budeme zapisovať v tvare $n \rightarrow w \in P$ namiesto $(n, w) \in P$.
+    Pravidlá s rovnakou ľavou stranou $n \rightarrow w_1$, $n \rightarrow w_2$, \dots, $n\rightarrow
+    w_i$ budeme zapisovať zjednodušene ako $n \rightarrow w_1 \, | \, w_2 \, | \, \dots \, | \,
+    w_i$.
+\end{note}
+
+\begin{definition}
+    \textbf{Krok odvodenia} v gramatike $G$ je binárna relácia $\Rightarrow_G$ nad $(N \cup T)^*$.
+    Slová $x$, $y$ sú v relácii $\Rightarrow_G$ práve vtedy, keď $x = w_1 n w_2$, $y = w_1 s w_2$ a
+    $n \rightarrow s$ je pravidlo v $P$.
+\end{definition}
+
+\begin{definition}
+    \textbf{Jazyk generovaný gramatikou} $G$ je množina 
+    $$L(G) = \{w \in T^* \, | \, \sigma \Rightarrow_G^*w\}\text{.}$$ \textbf{Regulárne jazyky},
+    resp. \textbf{bezkontextové jazyky} sú jazyky, ktoré sú generované \textit{regulárnou}, resp.
+    \textit{bezkontextovou} gramatikou.
+\end{definition}
+
+\begin{definition}
+    \textbf{Odvodenie} slova $w$ (v gramatike $G$) $\sigma \Rightarrow w_1 \Rightarrow w_2
+    \Rightarrow \cdots \Rightarrow w$ je postupnosť krokov odvodení. Pod \textbf{ľavým}, resp.
+    \textbf{pravým krajným odvodením} rozumieme odvodenie, v ktorom sa v každom kroku odvodenia, v
+    ktorom máme viacero neterminálov, ktoré sa dajú prepisovať, vždy prepíše \textit{najľavejší},
+    resp. \textit{najpravejší} neterminál.
+\end{definition}
+
+\subsection{Syntaktická analýza}
+Na to, aby sme vedeli preložiť datalog do relačnej algebry, zišlo by sa nám vedieť z čoho sa
+datalogový program skladá. Aké obsahuje fakty, klauzuly, dotaz, atď. Pomocou týchto informácií
+bude následne jednoduchšie napísať algoritmus, ktorý nám datalogový program preloží do relačnej
+algebry. Jedným zo spôsobov je tzv. \textit{syntaktická analýza}. Ukážeme si, ako funguje na
+jednoduchom príklade, v ktorom budeme prekladať aritmetické výrazy z infixovej notácie do
+postfixovej notácie.
+
+Zoberme si jednoduchú gramatiku $G$ generujúcu jazyk aritmetických výrazov v infixovej notácii:
+\begin{align*}
+    G &= (N, T, P, \sigma)\text{, kde}\\
+    N &= \{\sigma, \alpha\}\text{,}\\
+    T &= \{\texttt{+}, \cdot, \texttt{(}, \texttt{)}, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9\}\text{,}\\
+    P &= \{\sigma \rightarrow \texttt{(}\sigma\texttt{)} \, | \, \sigma \texttt{+} \sigma \, | \, \sigma \cdot \sigma
+                      \, | \, 1 \alpha \, | \, 2 \alpha \, | \, 3 \alpha
+                      \, | \, 4 \alpha \, | \, 5 \alpha \, | \, 6 \alpha
+                      \, | \, 7 \alpha \, | \, 8 \alpha \, | \, 9 \alpha
+                      \, | \, 0,\\
+      &\quad \quad \alpha \rightarrow 0 \alpha \, | \, 1 \alpha \, | \, 2 \alpha
+                      \, | \, 3 \alpha \, | \, 4 \alpha \, | \, 5 \alpha
+                      \, | \, 6 \alpha \, | \, 7 \alpha \, | \, 8 \alpha \, | \, 9 \alpha \, | \, \varepsilon
+                      \}\text{.}
+\end{align*}
+
+Zoberme si slovo z tohto jazyka, napríklad $(4 + 5)\cdot 123 \cdot 0$, a k nemu jedno
+prislúchajúce odvodenie (odvodenie zakreslíme pomocou stromu).
+\begin{center}
+    \[
+    \Tree
+    [.$\sigma$ 
+        [.$\sigma$ 
+            $\texttt{(}$
+            [.$\sigma$
+                [.$\sigma$
+                    $4$
+                    [.$\alpha$
+                        $\varepsilon$
+                    ]
+                ]
+                $\texttt{+}$
+                [.$\sigma$
+                    $5$
+                    [.$\alpha$
+                        $\varepsilon$
+                    ]
+                ]
+            ]
+            $\texttt{)}$
+        ] 
+        $\cdot$ 
+        [.$\sigma$ 
+            [.$\sigma$
+                $1$
+                [.$\alpha$
+                    $2$
+                    [.$\alpha$
+                        $3$
+                        [.$\alpha$
+                            $\varepsilon$
+                        ]
+                    ]
+                ]
+            ]
+            $\cdot$
+            [.$\sigma$
+                $0$
+            ]
+        ]
+    ]
+    \]
+    \textit{Pravé krajné odvodenie}
+\end{center}
+
+\begin{center}
+    \[
+    \Tree
+    [.$\sigma$ 
+        [.$\sigma$
+            [.$\sigma$ 
+                $\texttt{(}$
+                [.$\sigma$
+                    [.$\sigma$
+                        $4$
+                        [.$\alpha$
+                            $\varepsilon$
+                        ]
+                    ]
+                    $\texttt{+}$
+                    [.$\sigma$
+                        $5$
+                        [.$\alpha$
+                            $\varepsilon$
+                        ]
+                    ]
+                ]
+                $\texttt{)}$
+            ] 
+            $\cdot$
+            [.$\sigma$
+                $1$
+                [.$\alpha$
+                    $2$
+                    [.$\alpha$
+                        $3$
+                        [.$\alpha$
+                            $\varepsilon$
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        $\cdot$
+        [.$\sigma$
+            $0$
+        ]
+    ]
+    \]
+    \textit{Ľavé krajné odvodenie}
+\end{center}
+
+Môžeme si všimnúť, že veľkosť stromu odvodenia rýchlo narastá, hlavne kvôli odvodzovaniu čísiel.
+Preto sa v praxi často používa tzv. \textit{lexer} (\textit{tokenizer}). Lexer rozdelí vstupný
+reťazec (slovo) na tzv. \textit{tokeny}, ktoré sú zjednodušenou reprezentáciou častí vstupného
+reťazca. Tieto tokeny sú popísané pomocou regulárnych jazykov (väčšinou pomocou regulárnych
+výrazov, ktoré sú ekvivalentné s regulárnymi gramatikami \cite{rovan2013regex}). Následne sa odvodenie robí nad
+tokenami, čím sa zmenší veľkosť stromu odvodenia a zjednoduší sa nám odvodenie. V našom prípade
+definujeme jeden token reprezentujúci celé čísla
+$$\texttt{INT} = \{0\} \cup \{1, 2, 3, 4, 5, 6, 7, 8, 9\} \cdot \{1, 2, 3, 4, 5, 6, 7, 8, 9, 0\}^* \approx \mathbb{N}_0\text{.}$$
+
+Potom sa gramatika $G$ zjednoduší na
+\begin{align*}
+    G' &= (N', T', P', \beta)\text{, kde}\\
+    N' &= \{\beta\}\text{,}\\
+    T' &= \{\texttt{+}, \cdot, \texttt{(}, \texttt{)}, \mathtt{INT}\}\text{,}\\
+    P' &= \{\beta \rightarrow \texttt{(}\beta\texttt{)} \, | \, \beta \texttt{+} \beta \, | \, \beta \cdot \beta
+                      \, | \, \texttt{INT}\}\text{.}
+\end{align*}
+
+\begin{todo}
+    Lepšie popísať ako funguje lexer.
+\end{todo}
+
+Ľavé krajné odvodenie slova $(4 + 5)\cdot 123 \cdot 0$ v gramatike $G'$ by vyzeralo nasledovne:
+\begin{center}
+    \[
+    \Tree
+    [.$\beta$ 
+        [.$\beta$
+            [.$\beta$ 
+                $\texttt{(}$
+                [.$\beta$
+                    [.$\beta$
+                        \qroof{$4$}.$\texttt{INT}$ 
+                    ]
+                    $\texttt{+}$
+                    [.$\beta$
+                        \qroof{$5$}.$\texttt{INT}$ 
+                    ]
+                ]
+                $\texttt{)}$
+            ] 
+            $\cdot$
+            [.$\beta$
+                \qroof{$123$}.$\texttt{INT}$ 
+            ]
+        ]
+        $\cdot$
+        [.$\beta$
+            \qroof{$0$}.$\texttt{INT}$ 
+        ]
+    ]
+    \]
+    \textit{Ľavé krajné odvodenie v gramatike $G'$}
+\end{center}
+
+
+Na takýto strom odvodenia môžeme aplikovať algoritmus, ktorý nám z infixovej notácie
+vygeneruje postfixovú notáciu. Algoritmus funguje nasledovne: vrcholy stromu (odvodenia)
+sa transformujú podľa nasledujúcich pravidiel:
+
+\begin{center}
+    \begin{tabular}{@{}c c c@{}}
+        \Tree [.$\beta$ $\texttt{(}$ [.$\beta_1$ ] $\texttt{)}$ ]
+        & \raisebox{-4ex}{$\rightsquigarrow$}
+        & \raisebox{-4ex}{\Tree [.$\beta_1$ ]} \\
+        \\
+        \Tree [.$\beta$ [.$\beta_1$ ] $\texttt{+}$ [.$\beta_2$ ] ]
+        & \raisebox{-4ex}{$\rightsquigarrow$}
+        & \Tree [.$\beta$ [.$\beta_1$ ] [.$\beta_2$ ] $\texttt{+}$ ] \\
+        \\
+        \Tree [.$\beta$ [.$\beta_1$ ] $\cdot$ [.$\beta_2$ ] ]
+        & \raisebox{-4ex}{$\rightsquigarrow$}
+        & \Tree [.$\beta$ [.$\beta_1$ ] [.$\beta_2$ ] $\cdot$ ] \\
+        \\
+        \Tree [.$\texttt{INT}$ ]
+        & $\rightsquigarrow$
+        & \Tree [.$\texttt{INT}$ ]
+    \end{tabular}
+\end{center}
+
+Po aplikovaní týchto pravidiel na strom odvodenia dostaneme strom reprezentujúci postfixovú notáciu,
+z ktorého vieme jednoducho vygenerovať výsledný výraz.
+
+\begin{center}
+    \[
+    \Tree
+    [.$\beta$ 
+        [.$\beta$
+            [.$\beta$ 
+                [.$\beta$
+                    \qroof{$4$}.$\texttt{INT}$ 
+                ]
+                [.$\beta$
+                \qroof{$5$}.$\texttt{INT}$ 
+                ]
+                $\texttt{+}$
+            ] 
+            [.$\beta$
+            \qroof{$123$}.$\texttt{INT}$ 
+            ]
+            $\cdot$
+        ]
+        [.$\beta$
+        \qroof{$0$}.$\texttt{INT}$ 
+        ]
+        $\cdot$
+    ]
+    \]
+    \textit{Odvodenie slova $4 \, 5 + 123 \cdot 0 \,\cdot$}
+\end{center}
+
+Problém nastáva, ako zo vstupného slova vygenerovať strom odvodenia. Na tento problém existuje
+viacero algoritmov, ktoré sa líšia v tom, akú množinu gramatík dokážu spracovať. Jeden z týchto
+algoritmov je tzv. LL($k$) algoritmus, ktorý číta vstup zľava doprava (\textbf{L}eft to right) a
+vytvára ľavé krajné odvodenie (\textbf{L}eftmost derivation) a pozerá sa na $k$ nasledujúcich
+tokenov. 
+
+ANTLR je generátor parserov, ktorý na základe gramatiky, ktorú mu zadáme, vygeneruje parser (a
+lexer), ktorý dokáže pomocou LL($k$) algoritmu zistiť, či dané slovo patrí do jazyka generovaného
+touto gramatikou a v prípade, že áno, vygeneruje k nemu prislúchajúci strom ľavého krajného
+odvodenia.

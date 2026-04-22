@@ -4,7 +4,7 @@
 
 grammar datalog;
 
-QUERY_MARKER: '?-'; //z cvik prebrate
+QUERY_MARKER: '?-';
 BODY_HEAD_SEPARATOR: ':-';
 SLC: '%';
 MLC_START: '/*';
@@ -17,16 +17,17 @@ program: (clause | definition)* query;
 
 query: QUERY_MARKER (normal_predicate | normal_built_in_predicate) EOL;
 
-normal_built_in_predicate:  BUILT_IN name '(' ')'|
-                            BUILT_IN name '(' parameter (',' parameter)* ')';
-negative_buit_in_predicate: NOT normal_built_in_predicate;
-built_in_predicate:         normal_built_in_predicate | negative_buit_in_predicate;
+normal_built_in_predicate:   BUILT_IN name '(' ')'|
+                             BUILT_IN name '(' parameter (',' parameter)* ')';
+negative_built_in_predicate: NOT normal_built_in_predicate;
+built_in_predicate:          normal_built_in_predicate | negative_built_in_predicate;
     
-parameter: '[' parameter (',' parameter)* ']' |
-            predicate |
-            built_in_predicate |
-            term;
-            
+parameter: '[' ']' |
+           '[' parameter (',' parameter)* ']' |
+           predicate |
+           built_in_predicate |
+           term;
+
 normal_predicate:   name '(' ')' |
                     name '(' term (',' term)* ')';
 negative_predicate: NOT normal_predicate;
@@ -35,25 +36,24 @@ predicate:          normal_predicate | negative_predicate;
 clause: name '(' ')' BODY_HEAD_SEPARATOR (predicate | built_in_predicate) (',' (predicate | built_in_predicate))* EOL |
         name '(' term (',' term)* ')' BODY_HEAD_SEPARATOR (predicate | built_in_predicate) (',' (predicate | built_in_predicate))* EOL;
 
-definition: name '(' arity ')' BODY_HEAD_SEPARATOR '{' term_tuple (',' term_tuple)* '}' EOL;
+definition: name BODY_HEAD_SEPARATOR '{' '}' EOL |
+            name BODY_HEAD_SEPARATOR '{' term_tuple (',' term_tuple)* '}' EOL;
 
-term_tuple: '(' term (',' term)* ')';
+term_tuple: '(' ')' |
+            '(' term (',' term)* ')';
 
 term: variable |
       function '(' ')' |
       function '(' term (',' term)* ')';
 
-name: TOKEN;
-function: TOKEN;
-variable: (TOKEN | NUMBER_TOKEN);
-arity: NUMBER_TOKEN;
+name: LOWER (LOWER | NUMBER |'_')+;
+function: LOWER (LOWER | NUMBER | '_')+;
+variable: UPPER (UPPER | NUMBER | '_')+;
 
-fragment UPPER: [A-Z]+;
-fragment LOWER: [a-z]+;
-fragment NUMBER: [0-9]+;
+UPPER: [A-Z]+;
+LOWER: [a-z]+;
+NUMBER: [0-9]+;
 
-NUMBER_TOKEN: NUMBER;
-TOKEN: (UPPER | LOWER | NUMBER | '_')+;
 WS: [ \t\r\n]+ -> skip;
 COMMENT: SLC ~[\n\r]* ([\n\r] | EOF) -> channel(HIDDEN);
 MULTILINE_COMMENT:

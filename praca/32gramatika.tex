@@ -1,2 +1,144 @@
 \section{Gramatika datalogu pre ANTLR}
-Program ANTLR potrebuje na vygenerovanie parseru gramatiku parsovaného jazyka.
+Program ANTLR potrebuje na vygenerovanie parseru gramatiku datalogu. V tejto kapitole ju zostrojíme
+a odôvodníme, prečo sme zvolili práve takúto gramatiku.
+
+\vline
+
+ANTLR používa iný zápis pravidiel gramatiky ako sme definovali v teoretickej časti. Napríklad
+pravidlo $\sigma \rightarrow w_1 \, | \, w_2$ sa zapíše v ANTLR ako \verb$sigma: w1 | w2;$.
+Terminály sa píšu do jednoduchých úvodzoviek, napríklad \verb$'('$. Tokeny sa píšu veľkými
+písmenami, napríklad \verb$NUMBER$. Užitočným rozšírením je možnosť použiť zátvorky na zoskupovanie,
+napríklad \verb$(w_1 | w_2)$, čo znamená, že sa môže použiť buď $w_1$ alebo $w_2$, \verb$(w)*$
+znamená, že $w$ sa môže použiť nula alebo viac krát a \verb$(w)+$ znamená, že $w$ se musí použiť
+aspoň raz. Viacej o zápise gramatiky v ANTLR sa dočítate v dokumentácii \cite{antlrDoc}.
+
+\vline
+
+Datalogový program (teória s dotazom) sa skladá z niekoľkých klauzúl (niektoré z nich môžy byť
+faktami) nasledované dotazom. Do gramatiky (pre ANTLR) to prepíšeme ako 
+\begin{verbatim}
+program: (clause | definition)* query;
+\end{verbatim}
+kde \verb|program| bude počiatočný neterminál celej gramatiky, \verb|clause|, resp.
+\verb|definition|, resp. \verb|query| bude neterminál, z ktorého sa odvodí klauzula, resp.
+definícia, resp. dotaz.
+
+Neterminál \verb|definition| sa bude prepisovať priamočiaro. Najprv treba zadať meno predikátu, ktorý
+definujeme a potom napísať $n$-tice termov, pre ktorý je platný.
+
+\begin{verbatim}
+definition: name BODY_HEAD_SEPARATOR '{' '}' EOL |
+            name BODY_HEAD_SEPARATOR '{'
+                term_tuple (',' term_tuple)*
+            '}' EOL;
+
+term_tuple: '(' ')' |
+            '(' term (',' term)* ')';
+\end{verbatim}
+
+Neterminál \verb|clause| bude trochu komplikovanejšia, pretože musí obsahovat hlavu a telo klauzuly. V tele
+klauzuly sa môžu vyskytovať predikáty, negované predikáty, ale aj vstavané predikáty a negované
+vstavané predikáty.
+
+\begin{verbatim}
+clause: name '(' ')' BODY_HEAD_SEPARATOR 
+                    (predicate | built_in_predicate) 
+                    (',' (predicate | built_in_predicate))* EOL |
+        name '(' term (',' term)* ')' BODY_HEAD_SEPARATOR 
+                    (predicate | built_in_predicate)
+                    (',' (predicate | built_in_predicate))* EOL;
+
+predicate:          normal_predicate |
+                    negative_predicate;
+negative_predicate: NOT normal_predicate;
+
+built_in_predicate:          normal_built_in_predicate |
+                             negative_built_in_predicate;
+negative_built_in_predicate: NOT normal_built_in_predicate;
+\end{verbatim}
+
+Normálny vstavaný predikát sa skladá z mena a z $n$-tice termov, rovnako ako hlava klauzuly. 
+
+\begin{verbatim}
+normal_predicate: name '(' ')' |
+                  name '(' term (',' term)* ')';
+\end{verbatim}
+
+Vstavaný predikát je podobný normálnemu predikátu, až na to, že ho musíme označiť, že jeho parametre
+nie sú iba termy, ale aj predikáty a vstavané predikáty, ktoré môžu byť rôzne usporiadané v poliach.
+
+\begin{verbatim}
+normal_built_in_predicate: BUILT_IN name '(' ')'|
+                           BUILT_IN name '(' 
+                               parameter (',' parameter)* 
+                           ')';
+
+parameter: '[' ']' |
+           '[' parameter (',' parameter)* ']' |
+           predicate |
+           built_in_predicate |
+           term;
+\end{verbatim}
+
+Token \verb|BUILT_IN| by sme mohli vynechať. V takom prípade by ale kompilátor nevedel rozlíšiť
+vstavané predikáty od normálnych predikátov. To by pri následnom preklade do relačnej algebry
+znamenalo, že každý predikát, čo nebol definovaný faktom alebo klauzulou, by sa musel považovat za
+vstavaný predikát. Keďže ale chceme aby kompilátor vedel fungovať samostatne, bez prístupu do
+\textit{databázy}, nevieme aké vstavané predikáty existujú. Kvôli tomu by sme nevedeli vyhodiť
+kompilačnú chybu, keď v klauzule použijeme nedefinovaný predikát.
+
+\vline
+
+Keďže povolujeme iba kladné dotazy, tak \verb|query| sa môže prepísať iba na normálny predikát,
+obyčajný alebo vstavaný.
+
+\begin{verbatim}
+query: QUERY_MARKER (normal_predicate | normal_built_in_predicate) EOL;
+\end{verbatim}
+
+Použité tokeny sú definované nasledovne, pričom \verb|[0-9]| resp. \verb|[a-z]| znamená ľubovoľný
+znak z množiny číslic resp. písmen:
+
+\begin{minipage}{0.9\textwidth}
+\begin{verbatim}
+QUERY_MARKER: '?-';
+BODY_HEAD_SEPARATOR: ':-';
+SLC: '%';
+MLC_START: '/*';
+MLC_END: '*/';
+EOL: '.';
+NOT: '\\+';
+BUILT_IN: '$';
+
+UPPER: [A-Z]+;
+LOWER: [a-z]+;
+NUMBER: [0-9]+;
+\end{verbatim}
+\end{minipage}
+\medskip
+
+Tieto tokeny nemuseli byť definované, ale na miestach kde sú použité, by sa mohlo použiť ich
+definíciu. Náš prístup ale dovoľuje používateľovi jednoducho zmeniť tieto tokeny. Napríklad, ak by
+chcel pre $\leftarrow$ používať alternatívny zápis \verb|<-|, stačí zmeniť definíciu tokenu
+\verb|BODY_HEAD_SEPARATOR = '<-';|.
+
+\vline
+
+Názvy predikátov a funkčných symbolov sa skladajú z malých písmen, čísiel a znaku \verb|_|. Premenné
+budú rovnaké, ale budú sa skladať z veľkých písmen. Všetky názvy sa musia začať písmenom.
+
+\begin{verbatim}
+name: LOWER (LOWER | NUMBER |'_')+;
+function: LOWER (LOWER | NUMBER | '_')+;
+variable: UPPER (UPPER | NUMBER | '_')+;
+\end{verbatim}
+
+Na koniec ešte ANTLR nastavíme, aby preskakoval \textit{whitespace} znaky a podporoval
+jednoriadkové aj viacriadkové komentáre.
+
+\begin{verbatim}
+WS: [ \t\r\n]+ -> skip;
+COMMENT: SLC ~[\n\r]* ([\n\r] | EOF) -> channel(HIDDEN);
+MULTILINE_COMMENT: MLC_START (MULTILINE_COMMENT | .)*? 
+                   (MLC_END | EOF) -> channel(HIDDEN);
+\end{verbatim}
