@@ -24,8 +24,8 @@ built_in_predicate:          normal_built_in_predicate | negative_built_in_predi
     
 parameter: '[' ']' |
            '[' parameter (',' parameter)* ']' |
-           predicate |
-           built_in_predicate |
+           normal_predicate |
+           normal_built_in_predicate |
            term;
 
 normal_predicate:   name '(' ')' |
@@ -46,9 +46,9 @@ term: variable |
       function '(' ')' |
       function '(' term (',' term)* ')';
 
-name: LOWER (LOWER | NUMBER |'_')+;
-function: LOWER (LOWER | NUMBER | '_')+;
-variable: UPPER (UPPER | NUMBER | '_')+;
+name: LOWER (LOWER | NUMBER | '_')*;
+function: LOWER (LOWER | NUMBER | '_')*;
+variable: UPPER (UPPER | NUMBER | '_')*;
 
 UPPER: [A-Z]+;
 LOWER: [a-z]+;

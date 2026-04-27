@@ -65,7 +65,7 @@ normal_predicate: name '(' ')' |
 \end{verbatim}
 
 Vstavaný predikát je podobný normálnemu predikátu, až na to, že ho musíme označiť, že jeho parametre
-nie sú iba termy, ale aj predikáty a vstavané predikáty, ktoré môžu byť rôzne usporiadané v poliach.
+nie sú iba termy, ale aj predikáty a vstavané predikáty, ktoré môžu byť rôzne usporiadané v zoznamoch.
 
 \begin{verbatim}
 normal_built_in_predicate: BUILT_IN name '(' ')'|
@@ -75,8 +75,8 @@ normal_built_in_predicate: BUILT_IN name '(' ')'|
 
 parameter: '[' ']' |
            '[' parameter (',' parameter)* ']' |
-           predicate |
-           built_in_predicate |
+           normal_predicate |
+           normal_built_in_predicate |
            term;
 \end{verbatim}
 
@@ -128,9 +128,9 @@ Názvy predikátov a funkčných symbolov sa skladajú z malých písmen, čísi
 budú rovnaké, ale budú sa skladať z veľkých písmen. Všetky názvy sa musia začať písmenom.
 
 \begin{verbatim}
-name: LOWER (LOWER | NUMBER |'_')+;
-function: LOWER (LOWER | NUMBER | '_')+;
-variable: UPPER (UPPER | NUMBER | '_')+;
+name: LOWER (LOWER | NUMBER |'_')*;
+function: LOWER (LOWER | NUMBER | '_')*;
+variable: UPPER (UPPER | NUMBER | '_')*;
 \end{verbatim}
 
 Na koniec ešte ANTLR nastavíme, aby preskakoval \textit{whitespace} znaky a podporoval

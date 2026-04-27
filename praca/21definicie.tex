@@ -463,3 +463,32 @@ $$\REC ( t, \UNION ( [ \$s, \JOIN ( [t, t], [[X, Z], [Z, Y]], [X, Y] ) ] ) )$$ R
 tranzitívny uzáver vstavanej relácie $s$.
     \end{center}
     \end{priklad}
+
+\subsubsection{Vstavané operátory}
+Ako sme si ukázali skorej (definícia \ref{predikat2relacia}), na predikáty a relácie sa vieme
+pozerať ako na rovnaké objekty. Taktiež na operátory \JOIN, \ANTIJOIN, \UNION\ a \REC\ sa vieme
+pozerať ako na relácie, keďže ich výstupom je vždy relácia. Preto ku každému vstavanému predikátu
+vieme definovať vstavaný operátor, ktorý bude fungovať rovnako a bude mať rovnaké vstupy. Jediný
+rozdiel bude formálny, keďže vstavané operátory budú mať výstupom reláciu, zatiaľ čo vstavané
+predikáty majú výstupom pravdivostnú hodnotu. Takýto prístup si ale vyžadoval zmenu parsera relačnej
+algebry \cite{RAcompilator}.
+
+\begin{definition}
+    \textbf{Parameter} (\textit{v kontexte relačnej algebry}) je:
+    \begin{enumerate}
+        \item ľubovoľný term
+        \item ľubovoľnú \textit{reláciu} alebo vstavaný operátor (ktorého výstupom je relácia)
+        \item ľubovoľný zoznam parametrov, ktorý zapisujeme ako $[P_1, P_2, \dots, P_n]$,\\ kde
+        $P_1, P_2, \dots, P_n$ sú parametre
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    \textbf{Operátor} je $\$O(P_1, P_2, \dots, P_n)$, kde $\$O$ je názov operátora a \\$P_1, P_2,
+    \dots, P_n$ sú parametre operátora. Výstupom operátora je relácia.
+\end{definition}
+
+Starý prístup spracovával \JOIN, \ANTIJOIN, \UNION\ a \REC\ osobitne. Nový prístup ich spracováva
+rovnako ako ostatné operátory. Viac o ňom sa viete dočítať v \cite{JAVAimple}. Formálne by sme mali
+naše 4 operátory zapisovať s prefixom \$, ale keďže zvyšok implementácie vyžaduje, aby boli
+implementované v databázovom systéme tak, ako sme ich definovali, tak ich budeme zapisovať bez \$.

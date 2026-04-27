@@ -1,0 +1,36 @@
+\section{Vstavané predikáty}
+
+Klasicky datalog povoluje prácu iba s predikátmi definovanými v programe, či už pomocou faktov alebo
+pravidiel. V prípade, že chceme pracovať s veľkou databázou s niekoľkymi tabuľkami, museli by sme
+pre každú tabuľku vytvoriť predikát a naplniť ho faktami v každom programe, v ktorom chceme s danou
+tabuľkou pracovať. To by bolo veľmi neefektívne a nepraktické. Preto zavedieme tzv. \textbf{vstavané
+predikáty}. Tie budú práve reprezentovať veľké tabuľky alebo predikáty, ktoré by bolo nepraktické
+definovať a implementovať v datalogu. Z teoretického hľadiska môžu byť ľubovoľné, kľudne aj
+nekonečné alebo nevypočítateľné. V praxi však budú vstavané predikáty implementované v samotnom
+databázovom systéme, ktorý je v našom prípade naprogramovaný v jazyku Java. Keďže budú
+implementované vo vyššom programovacom jazyku ako datalog, môžu pracovať aj so zložitejšími vstupmi,
+ako s inými predikátmi, termami a zoznamami. Vieme ich použiť v pravidlách rovnako ako bežné
+predikáty s jedným obmedzením. Nemôžeme ich predefinovať alebo dodefinovať, čiže sa nemôžu
+vyskytovať na pravej strane implikácie. Vstavané predikáty budeme označovať pomocou \texttt{\$} pred
+menom predikátu.
+
+\newpage
+
+\begin{definition}
+    \label{parameter}
+    Pod pojmom \textbf{parameter} rozumieme:
+    \begin{enumerate}
+        \item ľubovoľný term
+        \item ľubovoľný predikát alebo vstavaný predikát
+        \item ľubovoľný zoznam parametrov, ktorý zapisujeme ako $[P_1, P_2, \dots, P_n]$,\\ kde
+        $P_1, P_2, \dots, P_n$ sú parametre
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    \textbf{Atomické formuly} sú
+    \begin{enumerate}
+        \item $p(t_1, t_2, \dots, t_n)$, kde $p$ je $n$-árny predikát a $t_1, t_2, \dots, t_n$ sú termy
+        \item $\$p(P_1, P_2, \dots, P_n)$, kde $\$p$ je $n$-árny vstavaný predikát a $P_1, P_2, \dots, P_n$ sú parametre
+    \end{enumerate}
+\end{definition}

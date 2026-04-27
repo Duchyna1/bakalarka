@@ -9,10 +9,6 @@ $\true$ označuje pravdu (hodnotu \textit{true}). $\false$ označuje nepravdu (h
 \textit{false}). $\unknown$ označuje hodnotu \textit{unknown}.
 \end{note}
 
-\begin{todo}
-Vstavané funkcie a predikáty.
-\end{todo}
-
 \begin{definition}
 \textbf{$n$-árna relácia} $r$ je definovaná ako $r \subseteq D_1 \times D_2 \times \dots \times
 D_n$. Jednotlivé prvky relácie $r$ nazývame \textbf{tuples}, \textbf{záznamy} alebo
@@ -33,7 +29,7 @@ $r$.
 \item symbolov všeobecných kvantifikátorov ($\forall$)
 \item symbolov pre definície ($\Rightarrow$)
 \item čiarok (\texttt{,})
-\item a zátvoriek (\texttt{(}, \texttt{)}).
+\item zátvoriek (\texttt{(}, \texttt{)})
         \end{enumerate}
     \end{definition}
 \end{samepage}
@@ -90,38 +86,39 @@ $\inter \models_\true \varphi[o]$ resp. $\inter \models_\false \varphi[o]$ resp.
 Pravdivosť formuly definujeme nasledovne:
     \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
         \item
-$\inter \models_\true \lnot \varphi[o]$ ak $\inter \models_\false \varphi[o]$.\\
-$\inter \models_\false \lnot \varphi[o]$ ak $\inter \models_\true \varphi[o]$.\\
-$\inter \models_\unknown \lnot \varphi[o]$ ak $\inter \models_\unknown \varphi[o]$.
+$\inter \models_\true \lnot \varphi[o]$ ak $\inter \models_\false \varphi[o]$\\
+$\inter \models_\false \lnot \varphi[o]$ ak $\inter \models_\true \varphi[o]$\\
+$\inter \models_\unknown \lnot \varphi[o]$ ak $\inter \models_\unknown \varphi[o]$
         \item
 $\inter \models_\true \varphi[o] \land \phi[o]$ ak $\inter \models_\true \varphi[o]$ a zároveň
-$\inter \models_\true \phi[o]$.\\
+$\inter \models_\true \phi[o]$\\
 $\inter \models_\false \varphi[o] \land \phi[o]$ ak $\inter \models_\false \varphi[o]$ alebo $\inter
-\models_\false \phi[o]$.\\
-$\inter \models_\unknown \varphi[o] \land \phi[o]$ v ostatných prípadoch.
-        \newpage
+\models_\false \phi[o]$\\
+$\inter \models_\unknown \varphi[o] \land \phi[o]$ v ostatných prípadoch
+        % \newpage
         \item
 $\inter \models_\true (\varphi \Rightarrow \phi)[o]$ ak platí
         \begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
-\item $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$,
-\item $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$,
-\item $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\unknown \phi[o]$,
-\item $\inter \models_\false \varphi[o]$.
+\item $\inter \models_\true \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$
+\item $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\true \phi[o]$
+\item $\inter \models_\unknown \varphi[o]$ a zároveň $\inter \models_\unknown \phi[o]$
+\item $\inter \models_\false \varphi[o]$
         \end{enumerate}
 $\inter \models_\false (\varphi \Rightarrow \phi)[o]$ ak $\inter \models_\true \varphi[o]$ a zároveň
-$\inter \models_\false \phi[o]$.\\
+$\inter \models_\false \phi[o]$\\
 $\inter \models_\unknown (\varphi \Rightarrow \phi)[o]$ ak $\inter \models_\unknown \varphi[o]$ a
-zároveň $\inter \models_\false \phi[o]$.
+zároveň $\inter \models_\false \phi[o]$
 \item Pre kvantifikovanú implikáciu $\forall X \iota$ platí:\\
 $\inter \models_\true \forall X \iota$ ak pre \textit{ľubovoľnú} konštantu $c$ platí $\inter
-\models_\true \iota[X|c]$,\\
+\models_\true \iota[X|c]$\\
 $\inter \models_\false \forall X \iota$ ak pre \textit{niektorú} konštantu $c$ platí $\inter
-\models_\false \iota[X|c]$,\\
-inak $\inter \models_\unknown \forall X \iota$.
+\models_\false \iota[X|c]$\\
+inak $\inter \models_\unknown \forall X \iota$
     \end{enumerate}
 \end{definition}
 
 \begin{definition}
+    \label{predikat2relacia}
 Ak \textbf{$n$-árny predikát $p_r$ je prislúchajúci} $n$-árnej relácii $r \subseteq D_1 \times D_2
 \times \dots \times D_n$, potom v každej interpretácii $\inter$ jazyka, ktorá obsahuje $p_r$, platí
 $\inter \models_\true p_r(c_1, c_2, \dots, c_n)$ ak $(c_1, c_2, \dots, c_n) \in r$, inak $\inter
@@ -135,7 +132,8 @@ Interpretáciu $\inter$ teórie $K_1 \land \dots \land K_n$ nazývame \textbf{mo
 
 \begin{definition}
 Majme teóriu $K_1 \land \dots \land K_n$ a atomickú formulu $Q$. Potom teóriu $K_1 \land \dots \land
-K_n \land Q$ nazývame \textbf{teória s dotazom $Q$}.
+K_n \land Q$ nazývame \textbf{teória s dotazom $Q$} alebo aj \textbf{program} resp.
+\textbf{datalogový program}.
 \end{definition}
 
 \begin{definition}

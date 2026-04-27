@@ -54,7 +54,7 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
                 // Child is built-in predicate
                 datalogParser.Built_in_predicateContext bipCtx = (datalogParser.Built_in_predicateContext) child;
                 Predicate pred = visitBuilt_in_predicate(bipCtx);
-                boolean isNegated = bipCtx.negative_buit_in_predicate() != null;
+                boolean isNegated = bipCtx.negative_built_in_predicate() != null;
                 body.add(new Atom(pred, isNegated));
             }
         }
@@ -102,7 +102,7 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
         } else {
             // Is a negative built-in predicate
             return visitNormal_built_in_predicate(
-                ctx.negative_buit_in_predicate().normal_built_in_predicate()
+                ctx.negative_built_in_predicate().normal_built_in_predicate()
             );
         }
     }
@@ -134,8 +134,8 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
     @Override
     public Definition visitDefinition(datalogParser.DefinitionContext ctx) {
         String name = ctx.name().getText();
-        int arity = Integer.parseInt(ctx.arity().getText());
         List<List<Term>> tuples = new ArrayList<>();
+        int arity = -1;
         
         // Build tuples
         for (datalogParser.Term_tupleContext tupleCtx : ctx.term_tuple()) {
@@ -143,6 +143,11 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
             List<Term> tuple = new ArrayList<>();
             for (datalogParser.TermContext termCtx : tupleCtx.term()) {
                 tuple.add(visitTerm(termCtx));
+            }
+            if (arity == -1) {
+                arity = tuple.size();
+            } else if (tuple.size() != arity) {
+                throw new IllegalArgumentException("Tuple arity does not match definition arity");
             }
             tuples.add(tuple);
         }
@@ -184,6 +189,10 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
                 for (datalogParser.TermContext termCtx : ctx.term()) {
                     args.add(visitTerm(termCtx));
                 }
+            }
+
+            if (args.isEmpty()) {
+                return new Constant(funcName);
             }
             
             return new FunctionTerm(funcName, args);
