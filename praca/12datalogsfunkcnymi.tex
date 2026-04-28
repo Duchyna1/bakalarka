@@ -3,30 +3,26 @@ Doteraz sme dosádzali do predikátov iba konštanty a premenné. Rozšírime ja
 symboly. Funkčný symbol $f$ (s aritou $n$) reprezentuje ľubovoľnú funkciu $f: D_1 \times D_2 \times
 \dots \times D_n \to D$.
 
-Funkčné symboly chceme zaviesť preto, že samotné konštanty a premenné nestačia na prirodzený zápis
-zloženejších hodnôt. Veľmi užitočná zložitejšia hodnota je napríklad zoznam. Zoznam môžeme
-reprezentovať pomocov dvoch funkčných symbolov: \verb|nil|, ktorý reprezentuje prázdný zoznam, a
-\verb|pair|, ktorý reprezentuje dvojicu, z ktorej vieme zostrojiť ľubovoľný zoznam. Zoznam
-obsahujúci prvky $a$, $b$ a $c$ sa potom bude reprezentovať termom 
-\verb|pair(a, pair(b, pair(c, nil)))|. Ďalším užitočnym funkčným symbolo je tzv. nasledovník
-\verb|s|. Ten jednoducho pre každé prirodzené číslo $n$ vráti jeho nasledovníka $n+1$. S týmito
-dvoma (troma ak rátame aj 0-árny funkčný symbol \verb|nil|) funkčnými symbolmi dokonca vieme
-simulovať ľubovoľný turingov stroj, a teda aj ľubovoľný algoritmus. Čo oproti datalogu pridáva
-obrovskú výpočtovú silu.
+Funkčné symboly chceme zaviesť preto, že samotné konštanty a premenné nestačia na reprezentáciu
+zložitejších štruktúr. Príkladom zložitejšej štruktúry je zoznam. Zoznam vieme reprezentovať pomocou
+funkčných symbolov \verb|nil| a \verb|list|: \verb|nil|, ktorý reprezentuje prázdny zoznam, a
+\verb|list|, ktorého prvým argumentom je prvý prvok zoznamu, a druhým argumentom je zvyšok zoznamu.
+Zoznam obsahujúci prvky $a$, $b$ a $c$ (v tomto poradí) potom bude reprezentovať termom
+\verb|list(a, list(b, list(c, nil)))|.
 
 \begin{definition}
 Za \textbf{term} považujeme:
 \begin{itemize}
-    \item ľubovoľný 0-árny funkčný symbol (ktorý považujeme za \textit{konštantu}, môžeme zapisovať aj
-    bez zátvoriek),
-    \item ľubovoľnú premennú (väčšinou budeme značiť veľkými písmenami latinskej abecedy),
-    \item ak $f$ je $n$-árny funkčný symbol a $t_1, t_2, \dots, t_n$ sú termy, potom $f(t_1, t_2, \dots,
-    t_n)$ je term.
+    \item ľubovoľný 0-árny funkčný symbol (ktorý považujeme za \textit{konštantu}, môžeme zapisovať
+    aj bez zátvoriek),
+    \item ľubovoľnú premennú (budeme značiť veľkými písmenami latinskej abecedy),
+    \item ak $f$ je $n$-árny funkčný symbol a $t_1, t_2, \dots, t_n$ sú termy, potom 
+    $f(t_1, t_2, \dots, t_n)$ je term.
 \end{itemize}
 Dôležité je, že term pozostáva z konečného množstva symbolov.
 \end{definition}
 
-Rozširime definíciu jazyka logiky (\ref{znaky_jazyka_1}) o symboly označujúce funkčné symboly. Do
+Rozšírime definíciu jazyka logiky (\ref{znaky_jazyka_1}) o symboly označujúce funkčné symboly. Do
 predikátov (\ref{doplnanie} 1.) potom nedosadzujeme premenné a konštanty, ale termy.
 
 \begin{definition}

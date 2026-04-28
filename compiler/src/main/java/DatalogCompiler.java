@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class DatalogCompiler {
-    public CompiledRAProgram compile(DatalogProgram program) {
+    public RAExpr compile(DatalogProgram program) {
         Map<String, List<RAExpr>> compiledDefinitions = compileDefinitions(program.getDefinitions());
         Map<String, RAExpr> combinedDefinitions = combineDefinitions(compiledDefinitions);
         Map<String, RAExpr> transformedDefinitions = transformeDefinitions(combinedDefinitions);
@@ -78,7 +78,7 @@ public class DatalogCompiler {
         queryInputTerms.add(headTerms);
         queryExpr = new RAJoin(queryRelations, queryInputTerms, headTerms);
         
-        return new CompiledRAProgram(inlinedExprs, queryExpr, query);
+        return queryExpr;
     }
 
     private Map<String, RAExpr> combineDefinitions(Map<String, List<RAExpr>> compiledDefinitions) {

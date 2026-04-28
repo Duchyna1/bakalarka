@@ -42,7 +42,7 @@ Do \textbf{formúl} patria:
 \item \textit{atomické formuly} $p(t_1, t_2, \dots t_n)$, kde $p$ je $n$-árny predikát a $t_1, t_2,
 \dots t_n$ sú konštanty alebo premenné
 \item ak $A$ a $B$ sú formuly, tak potom aj $A \land B$ a $\lnot A$ sú formuly
-\item nič iné nie je formula
+\item nič iné formula nie je.
         \end{enumerate}
     \end{definition}
 \end{samepage}
@@ -160,36 +160,37 @@ $$\mathcal{T} = \left(\lnot p \Rightarrow q\right)\\
 $\inter$, došli by sme k sporu $\inter \models_\true p \, \land \, \inter \not\models_\true p$ resp.
 $\inter \models_\false p \, \land \, \inter \not\models_\false p$). Ak by sme sa vedeli pýtať na
 záporné dotazy, dostali by sme pre teórie s dotazom $\mathcal{T} \land p$ a $\mathcal{T} \land \lnot
-p$ výsledok dotazu $\false$. S našim prístupom dostaneme pre dotaz \uv{\textit{platí $p$?}}
-$\false$.
+p$ výsledok dotazu $\false$. S našim prístupom dostaneme, že výsledkom dotazu \uv{\textit{platí
+$p$?}} je \textit{false} ($\false$).
 \end{note}
 
 \begin{definition}
 Klauzulu 
 $$\forall X_1 \forall X_2 \dots \forall X_n (A_1 \land A_2 \land \cdots A_i \land \lnot A_{i+1}
 \land \lnot A_{i+2} \land \cdots \land \lnot A_m) \Rightarrow B$$ nazývame \textbf{bezpečnou}, ak sa
-každá z premenných $X_1, X_2, \dots, X_n$ vyskytuje v niektorej z pozitívnych formúl $A_1, A_2,
-\dots, A_i$. Teóriu, ktorá obsahuje iba bezpečné klauzuly, nazývame \textbf{bezpečnou teóriou}.
+každá z premenných $X_1, X_2, \dots, X_n$ vyskytuje v niektorej z pozitívnych atomických formúl
+$A_1, A_2, \dots, A_i$. Teóriu, pozostáva iba z bezpečných klauzúl (spojených konjukciou), nazývame
+\textbf{bezpečnou teóriou}.
 \end{definition}
 
 \begin{note}
-Vo zvyšku práce budeme pracovať iba s bezpečnými klauzulami a bezpečnými teóriami. Dôvodom je
-nejednoznačnosť výsledkov dotazov pre teórie, ktoré obsahujú nebezpečné klauzuly. 
-    
-Zoberme si teóriu s dotazom 
+Vo zvyšku práce budeme pracovať iba s bezpečnými klauzulami a bezpečnými teóriami. Dôvodom je, že
+potom nemusíme vôbec uvažovať o doménach predikátov. Každá bezpečná formula je totiž doménovo nezávislá. 
+
+Zoberme si nebezpečnú (a doménovo závislú) teóriu s dotazom 
 $$\mathcal{T} = (\forall X \lnot p(X) \Rightarrow q(X)) \land q(X)$$ s interpretáciou $\inter$
 takou, že $\forall i \in \mathbb{N}: \inter \models_\true q(i)$ a pre všetky ostatné konštanty $c$
-platí $\inter \models_\false q(c)$. Čo je potom ale výsledok dotazu našej teórie s dotazom
-$\mathcal{T}$? Intuitívne by to malo byť všetko, čo nie je prirodzené číslo. Čo všetko to ale je?
-Rozprávame sa iba o číslach? Alebo tam máme zarátať aj množiny? Čo všetko dovolíme vložiť do množín?
-Nevieme to jednoznačne určiť, pretože nebezpečná klauzula nám umožňuje vytvoriť nekonečne veľa
-výsledkov dotazov, ktoré sa líšia v tom, čo všetko obsahujú. Bezpečné klauzuly nám zaručujú, že výsledok
-dotazu bude vždy jednoznačný (vzhľadom na interpretáciu).
+platí $\inter \models_\false q(c)$. Čo je potom ale výsledok dotazu $\mathcal{T}$? Intuitívne by to
+malo byť všetko, čo nie je prirodzené číslo. Čo to ale je? Ak je doménou predikátu $p$ napríklad
+množina celých čísiel $\mathbb{Z}$, potom výsledkom dotazu bude množina $\mathbb{Z}-\mathbb{N}$
+(t.j. množina všetkých záporných čísel). Ak by doménou bola množina racionálnych čísel $\mathbb{Q}$,
+výsledkom dotazu bude $\mathbb{Q}-\mathbb{N}$. Pri doménovo závislých formulách domény predikátov
+ovplyvňujú výsledky dotazov.
     
-Príkladom bezpečnej teórie s dotazom môže byť
+Príkladom bezpečnej teórie s dotazom je napríklad
 $$\mathcal{T}' = (\forall X r(X) \land \lnot p(X) \Rightarrow q(X)) \land p(X)$$ s interpretáciou
 $\inter'$ takou, že $\forall i \in \mathbb{N}: \inter' \models_\true p(i)$ a $\forall c \in
 \mathbb{R}: \inter' \models_\true r(c)$. V tejto teórii sme obmedzili množinu konštánt, ktoré má
-zmysel dopĺňať do predikátu $p$. Výsledok dotazu potom vieme jednoznačne určiť. Konkrétne sa bude
-jednať o množinu reálnych čísel bez prirodzených čísel ($\mathbb{R} - \mathbb{N}$).
+zmysel dopĺňať do predikátu $p$. Výsledok tohoto dotazu je $\mathbb{R}-\mathbb{N}$, nezávisle od
+domén predikátov.
 \end{note}
