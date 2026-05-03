@@ -302,8 +302,8 @@ vyskytuje referencia na iný predikát, táto referencia je zatiaľ nevyplnená 
     (sú konštanty) $X$ a $Y$, vráti $Z$ ($Z$ je premenná) alebo ak sú zadané $X$, $Y$ a $Z$, vráti
     pravdivostnú hodnotu a to je všetko. Aktuálna implementácia napr. \JOIN-u v našom databázovom
     systéme je ale nasledovná. Zoberie sa prvá relácia a jej vstupný vektor. Vyberie sa z nej nejaká
-    n-tica, aby spĺňala vstupný vektor. Týtom sa môžu konkretizovať niektoré premenné. Potom sa
-    zoberie druhá relácia a jej vstupný vektor (s už konkretizovanými premennými) a spravý sa to
+    n-tica, aby spĺňala vstupný vektor. Týmto sa môžu konkretizovať niektoré premenné. Potom sa
+    zoberie druhá relácia a jej vstupný vektor (s už konkretizovanými premennými) a spraví sa to
     isté. Preto v našom prípade záleží od poradia atómov. Ako príklad si zoberme program
 \begin{verbatim}
     p(Z) :- $cisloDo10(X), $cisloDo10(Y), $plus(X, Y, Z).
@@ -328,11 +328,11 @@ JOIN(
     [Z]
 )
 \end{verbatim}
-    a tento výraz nemusí byť správne vyhodnotený, keďže $plus$ nemusí vedieť pracovať so stroma
+    a tento výraz nemusí byť správne vyhodnotený, keďže $plus$ nemusí vedieť pracovať s troma
     premennými.
     
     Preto si používateľ musí dávať pozor na to, v akom poradí píše atómy do klauzúl, keďže to môže
-    ovplyvniť výsledok. Náš kompilátor zoberie naprv kladné atómy v poradí a následne negované atómy
+    ovplyvniť výsledok. Náš kompilátor zoberie najprv kladné atómy v poradí a následne negované atómy
     v poradí v akom boli zapísané v programe.
 \end{note}
 
@@ -340,16 +340,16 @@ JOIN(
 
 V piatom kroku tieto referencie nahradíme výrazom, ktorý im prislúcha. Keďže
 ale môže nastať situácia, že niektorý predikát je závislý sám na sebe (priamo alebo nepriamo),
-musíme prípadne predikáty \textit{zabaliť} do rekurzívneho operátora \REC. To spravíme tak, že naprv
+musíme prípadne predikáty \textit{zabaliť} do rekurzívneho operátora \REC. To spravíme tak, že najprv
 skonštruujeme graf závislosti predikátov, v ktorom bude orientovaná hrana z predikátu $A$ do
 predikátu $B$, ak $A$ (priamo) závisí na $B$. Potom pre každý predikát skontrolujeme, či existuje
 cesta z neho do seba samého. Ak áno, tento predikát je rekurzívny a musíme ho zabaliť do \REC.
 
-Výsledný výraz v relačnej algebre začneme stavať od dotazu. Prechádzame jeho výraz do hĺby a
-pamätáve si, cez aké \REC\ operátory sme prešli. Keď narazíme na \texttt{RelationRef} (pre ktorý sme
+Výsledný výraz v relačnej algebre začneme stavať od dotazu. Prechádzame jeho výraz do hĺbky a
+pamätáme si, cez aké \REC\ operátory sme prešli. Keď narazíme na \texttt{RelationRef} (pre ktorý sme
 nevideli operátor \REC), nahradíme ho výrazom, ktorý mu prislúcha. Takto postupujeme, až kým
 nenahradíme všetky \texttt{RelationRef} výrazmi, ktoré im prislúchajú. Výsledkom ale nemá byť celá
-relácia, ale iba tie záznemi, ktoré spĺňajú hlavu dotazu. Preto ešte celý výsledný výraz zabalíme do
+relácia, ale iba tie záznamy, ktoré spĺňajú hlavu dotazu. Preto ešte celý výsledný výraz zabalíme do
 \JOIN-u, ktorého výstupný vektor bude zodpovedať hlave dotazu.
 
 \medskip
