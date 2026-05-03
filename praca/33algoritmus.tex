@@ -1,2 +1,436 @@
 \section{Algoritmus prekladu}
-Po vygenerovaní stromu odvodenia prichádza na rad preklad do relačnej algebry.
+Po vygenerovaní stromu odvodenia prichádza na rad preklad do relačnej algebry. Preklad sa realizuje
+v piatich krokoch. 
+
+V prvom kroku využijeme dva objekty, ktoré nám automaticky vygeneroval ANTLR. Najprv vytvoríme
+objekt \texttt{datalogLexer}, ktorý potom premeníme na \\\texttt{CommonTokenStream}. Tento druhý
+objekt je v podstate zoznam tokenov, ktoré sa vyskytujú v zdrojovom kóde. Formálne by to boli znaky
+(resp. písmená) slova, z ktorých hľadáme strom odvodenia.
+
+\begin{lstlisting}
+CharStream program;
+datalogLexer lexer = new datalogLexer(program);
+CommonTokenStream tokens = new CommonTokenStream(lexer);
+\end{lstlisting}
+
+V druhom kroku vytvoríme objekt \texttt{datalogParser} (ktorý tiež vygeneroval \\ANTLR), ktorý nám
+umožní pracovať s gramatikou, ktorú sme definovali v súbore \texttt{datalog.g4}. Tento objekt nám
+umožní vytvoriť strom odvodenia z tokenov, ktoré sme získali v prvom kroku.
+
+\begin{lstlisting}
+datalogParser parser = new datalogParser(tokens);
+ParseTree tree = parser.program();
+\end{lstlisting}
+
+\subsection{Generácia AST}
+Tretí krok je zavolanie objektu \texttt{DatalogASTBuilder}, ktorý nám transformuje strom odvodenia
+na abstraktný syntaktický strom (AST). Tento strom je jednoduchší a pohodlnejší na ďalšie
+spracovanie. Transformácia sa realizuje pomocou tzv. \textit{visitor patternu}. Vstupom je objekt
+typu \texttt{DatalogProgram}, ktorý obsahuje všetky definície, klauzuly a dotaz. Triedy, ktoré sa
+týkajú AST, sú definované v priečinkoch \texttt{datalog} a \texttt{common} (spoločné objekty pre
+datalog aj relačnú algebru, termy a parametre).
+
+\begin{lstlisting}
+DatalogASTBuilder astBuilder = new DatalogASTBuilder();
+DatalogProgram ast = (DatalogProgram) astBuilder.visit(tree);
+\end{lstlisting}
+
+Príkladom, aká transformácia sa deje, je transformácia na objekt typu \texttt{Atom} a \texttt{Predicate}.
+Všetky nasledujúce podstromy odvodenia sa transformujú na rovnaké objekty s rovnakým rozhraním.
+
+\begin{center}
+    \[
+    \Tree
+    [.\texttt{predicate} 
+        [.\texttt{normal\_predicate}
+            \texttt{name}
+            \texttt{(}
+            \textit{possible terms}
+            \texttt{)}
+        ]
+    ]
+    \]
+    \textit{Obyčajný predikát}
+\end{center}
+
+\begin{center}
+    \[
+    \Tree
+    [.\texttt{predicate}
+        [.\texttt{negative\_predicate}
+            \qroof{\texttt{\textbackslash+}}.\texttt{NOT}
+            [.\texttt{normal\_predicate}
+                \texttt{name}
+                \texttt{(}
+                \textit{possible terms}
+                \texttt{)}
+            ]
+        ]
+    ]
+    \]
+    \textit{Negovaný obyčajný predikát}
+\end{center}
+
+\begin{center}
+    \[
+    \Tree
+    [.\texttt{built\_in\_predicate} 
+        [.\texttt{normal\_built\_in\_predicate}
+            \qroof{\texttt{\$}}.\texttt{BUILT\_IN}
+            \texttt{name}
+            \texttt{(}
+            \textit{possible parameters}
+            \texttt{)}
+        ]
+    ]
+    \]
+    \textit{Vstavaný predikát}
+\end{center}
+
+\begin{center}
+    \[
+    \Tree
+    [.\texttt{built\_in\_predicate}
+        [.\texttt{negative\_built\_in\_predicate}
+            \qroof{\texttt{\textbackslash+}}.\texttt{NOT}
+            [.\texttt{normal\_built\_in\_predicate}
+                \qroof{\texttt{\$}}.\texttt{BUILT\_IN}
+                \texttt{name}
+                \texttt{(}
+                \textit{possible parameters}
+                \texttt{)}
+            ]
+        ]
+    ]
+    \]
+    \textit{Negovaný vstavaný predikát}
+\end{center}
+
+Celá štruktúra a hierarchia tried, ktoré reprezentujú AST, sú podrobnejšie popísané v diagrame.
+
+\begin{figure}[h]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{forest}
+  for tree={
+    draw,
+    align=left,
+    font=\ttfamily\footnotesize,
+    inner sep=5pt,
+    fill=gray!10,
+    edge={-{Stealth[scale=0.8]}},
+    l sep=1.2cm,
+    s sep=0.3cm,
+  }
+  [{\bfseries DatalogProgram\\ - clauses: List<Clause>\\ - definitions: List<Definition>\\ - query: Query}
+    [{\bfseries Clause\\ - head: Predicate\\ - body: List<Atom>}
+      [{\bfseries Predicate\\ - name: String\\ - terms: List<Term>\\ - isBuiltIn: bool}
+        [{\itshape\bfseries Term}
+          [{\bfseries Constant\\ - value: String},       edge={dashed,-{Triangle[open,scale=0.8]}}]
+          [{\bfseries Variable\\ - name: String},        edge={dashed,-{Triangle[open,scale=0.8]}}]
+          [{\bfseries FunctionTerm\\ - name: String\\ - args: List<Term>}, edge={dashed,-{Triangle[open,scale=0.8]}}]
+          [{\bfseries Parameter\\ - text: String},       edge={dashed,-{Triangle[open,scale=0.8]}}]
+        ]
+      ]
+      [{\bfseries Atom\\ - predicate: Predicate\\ - isNegated: boolean}]
+    ]
+    [{\bfseries Definition\\ - name: String\\ - arity: int\\ - tuples: List<List<Term>>}]
+    [{\bfseries Query\\ - predicate: Predicate}]
+  ]
+\end{forest}%
+}
+\caption*{Hierarchia tried AST}
+\end{figure}
+
+V tejto fáze sa tiež realizuje kontrola, či sú klauzuly bezpečné a či všetky \\\verb|term_tuple| v
+definícii majú rovnakú aritu, keďže tieto vlastnosti programu nie je možné vyjadriť pomocou
+bezkontextovej gramatiky. Taktiež sa kontroluje, či termy v \verb|term_tuple| neobsahujú premenné.
+Táto vlastnosť by sa dala vyjadriť pomocou bezkontextovej gramatiky, ale pre jednoduchosť
+implementácie sme sa rozhodli proti tomu.
+
+\subsection{Preklad do relačnej algebry}
+Posledné 2 kroky sa týkajú samotného prekladu do relačnej algebry a vykonáva ich trieda
+\texttt{DatalogCompiler}.
+
+\begin{lstlisting}
+DatalogCompiler compiler = new DatalogCompiler();
+RAExpr compiled = compiler.compile(ast);
+\end{lstlisting}
+
+V štvrtom kroku vygenerujeme pre každý predikát v programe objekt typu \texttt{RAExpr}, ktorý
+reprezentuje reláciu k nemu prislúchajúcu. Ak je nejaký predikát závislý na inom predikáte, zatiaľ
+ho nepreložíme, ale použijeme referenciu (\textit{placeholder}) na tento predikát (objekt typu
+\texttt{RelationRef}). Prekladať nebudeme priamo do relačnej algebry, ale do Java objektov
+reprezentujúcich relačnú algebru. To nám umožní ľahšie manipulovať s výsledným výrazom a taktiež
+jednoduchšie meniť zápis výsledného výrazu. Napríklad ak by sme chceli zmeniť poradie parametrov v
+operátoroch, alebo zmeniť odsadenie a zátvorky.
+
+\vline
+
+Prvým problémom, s ktorým sa v tomto kroku stretávame, je ako preložiť definície. Definície sú v
+podstate relácie, ktoré obsahujú pevne dané množiny n-tíc. Keďže nemáme žiaden operátor, ktorý by
+toto priamo podporoval, musíme \uv{zneužiť} operátor \JOIN\ a vstavané relácie.
+
+\begin{definition}
+    Vstavané relácie $\$true$ a $\$false$ sú definované nasledovne:
+    \begin{align*}
+        \$true &= \{()\} \\
+        \$false &= \emptyset
+    \end{align*}
+\end{definition}
+
+Zoberme si výraz $\JOIN([\$true], [[]], [n1(), a()])$ (normálne by sme zapísali konštanty ako $1$ a
+$a$, ale naša aktuálna implementácia gramatiky vyžaduje tento zápis). Nech $M$ je množina z definície
+\JOIN. Potom $M = \{()\}$, keďže iba pre $()$ platí $() \in \$true$. Zápis je trochu neintuitívny,
+ale zhoduje sa s definíciou, keďže neexistuje žiadny term $T_{i, j}$ ani premenná $P_k$. Potom výsledná
+relácia $R$ je rovná $\{(n1(), a())\}$.
+
+Týmto spôsobom vieme vyrobiť ľubovoľnú reláciu s jednou
+n-ticou. Pre viacnásobné n-tice môžeme použiť viacnásobné \JOIN\ \textit{obalené} v \UNION.
+
+\begin{priklad}
+    Program (resp. iba časť programu) \verb|color :- {(red()), (blue())}.| sa preloží ako
+\begin{verbatim}
+UNION([
+    JOIN([$true], [[]], [red()]),
+    JOIN([$true], [[]], [blue()])
+])
+\end{verbatim}
+\end{priklad}
+
+Keďže jeden predikát môže byť definovaný viackrát, musíme prejsť všetky definície, pozbierať všetky
+n-tice a spojiť ich do jednej relácie (bez duplikátov). 
+
+Pôvodne sme chceli mať 5 operátorov. Piaty operátor by bol \DEF, ktorý by nám umožňoval definovať
+reláciu pomocou množiny n-tíc. Preto sa používa v programe kompilátora trieda \texttt{RADef}. Keďže
+sme sa ale nakoniec rozhodli uprednostniť menšiu množinu operátorov, \DEF\ sa transfomuje na \UNION\
+\JOIN-ov, ako sme ukázali v príklade vyššie. Preto sa v tejto fáze realizuje aj táto transformácia.
+
+\vline
+
+Druhým problémom je preklad klauzúl. V datalogu je klauzula v podstate konjunkcia atómov a keďže
+konjunkcia je asociatívna a komutatívna, môžeme atómy v klauzule zoradiť ľubovoľne. Preto môžeme
+pred prekladom klauzúl zoradiť atómy tak, že najprv budú kladné atómy a až potom negované atómy.
+
+Z kladných atómov vieme pomocou \JOIN\ vyrobiť reláciu, ktorá obsahuje všetky n-tice, ktoré môžeme
+doplniť, aby boli všetky pravdivé. Túto výslednú reláciu potom použijeme ako prvú
+reláciu v \ANTIJOIN\ operátore, pomocou ktorého odfiltrujeme všetky n-tice, ktoré by spĺňali
+negované atómy. Výstupom celej klauzuly sú ale iba tie n-tice, ktoré spĺňajú hlavu klauzuly. To
+zohľadníme vo výstupnom vektore v \ANTIJOIN-e (respektíve v \JOIN-e, ak nemáme negatívne atómy).
+
+\begin{priklad}
+Časť datalogového programu
+\begin{verbatim}
+dvojica(f(A), D) :- $hrana(A, B),
+                    $hrana(f(B), kon()), 
+                    $hrana(kon(), D),
+                    \+ $hrana(A, kon()),
+                    \+ $hrana(f(B), D).
+\end{verbatim}
+
+sa preloží nasledovne. Najprv vytvoríme reláciu z kladných atómov pomocou \JOIN-u.
+
+\begin{verbatim}
+JOIN(
+    [$hrana, $hrana, $hrana],
+    [[A, B], [f(B), kon()], [kon(), D]],
+    [A, B, D]
+)
+\end{verbatim}
+
+Táto relácia obsahuje všetky n-tice, ktoré spĺňajú kladné atómy. Potom použijeme \ANTIJOIN\ na
+vytvorenie výslednej relácie \verb|dvojica|.
+
+\begin{verbatim}
+ANTIJOIN(
+    [JOIN(
+        [$hrana, $hrana, $hrana],
+        [[A, B], [f(B), kon()], [kon(), D]],
+        [A, B, D]
+    ),
+    $hrana, $hrana],
+    [[A, B, D], [A, kon()], [f(B), D]],
+    [f(A), D]
+)
+\end{verbatim}
+\end{priklad}
+
+V prípade, že klauzula neobsahuje žiadne negované atómy, použijeme iba \JOIN\ a výstupný vektor bude
+zodpovedať hlave klauzuly. V prípade, že klauzula obsahuje iba jeden pozitívny atóm, \JOIN\ nie je
+potrebné vyrábať, ale môžeme použiť tento atóm priamo v \ANTIJOIN-e.
+
+Zaujímavý prípad je klauzula, ktorá obsahuje iba negované atómy. Keďže musí byť bezpečná, nemôže
+obsahovať žiadne premenné, ale iba konštanty. V takomto prípade má klauzula tvar \uv{\textit{n-tica 1
+patrí do relácie A, ak n-tica 2 nepatrí do relácie B, n-tica 3 nepatrí do relácie C, ...}}. Keďže
+ale \ANTIJOIN\ potrebuje jednu reláciu v pozitívnom kontexte, musíme do všetkých takýchto klauzúl
+pridať nejaký pozitívny atóm, napríklad \verb|$true()|.
+
+\begin{priklad}
+    Klauzula \verb|test(n1()) :- \+ $a(n2()), \+ $b(n3()).| sa preloží ako:
+\begin{verbatim}
+ANTIJOIN([$true, $a, $b], [[], [n2()], [n3()]], [n1()])
+\end{verbatim}
+\end{priklad}
+
+V prípade, že jeden predikát je definovaný viackrát, musíme všetky klauzuly, ktoré mu prislúchajú,
+spojiť do jednej relácie pomocou \UNION-u.
+
+\begin{priklad}
+    Program
+\begin{verbatim}
+p(X) :- $a(X).
+p(Y) :- $b(Y).
+\end{verbatim}
+sa preloží ako:
+\begin{verbatim}
+UNION([
+    JOIN([$a], [[X]], [X]),
+    JOIN([$b], [[Y]], [Y])
+])
+\end{verbatim}
+\end{priklad}
+
+Výsledkom štvrtého kroku je teda mapa \texttt{Map<String, RAExpr>}, ktorá priraďuje každému
+predikátu (resp. relácii) výraz v relačnej algebre, ktorý ho reprezentuje. Ak sa v niektorej relácii
+vyskytuje referencia na iný predikát, táto referencia je zatiaľ nevyplnená (je to objekt typu
+\texttt{RelationRef}).
+
+\begin{note}
+    Teoreticky nezáleží od poradia atómov v klauzule, ale pri konkrétnych vstavaných predikátoch
+    môže záležať. Zoberme si napríklad predikát \verb|$plus(X, Y, Z)|, ktorý je pravdivý vtedy a len
+    vtedy, keď $X + Y = Z$. Jeho implementácia v databázovom systéme môže byť taká, že ak sú zadané
+    (sú konštanty) $X$ a $Y$, vráti $Z$ ($Z$ je premenná) alebo ak sú zadané $X$, $Y$ a $Z$, vráti
+    pravdivostnú hodnotu a to je všetko. Aktuálna implementácia napr. \JOIN-u v našom databázovom
+    systéme je ale nasledovná. Zoberie sa prvá relácia a jej vstupný vektor. Vyberie sa z nej nejaká
+    n-tica, aby spĺňala vstupný vektor. Týtom sa môžu konkretizovať niektoré premenné. Potom sa
+    zoberie druhá relácia a jej vstupný vektor (s už konkretizovanými premennými) a spravý sa to
+    isté. Preto v našom prípade záleží od poradia atómov. Ako príklad si zoberme program
+\begin{verbatim}
+    p(Z) :- $cisloDo10(X), $cisloDo10(Y), $plus(X, Y, Z).
+\end{verbatim}
+    Prislušný výraz v relačnej algebre je
+\begin{verbatim}
+JOIN(
+    [$cisloDo10, $cisloDo10, $plus],
+    [[X], [Y], [X, Y, Z]],
+    [Z]
+)
+\end{verbatim}
+    Sémanticky identický program
+\begin{verbatim}
+p(Z) :- $plus(X, Y, Z), $cisloDo10(X), $cisloDo10(Y).
+\end{verbatim}
+    sa ale preloží ako
+\begin{verbatim}
+JOIN(
+    [$plus, $cisloDo10, $cisloDo10],
+    [[X, Y, Z], [X], [Y]],
+    [Z]
+)
+\end{verbatim}
+    a tento výraz nemusí byť správne vyhodnotený, keďže $plus$ nemusí vedieť pracovať so stroma
+    premennými.
+    
+    Preto si používateľ musí dávať pozor na to, v akom poradí píše atómy do klauzúl, keďže to môže
+    ovplyvniť výsledok. Náš kompilátor zoberie naprv kladné atómy v poradí a následne negované atómy
+    v poradí v akom boli zapísané v programe.
+\end{note}
+
+\vline
+
+V piatom kroku tieto referencie nahradíme výrazom, ktorý im prislúcha. Keďže
+ale môže nastať situácia, že niektorý predikát je závislý sám na sebe (priamo alebo nepriamo),
+musíme prípadne predikáty \textit{zabaliť} do rekurzívneho operátora \REC. To spravíme tak, že naprv
+skonštruujeme graf závislosti predikátov, v ktorom bude orientovaná hrana z predikátu $A$ do
+predikátu $B$, ak $A$ (priamo) závisí na $B$. Potom pre každý predikát skontrolujeme, či existuje
+cesta z neho do seba samého. Ak áno, tento predikát je rekurzívny a musíme ho zabaliť do \REC.
+
+Výsledný výraz v relačnej algebre začneme stavať od dotazu. Prechádzame jeho výraz do hĺby a
+pamätáve si, cez aké \REC\ operátory sme prešli. Keď narazíme na \texttt{RelationRef} (pre ktorý sme
+nevideli operátor \REC), nahradíme ho výrazom, ktorý mu prislúcha. Takto postupujeme, až kým
+nenahradíme všetky \texttt{RelationRef} výrazmi, ktoré im prislúchajú. Výsledkom ale nemá byť celá
+relácia, ale iba tie záznemi, ktoré spĺňajú hlavu dotazu. Preto ešte celý výsledný výraz zabalíme do
+\JOIN-u, ktorého výstupný vektor bude zodpovedať hlave dotazu.
+
+\medskip
+\refstepcounter{priklad}
+    Ukážeme si preklad programu spolu z vysvetlením, ktoré časti relačnej algebry zodpovedajú ktorým
+    častiam programu.
+\begin{verbatim}
+ 1  node :- {(a()), (b()), (c())}.
+ 2  blocked :- {(c())}.
+ 3  
+ 4  reachable(X) :- node(X).
+ 5  reachable(X) :- reachable(X).
+ 6  
+ 7  selected(X) :- reachable(X), $eq(X, b()).
+ 8  free(X) :- reachable(X), \+ blocked(X).
+ 9  
+10  result(X) :- free(X), selected(X).
+11  
+12  ?- result(Z).
+\end{verbatim}
+
+Znak \texttt{\%} označuje jednoriadkový komentár.
+
+\begin{verbatim}
+JOIN([                                    % dotaz - 12
+  JOIN([                                  % result - 10
+    ANTIJOIN([                            % free - 8
+      REC(reachable,                      % lebo riadok 5 je rekurzívny
+        UNION([
+          JOIN([                          % reachable - 4
+            UNION([                       % node - 1
+              JOIN([$true], [[]], [a()]),
+              JOIN([$true], [[]], [b()]),
+              JOIN([$true], [[]], [c()])
+            ])
+          ], [[X]], [X]),
+          JOIN([reachable], [[X]], [X])   % reachable - 5
+        ])
+      ),
+      JOIN([$true], [[]], [c()])          % blocked - 2
+    ], [[X], [X]], [X]),
+    JOIN([                                % selected - 7
+      REC(reachable,                      % znovu reachable
+        UNION([
+          JOIN([
+            UNION([
+              JOIN([$true], [[]], [a()]),
+              JOIN([$true], [[]], [b()]),
+              JOIN([$true], [[]], [c()])
+            ])
+          ], [[X]], [X]),
+          JOIN([reachable], [[X]], [X])])
+      ),
+      $eq
+    ], [[X], [X, b()]], [X])
+  ], [[X], [X]], [X])
+], [[Z]], [Z])
+\end{verbatim}
+\begin{center}
+\centering
+\textit{Príklad \thepriklad}
+\end{center}
+\medskip
+
+\subsection*{Rekapitulácia}
+Preklad do relačnej algebry sa realizuje v piatich krokoch. Heslovite sú to:
+\begin{enumerate}
+    \item Vytvorenie lexeru a token streamu
+    \item Vytvorenie parseru a stromu odvodenia
+    \item Generácia AST z odvodenia
+    \item Preklad predikátov do relačnej algebry s nevyplnenými referenciami
+    \begin{enumerate}
+        \item Preklad definícií pomocou \JOIN\ a \UNION\
+        \item Preklad klauzúl pomocou \JOIN\ a \ANTIJOIN\
+        \item Spojenie klauzúl do jednej relácie pomocou \UNION\
+    \end{enumerate}
+    \item Postavenie výsledného výrazu v relačnej algebre
+    \begin{enumerate}
+        \item Postavenie grafu závislosti predikátov
+        \item Zabalenie rekurzívnych predikátov do \REC\
+        \item Nahradenie referencií výrazmi, ktoré im prislúchajú
+        \item Zabalenie výsledného výrazu do \JOIN-u reprezentujúceho dotaz
+    \end{enumerate}
+\end{enumerate}

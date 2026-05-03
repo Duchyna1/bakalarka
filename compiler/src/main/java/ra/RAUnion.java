@@ -1,7 +1,6 @@
 package ra;
 
 import java.util.*;
-import common.Term;
 
 public class RAUnion extends RAExpr {
     private final List<RAExpr> relations;

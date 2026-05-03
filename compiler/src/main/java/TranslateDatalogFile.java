@@ -1,4 +1,6 @@
 import datalog.DatalogProgram;
+import ra.RAExpr;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -36,7 +38,7 @@ public class TranslateDatalogFile {
         DatalogProgram ast = (DatalogProgram) astBuilder.visit(tree);
 
         DatalogCompiler compiler = new DatalogCompiler();
-        CompiledRAProgram compiled = compiler.compile(ast);
+        RAExpr compiled = compiler.compile(ast);
 
         System.out.println("Input file: " + inputPath);
         System.out.println("--- Compiled relational algebra ---");

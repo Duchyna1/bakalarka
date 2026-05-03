@@ -1,7 +1,6 @@
 package common;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FunctionTerm extends Term {
     private final String name;

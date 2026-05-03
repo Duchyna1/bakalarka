@@ -16,8 +16,11 @@ pomocou $\ANTIJOIN$.
 \subsection*{Karteziánsky súčin $\times$}
 Karteziánsky súčin $R \times S$ vieme prepísať pomocou $\JOIN$. Jednoducho vymenujeme všetky
 atribúty z $R$ a $S$ ako vstupné termy a výstupné termy. 
-$$R \times S \approx \JOIN([R, S], [[A_1, A_2, \dots, A_n], [B_1, B_2, \dots, B_m]], [A_1, A_2,
-\dots, A_n, B_1, B_2, \dots, B_m])$$
+\begin{align*}
+    R \times S \approx \JOIN(&[R, S],\\ 
+                             &[[A_1, A_2, \dots, A_n], [B_1, B_2, \dots, B_m]],\\ 
+                             &[A_1, A_2, \dots, A_n, B_1, B_2, \dots, B_m])
+\end{align*}
 
 \subsection*{Projekcia $\Pi$}
 Projekcia je už zakomponovaná v $\JOIN$ a $\ANTIJOIN$. Ak ale chceme vyjadriť iba projekciu, môžeme

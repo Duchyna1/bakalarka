@@ -5,6 +5,7 @@ import java.util.*;
 
 public class RADef extends RAExpr {
     private final List<List<Term>> tuples;
+    private final int arity;
     
     private void checkArrity(List<List<Term>> tuples) {
         if (tuples.isEmpty()) return;
@@ -33,6 +34,11 @@ public class RADef extends RAExpr {
         for (List<Term> tuple : tuples) {
             this.tuples.add(new ArrayList<>(tuple));
         }
+        this.arity = tuples.isEmpty() ? -1 : tuples.get(0).size();
+    }
+    
+    public int arity() {
+        return this.arity;
     }
     
     public List<List<Term>> getTuples() {

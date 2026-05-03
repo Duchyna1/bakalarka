@@ -86,10 +86,10 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
     @Override
     public Predicate visitPredicate(datalogParser.PredicateContext ctx) {
         if (ctx.normal_predicate() != null) {
-            // Is a normal predicate
+            // Is normal predicate
             return visitNormal_predicate(ctx.normal_predicate());
         } else {
-            // Is a negative predicate
+            // Is negative predicate
             return visitNormal_predicate(ctx.negative_predicate().normal_predicate());
         }
     }
@@ -97,10 +97,10 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
     @Override
     public Predicate visitBuilt_in_predicate(datalogParser.Built_in_predicateContext ctx) {
         if (ctx.normal_built_in_predicate() != null) {
-            // Is a normal built-in predicate
+            // Is normal built-in predicate
             return visitNormal_built_in_predicate(ctx.normal_built_in_predicate());
         } else {
-            // Is a negative built-in predicate
+            // Is negative built-in predicate
             return visitNormal_built_in_predicate(
                 ctx.negative_built_in_predicate().normal_built_in_predicate()
             );
@@ -139,7 +139,7 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
         
         // Build tuples
         for (datalogParser.Term_tupleContext tupleCtx : ctx.term_tuple()) {
-            // Build a tuple of terms
+            // Build tuple of terms
             List<Term> tuple = new ArrayList<>();
             for (datalogParser.TermContext termCtx : tupleCtx.term()) {
                 tuple.add(visitTerm(termCtx));
@@ -159,10 +159,10 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
     public Query visitQuery(datalogParser.QueryContext ctx) {
         Predicate pred;
         if (ctx.normal_predicate() != null) {
-            // Is a normal predicate
+            // Is normal predicate
             pred = visitNormal_predicate(ctx.normal_predicate());
         } else {
-            // Is a built-in predicate
+            // Is built-in predicate
             pred = visitNormal_built_in_predicate(ctx.normal_built_in_predicate());
         }
         return new Query(pred);
@@ -173,18 +173,18 @@ public class DatalogASTBuilder extends datalogBaseVisitor<Object> {
         if (ctx.variable() != null) {
             String varName = ctx.variable().getText();
             if (Character.isUpperCase(varName.charAt(0))) {
-                // If starts with uppercase letter, it's a variable
+                // Starts with uppercase letter - variable
                 return new Variable(varName);
             } else {
-                // Otherwise, it's a constants
+                // Constants
                 return new Constant(varName);
             }
         } else if (ctx.function() != null) {
-            // Is a function term
+            // Function term
             String funcName = ctx.function().getText();
             List<Term> args = new ArrayList<>();
             
-            // Build function arguments
+            // Function arguments
             if (ctx.term() != null) {
                 for (datalogParser.TermContext termCtx : ctx.term()) {
                     args.add(visitTerm(termCtx));

@@ -21,7 +21,7 @@ program: (clause | definition)* query;
 \end{verbatim}
 kde \verb|program| bude počiatočný neterminál celej gramatiky, \verb|clause|, resp.
 \verb|definition|, resp. \verb|query| bude neterminál, z ktorého sa odvodí klauzula, resp.
-definícia, resp. dotaz.
+definícia, resp. dotaz. Takto definovaná gramatika vyžaduje práve jeden dotaz na konci programu, ale môže obsahovat ľubovoľný počet klauzúl a definícii (vrátane žiadnych).
 
 Neterminál \verb|definition| sa bude prepisovať priamočiaro. Najprv treba zadať meno predikátu, ktorý
 definujeme a potom napísať $n$-tice termov, pre ktorý je platný.

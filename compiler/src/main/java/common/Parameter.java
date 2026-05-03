@@ -1,9 +1,12 @@
 package common;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parameter extends Term {
     private final String text;
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("[A-Z][A-Z0-9_]*");
 
     public Parameter(String text) {
         this.text = text;
@@ -12,10 +15,15 @@ public class Parameter extends Term {
     public String getText() {
         return text;
     }
-
+    
     @Override
     public Set<String> getVariables() {
-        return new HashSet<>();
+        Set<String> vars = new HashSet<>();
+        Matcher matcher = VARIABLE_PATTERN.matcher(text);
+        while (matcher.find()) {
+            vars.add(matcher.group());
+        }
+        return vars;
     }
 
     @Override

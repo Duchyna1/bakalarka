@@ -1,4 +1,3 @@
-import common.FunctionTerm;
 import common.Term;
 import common.Variable;
 import datalog.Atom;
@@ -32,9 +31,9 @@ public class DatalogCompiler {
         for (Map.Entry<String, RAExpr> entry : transformedDefinitions.entrySet()) {
             String name = entry.getKey();
             RAExpr expr = entry.getValue();
-            List<RAExpr> mutableList = new ArrayList<>();
-            mutableList.add(expr);
-            compiledDefinitions.put(name, mutableList);
+            List<RAExpr> tempList = new ArrayList<>();
+            tempList.add(expr);
+            compiledDefinitions.put(name, tempList);
         }
         
         Map<String, RAExpr> compiledClauses = compileClauses(program.getClausesByPredicate());
@@ -93,6 +92,8 @@ public class DatalogCompiler {
                 if (def instanceof RADef) 
                     allTuples.addAll(((RADef) def).getTuples());
             
+            allTuples = new ArrayList<>(new LinkedHashSet<>(allTuples));
+            
             combinedDefinitions.put(name, new RADef(allTuples));
         }
         return combinedDefinitions;
@@ -144,6 +145,18 @@ public class DatalogCompiler {
             String name = entry.getKey();
             List<RAExpr> definitions = entry.getValue();
             
+            int arity = -1;
+            for (RAExpr def : definitions) {
+                if (def instanceof RADef) {
+                    int defArity = ((RADef) def).arity();
+                    if (arity == -1) {
+                        arity = defArity;
+                    } else if (defArity != arity) {
+                        throw new IllegalArgumentException("All definitions for a predicate must have the same arity");
+                    }
+                }
+            }
+            
             if (definitions.size() == 1) {
                 mergedDefinitions.put(name, definitions.get(0));
             } else {
@@ -191,6 +204,11 @@ public class DatalogCompiler {
             }
         }
         
+        if (positiveBodyAtoms.isEmpty())
+        {
+            positiveBodyAtoms.add(new Atom(new Predicate("true", List.of(), true), false));
+        }
+        
         // Only one positive body atom
         if (positiveBodyAtoms.size() == 1 && negativeBodyAtoms.isEmpty()) {
             Atom atom = positiveBodyAtoms.get(0);
@@ -215,17 +233,37 @@ public class DatalogCompiler {
             return new RAJoin(positiveBodyRelations, inputTerms, headTerms);
         }
         
-        // Both positive and negative body atoms
-        List<RAExpr> positiveBodyRelations = new ArrayList<>();
-        for (Atom atom : positiveBodyAtoms) {
-            positiveBodyRelations.add(new RelationRef(atom.getPredicate().getName(), atom.getPredicate().isBuiltIn()));
+        RAExpr positiveJoin;
+        List<Term> positiveOutputTerms;
+        
+        // Only one positive body atom and negative body atoms
+        if (positiveBodyAtoms.size() == 1) {
+            Atom atom = positiveBodyAtoms.get(0);
+            positiveJoin = new RelationRef(atom.getPredicate().getName(), atom.getPredicate().isBuiltIn());
+            positiveOutputTerms = atom.getPredicate().getTerms();
         }
-        List<List<Term>> positiveInputTerms = new ArrayList<>();
-        for (Atom atom : positiveBodyAtoms) {
-            positiveInputTerms.add(atom.getPredicate().getTerms());
+        else
+        {
+            // Both positive and negative body atoms
+            List<RAExpr> positiveBodyRelations = new ArrayList<>();
+            for (Atom atom : positiveBodyAtoms) {
+                positiveBodyRelations.add(new RelationRef(atom.getPredicate().getName(), atom.getPredicate().isBuiltIn()));
+            }
+            List<List<Term>> positiveInputTerms = new ArrayList<>();
+            for (Atom atom : positiveBodyAtoms) {
+                positiveInputTerms.add(atom.getPredicate().getTerms());
+            }
+            positiveOutputTerms = new ArrayList<>();
+            for (List<Term> termTuple : positiveInputTerms) {
+                for (Term term : termTuple) {
+                    for (String var : term.getVariables()) {
+                        positiveOutputTerms.add(new Variable(var));
+                    }
+                }
+            }
+            positiveOutputTerms = new ArrayList<>(new LinkedHashSet<>(positiveOutputTerms));
+            positiveJoin = new RAJoin(positiveBodyRelations, positiveInputTerms, positiveOutputTerms);
         }
-        List<Term> positiveOutputTerms = new ArrayList<>(new LinkedHashSet<>(positiveInputTerms.stream().flatMap(List::stream).toList()));
-        RAExpr positiveJoin = new RAJoin(positiveBodyRelations, positiveInputTerms, positiveOutputTerms);
         
         List<RAExpr> negativeBodyRelations = new ArrayList<>();
         negativeBodyRelations.add(positiveJoin);
@@ -278,13 +316,17 @@ public class DatalogCompiler {
         return graph;
     }
     
-    private boolean dfs(Map<String, List<String>> graph, String current, Set<String> visited) {
+    private boolean dfs(String start, Map<String, List<String>> graph, String current, Set<String> visited) {
+        if (current.equals(start) && !visited.isEmpty()) {
+            return true; // Cycle found
+        }
+
         if (visited.contains(current)) {
-            return true; // Cycle detected
+            return false;
         }
         visited.add(current);
         for (String neighbor : graph.getOrDefault(current, Collections.emptyList())) {
-            if (dfs(graph, neighbor, visited)) {
+            if (dfs(start, graph, neighbor, visited)) {
                 return true;
             }
         }
@@ -294,7 +336,7 @@ public class DatalogCompiler {
     
     private boolean isRecursive(Map<String, List<String>> graph, String relationName) {
         Set<String> visited = new LinkedHashSet<>();
-        return dfs(graph, relationName, visited);
+        return dfs(relationName, graph, relationName, visited);
     }
     
     private RAExpr inlineExpression(RAExpr expr, Map<String, RAExpr> relations, List<String> dontInline) {

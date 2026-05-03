@@ -40,10 +40,6 @@ public class Clause {
             }
         }
         
-        if (bodyPositiveVars.size() == 0) {
-            return "No positive atoms in body";
-        }
-        
         for (String var : headVars) {
             if (!bodyPositiveVars.contains(var) && !bodyNegativeVars.contains(var)) {
                 return "Variable in head not in body";
