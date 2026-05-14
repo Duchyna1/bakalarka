@@ -1,0 +1,76 @@
+\addcontentsline{toc}{chapter}{Príloha}
+\chapter*{Príloha}
+\vspace{-1cm}
+
+\subsection*{Štruktúra priečinka \texttt{compiler}}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\dirtree{%
+.1 compiler/.
+.2 generate\_tests.sh.
+.2 pom.xml.
+.2 README.md.
+.2 src/.
+.3 main/.
+.4 antlr4/.
+.5 datalog.g4.
+.4 java/.
+.5 common/.
+.6 Constant.java.
+.6 FunctionTerm.java.
+.6 Parameter.java.
+.6 Term.java.
+.6 Variable.java.
+.5 datalog/.
+.6 Atom.java.
+.6 Clause.java.
+.6 DatalogProgram.java.
+.6 Definition.java.
+.6 Predicate.java.
+.6 Query.java.
+.5 ra/.
+.6 RAAntiJoin.java.
+.6 RADef.java.
+.6 RAExpr.java.
+.6 RAJoin.java.
+.6 RARec.java.
+.6 RAUnion.java.
+.6 RelationRef.java.
+.5 DatalogASTBuilder.java.
+.5 DatalogCompiler.java.
+.5 MyErrorListener.java.
+.5 TranslateDatalogFile.java.
+.2 tests/.
+.3 000\_turing\_machine.dl.
+.3 000\_turing\_machine.ra.
+.3 \ldots.
+}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Súbory s príponou \texttt{.dl} sú vstupné testovacie Datalogové programy. Súbory s príponou
+\texttt{.ra} obsahujú očakávaný výstup prekladu v relačnej algebre. Testy označené ako
+\textit{chybový vstup} (prípona \texttt{\_e}) neobsahujú súbor \texttt{.ra}, pretože ich očakávaným
+výsledkom je chybová hláška kompilátora.
+
+\vline\vspace{-0.3cm}
+
+Súbor \texttt{TranslateDatalogFile.java} obsahuje metódu \texttt{main}, ktorá preloží Datalogový
+program zo štandardného vstupu a vypíše výsledok na štandardný výstup.
+
+\vline\vspace{-0.3cm}
+
+Súbor \texttt{generate\_tests.sh} je skript, ktorý pre každý Datalogový program v priečinku
+\texttt{tests} spustí kompilátor, presmeruje ho na štandardný vstup a výstup presmeruje do
+príslušného súboru \texttt{.ra}.
+
+\vline\vspace{-0.3cm}
+
+Súbor \texttt{datalog.g4} obsahuje gramatiku Datalogu, ktorú používa nástroj ANTLR na vygenerovanie
+Java kódu pre lexikálnu a syntaktickú analýzu Datalogových programov.
+
+\vline\vspace{-0.3cm}
+
+Súbor \texttt{README.md} obsahuje stručný popis priečinka a návod na spustenie kompilátora a testov.
+\end{minipage}
+

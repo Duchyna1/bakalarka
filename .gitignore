@@ -1,6 +1,6 @@
-.antlr
 praca/main.synctex.gz
 target
+!compiler.jar
 .vscode
 zdroje
 *.nav
@@ -8,4 +8,3 @@ zdroje
 *.synctex.gz
 compiler/tests/*
 !compiler/tests/000*
-compiler/src/main/java/Test*

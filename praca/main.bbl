@@ -1,5 +1,5 @@
 \newcommand{\noopsort}[1]{} \newcommand{\printfirst}[2]{#1} \newcommand{\singleletter}[1]{#1} \newcommand{\switchargs}[2]{#2#1}
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{antlrDoc}
 {ANTLR Project}.
@@ -10,6 +10,10 @@
 \bibitem{RAcompilator}
 Diana Biriukova.
 \newblock Compiler of relational algebra expressions, 2025.
+
+\bibitem{hedera2022relacna}
+Matúš Hedera.
+\newblock Relačná algebra pre výpočet rekurzívnych dotazov, 2022.
 
 \bibitem{JAVAimple}
 Tomáš Magát.

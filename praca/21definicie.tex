@@ -1,8 +1,7 @@
-\section{Definície}
 V tejto časti sa inšpirujeme relačnou algebrou z \cite{RAcompilator} a klasickou
 \textit{učebnicovou} relačnou algebrou a definujeme našu vlastnú.
 
-\subsection{Učebnicová relačná algebra}
+\section{Učebnicová relačná algebra}
 Klasická relačná algebra pracuje s reláciami, ktoré majú väčšinou jednotlivé atribúty pomenované.
 Potom ich vieme jednoducho reprezentovať pomocou tabuliek.
 
@@ -27,17 +26,17 @@ Potom ich vieme jednoducho reprezentovať pomocou tabuliek.
 
 Na manipuláciu s týmito reláciami existuje niekoľko operátorov:
 
-\subsubsection{\textbf{Množinové operátory}} zjednotenie množín $\cup$, rozdiel množín $-$, (prienik
-množín $\cap$, ale ten sa dá vyjadriť aj za pomoci rodielu $A \cap B = A - (A-B)$)
+\subsection*{\textbf{Množinové operátory}} zjednotenie množín $\cup$, rozdiel množín $-$, (prienik
+množín $\cap$, ale ten sa dá vyjadriť aj za pomoci rozdielu $A \cap B = A - (A-B)$)
 
 Pre relácie, na ktoré aplikujeme tieto operátory musí platiť, že majú identické domény atribútov.
-Pred tým, ako aplikujeme operátor na dve relácie, musíme usporiadať ich atribúty v jednotlivých
+Predtým, ako aplikujeme operátor na dve relácie, musíme usporiadať ich atribúty v jednotlivých
 záznamoch do rovnakého poradia.
 
-\subsubsection{\textbf{Karteziánsky súčin $\times$}} $R \times S$, kde $R$ a $S$ sú relácie.
+\subsection*{\textbf{Karteziánsky súčin $\times$}} $R \times S$, kde $R$ a $S$ sú relácie.
 Výsledná relácia sa dá matematicky zapísať nasledovne: 
 $$R \times S = \{(a_1, \dots, a_n, b_1, \dots, b_m) \, | \,  (a_1, \dots, a_n) \in R, (b_1, \dots,
-b_m) \in S)\}$$
+b_m) \in S\}$$
     \begin{priklad}
     \begin{center}
         \[
@@ -76,7 +75,7 @@ b_m) \in S)\}$$
     \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Projekcia $\Pi$}} $\Pi_{a_1, \dots, a_n}(R)$, kde $a_1, \dots, a_n$ sú názvy
+\subsection*{\textbf{Projekcia $\Pi$}} $\Pi_{a_1, \dots, a_n}(R)$, kde $a_1, \dots, a_n$ sú názvy
 atribútov relácie $R$, vráti novú reláciu, ktorá obsahuje \uv{iba stĺpce} $a_1, \dots, a_n$.
 Výsledok je stále relácia (čiže aj množina), takže neobsahuje duplicitné záznamy.
     \begin{priklad}
@@ -118,7 +117,7 @@ Výsledok je stále relácia (čiže aj množina), takže neobsahuje duplicitné
     \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Selekcia $\sigma$}} $\sigma_C(R)$, kde $C$ je podmienka, ktorá obsahuje
+\subsection*{\textbf{Selekcia $\sigma$}} $\sigma_C(R)$, kde $C$ je podmienka, ktorá obsahuje
 atribúty relácie $R$. Výsledná relácia je podmnožina relácie $R$ obsahujúca iba tie záznamy, ktoré
 spĺňajú podmienku $C$.
     \begin{priklad}
@@ -148,7 +147,7 @@ spĺňajú podmienku $C$.
     \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Prirodzený (natural) join $\Join$}} $R \Join S$, kde $R$ a $S$ sú relácie.
+\subsection*{\textbf{Prirodzený (natural) join $\Join$}} $R \Join S$, kde $R$ a $S$ sú relácie.
 Podobne ako v karteziánskom súčine párujeme záznamy z dvoch relácií, ale iba tie záznamy z $R$ a
 $S$, ktoré sa zhodujú na atribútoch spoločných pre $R$ a $S$. V množinovom zápise:
     \begin{align*}
@@ -197,13 +196,13 @@ $S$, ktoré sa zhodujú na atribútoch spoločných pre $R$ a $S$. V množinovom
         \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Antijoin $\Antijoin$}} $R \Antijoin S$, kde $R$ a $S$ sú relácie. Vo
+\subsection*{\textbf{Antijoin $\Antijoin$}} $R \Antijoin S$, kde $R$ a $S$ sú relácie. Vo
 výslednej relácii sú tie záznamy z $R$, pre ktoré neexistuje záznam v $S$, s ktorým by sa zhodovali
 na spoločných atribútoch. V množinovom zápise: 
     \begin{align*}
         R          &= A_1 \times \cdots \times A_n \times C_1 \times \cdots \times C_k\\
         S          &= B_1 \times \cdots \times B_n \times C_1 \times \cdots \times C_k\\
-        R \times S &= \{(a_1, \dots, a_n, c_1, \dots, c_k) \in R \, | \, \forall (b_1, \dots, b_m, c'_1, \dots, c'_k) \in S: c_1 \neq c'_1, \dots, c_k \neq c'_k\}
+        R \times S &= \{(a_1, \dots, a_n, c_1, \dots, c_k) \in R \, | \, \forall (b_1, \dots, b_m, c'_1, \dots, c'_k) \in S, \exists i: c_i \neq c_i'\}
     \end{align*}
     \begin{priklad}
         \begin{center}
@@ -239,7 +238,7 @@ na spoločných atribútoch. V množinovom zápise:
         \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Theta-join $\Join_C$}} $R \Join_C S$, kde $R$ a $S$ sú relácie a $C$ je
+\subsection*{\textbf{Theta-join $\Join_C$}} $R \Join_C S$, kde $R$ a $S$ sú relácie a $C$ je
 podmienka, v ktorej sa vyskytujú atribúty z $R$ a $S$. Natural join nám povolil spojiť dva záznamy
 iba ak ich spoločné atribúty boli rovnaké. Theta-join popáruje každú dvojicu záznamov z $R$ a $S$,
 ktoré spĺňajú podmienku $C$.
@@ -265,7 +264,7 @@ ktoré spĺňajú podmienku $C$.
                 \end{array}
                 &
                 \begin{array}{c|c|c|c|c}
-                \multicolumn{5}{c}{M \Join_{R.\textbf{Od} < M.\textbf{Roz} \land M.\textbf{Roz} < R.\textbf{Od}} R} \\ \hline
+                \multicolumn{5}{c}{M \Join_{R.\textbf{Od} < M.\textbf{Roz} \land M.\textbf{Roz} < R.\textbf{Do}} R} \\ \hline
                 \textbf{Mesto}    & \textbf{Roz} & \textbf{Od} & \textbf{Do} & \textbf{Veľ}   \\ \hline
                 \text{Bratislava} & \text{368}   & 301         & 1000        & \text{Veľké}   \\
                 \text{Košice}     & \text{242}   & 101         & 300         & \text{Stredné} \\
@@ -277,7 +276,7 @@ ktoré spĺňajú podmienku $C$.
     \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Premenovanie $\rho$}} $\rho_{A/ B} (R)$, kde $R$ je relácia, $A$ je názov
+\subsection*{\textbf{Premenovanie $\rho$}} $\rho_{A/ B} (R)$, kde $R$ je relácia, $A$ je názov
 atribútu z relácie $R$ a $B$ je nový názov atribútu. Výsledkom bude relácia s rovnakými záznamami,
 iba atribút $A$ sa premenuje na $B$.
     \begin{priklad}
@@ -310,19 +309,20 @@ iba atribút $A$ sa premenuje na $B$.
     \end{center}
     \end{priklad}
     
-\subsubsection{\textbf{Iné join-y}} V niektorých knihách sa spomínajú aj iné variácie join-ov ako
+\subsection*{\textbf{Iné join-y}} V niektorých knihách sa spomínajú aj iné variácie join-ov ako
 \textit{left outer join}, \textit{right outer join} alebo \textit{full outer join}. My sa s nimi
 nebudeme zaoberať, keďže sa dajú vyskladať z predchádzajúcich operátorov. Pre ich správne fungovanie
 treba ale zaviesť špeciálnu konštantu, ktorá sa v literatúre označuje ako $\omega$, $\varepsilon$,
 \verb|null| alebo \verb|none|.
 
-\subsection{Naša relačná algebra}
-Pre jednoduchší preklad datalogu do relačnej algebry sme si zvolili nasledujúcu algebru so štyrmi
+\section{Naša relačná algebra}
+Pre jednoduchší preklad Datalogu do relačnej algebry sme si zvolili nasledujúcu algebru so štyrmi
 operátormi (inšpirovaná algebrou z \cite{RAcompilator}). Tiež pracuje s reláciami, ale nepotrebuje
 vopred pomenované atribúty. Vždy, keď potrebuje pracovať s \uv{názvami stĺpcov}, sú explicitne
 vymenované.
 
-\subsubsection{}
+\vline
+
 $\UNION([R_1, \dots, R_n])$, kde $R_1, \dots, R_n$ sú relácie s rovnakým počtom atribútov. Výsledná
 relácia bude obsahovať všetky záznamy z každej relácie $R_1$ až $R_n$ (až na duplikáty). Formálne
 $\UNION([R_1, \dots, R_n]) = \bigcup\limits_{i=1}^n R_i$.
@@ -369,7 +369,8 @@ $\UNION([R_1, \dots, R_n]) = \bigcup\limits_{i=1}^n R_i$.
     \end{center}
     \end{priklad} 
 
-\subsubsection{}
+\vline
+
 $\JOIN([R_1, \dots, R_n], [[T_{1, 1}, \dots, T_{1, a_1}], \dots, [T_{n, 1}, T_{n, a_n}]], [T_1,
 \dots, T_k])$, kde $R_i$ je relácia s aritou $a_i$, $T_{i, j}$ sú \textit{vstupné} termy a $T_l$ sú
 \textit{výstupné} termy.
@@ -406,7 +407,8 @@ k_p) \in M\} \text{.}$$
     \end{priklad}
 
         
-\subsubsection{}
+\vline
+
 $\ANTIJOIN([R_1, \dots, R_n], [[T_{1, 1}, \dots, T_{1, a_1}], \dots, [T_{n, 1}, T_{n, a_n}]], [T_1,
 \dots, T_k])$, kde $R_i$ je relácia s aritou $a_i$, $T_{i, j}$ sú \textit{vstupné} termy a $T_l$ sú
 \textit{výstupné} termy.
@@ -454,24 +456,27 @@ Nech $f$ je funkčný symbol, ktorý pre ľubovoľný reťazec vráti jeho prvý
     \end{center}
     \end{priklad}
         
-\subsubsection{}
+\vline
+
 $\REC(N, R)$, kde $N$ je názov relácie a $R$ je relácia. Tento operátor definuje reláciu s názvom
 $N$ a dovoľuje použiť v relácii $R$ odkaz na ňu.
-    \begin{priklad}
+\begin{priklad}
     \begin{center}
-$$\REC ( t, \UNION ( [ \$s, \JOIN ( [t, t], [[X, Z], [Z, Y]], [X, Y] ) ] ) )$$ Relácia $t$ je
-tranzitívny uzáver vstavanej relácie $s$.
+        $$\REC ( t, \UNION ( [ \$s, \JOIN ( [t, t], [[X, Z], [Z, Y]], [X, Y] ) ] ) )$$ Relácia $t$ je
+        tranzitívny uzáver vstavanej relácie $s$.
     \end{center}
-    \end{priklad}
+\end{priklad}
 
-\subsubsection{Vstavané operátory}
-Ako sme si ukázali skorej (definícia \ref{predikat2relacia}), na predikáty a relácie sa vieme
+\subsection{Vstavané operátory}
+Ako sme si ukázali skôr (definícia \ref{predikat2relacia}), na predikáty a relácie sa vieme
 pozerať ako na rovnaké objekty. Taktiež na operátory \JOIN, \ANTIJOIN, \UNION\ a \REC\ sa vieme
 pozerať ako na relácie, keďže ich výstupom je vždy relácia. Preto ku každému vstavanému predikátu
 vieme definovať vstavaný operátor, ktorý bude fungovať rovnako a bude mať rovnaké vstupy. Jediný
 rozdiel bude formálny, keďže vstavané operátory budú mať výstupom reláciu, zatiaľ čo vstavané
 predikáty majú výstupom pravdivostnú hodnotu. Takýto prístup si ale vyžadoval zmenu parsera relačnej
 algebry \cite{RAcompilator}.
+
+\newpage
 
 \begin{definition}
     \textbf{Parameter} (\textit{v kontexte relačnej algebry}) je:
@@ -488,7 +493,6 @@ algebry \cite{RAcompilator}.
     \dots, P_n$ sú parametre operátora. Výstupom operátora je relácia.
 \end{definition}
 
-Starý prístup spracovával \JOIN, \ANTIJOIN, \UNION\ a \REC\ osobitne. Nový prístup ich spracováva
-rovnako ako ostatné operátory. Viac o ňom sa viete dočítať v \cite{JAVAimple}. Formálne by sme mali
-naše 4 operátory zapisovať s prefixom \$, ale keďže zvyšok implementácie vyžaduje, aby boli
-implementované v databázovom systéme tak, ako sme ich definovali, tak ich budeme zapisovať bez \$.
+Operátory \JOIN, \ANTIJOIN, \UNION\ a \REC\ budeme v ďalšom texte niekedy zapisovať bez znaku \$, aj
+keď sú v relačnej algebre definované ako vstavané operátory. Od kompilátora relačnej algebry
+vyžadujeme, aby boli tieto štyri vstavané operátory k dispozícii.

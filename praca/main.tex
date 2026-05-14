@@ -6,8 +6,11 @@
 \usepackage[T1]{fontenc}
 
 \usepackage[slovak]{babel}
-% \usepackage[none]{hyphenat} % zakaze delenie slov
+% \usepackage{ragged2e} % pre lepšiu justifikáciu \usepackage[none]{hyphenat} % zakazuje delenie
+% slov \usepackage{hyphenat} % povoluje delenie slov
 \usepackage{enumitem}
+
+% \justifying % justifikuj celý text
 \usepackage{qtree}
 
 \linespread{1.25}
@@ -17,18 +20,10 @@
 \renewcommand{\lstlistingname}{Algoritmus}
 % nastavenia balicka listings mozete pridat aj language=... na nastavenie najcastejsie pouzivaneho
 % prog. jazyka takisto sa da zapnut cislovanie riadkov
-\lstset{
-	basicstyle=\ttfamily\small,
-	keywordstyle=\color{blue}\bfseries,
-	commentstyle=\color{gray}\itshape,
-	stringstyle=\color{red},
-	breaklines=true,
-	showstringspaces=false,
-	captionpos=b,
-	aboveskip=\baselineskip,
-	belowskip=\baselineskip,
-	frame=l
-}
+\lstset{ basicstyle=\ttfamily\small, keywordstyle=\color{blue}\bfseries,
+	commentstyle=\color{gray}\itshape, stringstyle=\color{red}, breaklines=true,
+	showstringspaces=false, captionpos=b, aboveskip=\baselineskip, belowskip=\baselineskip, frame=l
+	}
 
 \newcommand{\true}{\top}
 \newcommand{\false}{\bot}
@@ -42,6 +37,7 @@
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{dirtree}
 
 \newtheoremstyle{defstyle}% name
 {}% Space above
@@ -190,7 +186,7 @@ zozname.
 % predpismi, akademickými právami a slobodami, etickými a morálnymi zásadami za súčasného dodržania
 % akademickej integrity. Som si vedomý/vedomá, že plne zodpovedám za správnosť výsledného textu.
 
-\paragraph{Poďakovanie:} TODO % TODO
+% \paragraph{Poďakovanie:} TODO % TODO
 
 % --- Koniec poďakovania
 
@@ -200,12 +196,22 @@ zozname.
 \newpage 
 \section*{Abstrakt}
 
-% TODO
-Slovenský abstrakt v rozsahu 100-500 slov, jeden odstavec. Abstrakt stručne sumarizuje výsledky
-práce. Mal by byť pochopiteľný pre bežného informatika. Nemal by teda využívať skratky, termíny
-alebo označenie zavedené v práci, okrem tých, ktoré sú všeobecne známe.
+Táto práca sa zaoberá návrhom a implementáciou kompilátora z jazyka Datalog rozšíreného o funkčné
+symboly a vstavané predikáty do relačnej algebry. Motiváciou je integrácia Datalogu ako vyššieho
+dotazovacieho jazyka do experimentálneho databázového systému, ktorý používa relačnú algebru ako
+interný dotazovací jazyk.
 
-\paragraph*{Kľúčové slová:} datalog, relačná algebra, kompilátor, databázový systém
+V teoretickej časti práce definujeme syntax a sémantiku Datalogu s funkčnými symbolmi a vstavanými
+predikátmi. Následne špecifikujeme cieľovú relačnú algebru so štyrmi operátormi: \UNION, \JOIN,
+\ANTIJOIN\ a \REC.
+
+V implementačnej časti popíšeme gramatiku Datalogu zapísanú v nástroji ANTLR 4, konštruovanie
+abstraktného syntaktického stromu a viacstupňový algoritmus prekladu.  Kompilátor vykonáva
+syntaktickú aj sémantickú analýzu vstupného programu a generuje ekvivalentný výraz relačnej algebry.
+Výsledný nástroj je použiteľný samostatne, nezávisle od konkrétneho databázového systému.
+
+\paragraph*{Kľúčové slová:} Datalog, relačná algebra, kompilátor, funkčné symboly, ANTLR, databázový
+systém
 
 
 % -------------------
@@ -213,11 +219,23 @@ alebo označenie zavedené v práci, okrem tých, ktoré sú všeobecne známe.
 % -------------------
 \newpage 
 \section*{Abstract}
-% TODO
-Abstract in the English language (translation of the abstract in the Slovak language).
 
-% TODO
-\paragraph*{Keywords:} 
+This thesis deals with the design and implementation of a compiler from the Datalog language
+extended with function symbols and built-in predicates to relational algebra. The motivation is the
+integration of Datalog as a higher-level query language into an experimental database system that
+uses relational algebra as its internal query language.
+
+In the theoretical part of the thesis, we define the syntax and semantics of Datalog with function
+symbols and built-in predicates. We then specify the target relational algebra with four operators:
+\UNION, \JOIN, \ANTIJOIN\ and \REC.
+
+In the implementation part, we describe the Datalog grammar written in ANTLR 4, the construction of
+an abstract syntax tree, and a multi-step translation algorithm. The compiler performs syntactic and
+semantic analysis of the input program and generates an equivalent relational algebra expression.
+The resulting tool can be used standalone, independently of any specific database system.
+
+\paragraph*{Keywords:} Datalog, relational algebra, compiler, function symbols, ANTLR, database
+system
 
 % --- Koniec Abstrakt - Anglicky
 
@@ -252,8 +270,7 @@ Abstract in the English language (translation of the abstract in the Slovak lang
 
 \newpage 
 
-% \listoffigures
-% \listoftables
+% \listoffigures \listoftables
 
 % ---  Koniec Zoznamov
 
@@ -265,7 +282,7 @@ Abstract in the English language (translation of the abstract in the Slovak lang
 \input{10datalog.tex}
 \input{20relacnaalgebra.tex}
 \input{30kompilator.tex}
-\input{99zaver.tex}
+\input{90zaver.tex}
 
 % -------------------
 % --- Bibliografia
@@ -284,7 +301,7 @@ Abstract in the English language (translation of the abstract in the Slovak lang
 \bibliography{literatura} 
 
 % Prípadne môžete napísať literatúru priamo tu \begin{thebibliography}{5}
- 
+
 % \bibitem{br1} MOLINA H. G. - ULLMAN J. D. - WIDOM J., 2002, Database Systems, Upper Saddle River :
 % Prentice-Hall, 2002, 1119 s., Pearson International edition, 0-13-098043-9
 
@@ -310,5 +327,7 @@ Abstract in the English language (translation of the abstract in the Slovak lang
 
 % Nepovinná časť prílohy obsahuje materiály, ktoré neboli zaradené priamo  do textu. Každá príloha
 % sa začína na novej strane. Zoznam príloh je súčasťou obsahu.
+
+\input{99prilohy.tex}
 
 \end{document}

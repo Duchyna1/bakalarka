@@ -1,7 +1,7 @@
 \section{ANTLR}
 Náš kompilátor používa generátor \textit{parserov} \textbf{AN}other \textbf{T}ool for
 \textbf{L}anguage \textbf{R}ecognition. V tejto časti si priblížime, ako funguje \textit{ANTLR} a
-ako funguje samotný preklad do relačnej algebry.
+ako prebieha preklad z Datalogu do relačnej algebry.
 
 \subsection{Rýchlokurz formálnych jazykov}
 
@@ -93,12 +93,10 @@ ako funguje samotný preklad do relačnej algebry.
 \end{definition}
 
 \subsection{Syntaktická analýza}
-Na to, aby sme vedeli preložiť datalog do relačnej algebry, zišlo by sa nám vedieť z čoho sa
-datalogový program skladá. Aké obsahuje fakty, klauzuly, dotaz, atď. Pomocou týchto informácií
-bude následne jednoduchšie napísať algoritmus, ktorý nám datalogový program preloží do relačnej
-algebry. Jedným zo spôsobov je tzv. \textit{syntaktická analýza}. Ukážeme si, ako funguje na
-jednoduchom príklade, v ktorom budeme prekladať aritmetické výrazy z infixovej notácie do
-postfixovej notácie.
+Na to, aby sme vedeli preložiť Datalog do relačnej algebry potrebujeme vedieť identifikovať a
+preložiť jeho jednotlivé jazykové prvky. Tie prvky nájde tzv. \textit{syntaktická analýza}. Ukážeme
+si, ako funguje na jednoduchom príklade, v ktorom budeme prekladať aritmetické výrazy z infixovej
+notácie do postfixovej notácie.
 
 Zoberme si jednoduchú gramatiku $G$ generujúcu jazyk aritmetických výrazov v infixovej notácii:
 \begin{align*}
@@ -118,6 +116,7 @@ Zoberme si jednoduchú gramatiku $G$ generujúcu jazyk aritmetických výrazov v
 
 Zoberme si slovo z tohto jazyka, napríklad $(4 + 5)\cdot 123 \cdot 0$, a k nemu jedno
 prislúchajúce odvodenie (odvodenie zakreslíme pomocou stromu).
+
 \begin{center}
     \[
     \Tree
@@ -215,11 +214,22 @@ prislúchajúce odvodenie (odvodenie zakreslíme pomocou stromu).
 Môžeme si všimnúť, že veľkosť stromu odvodenia rýchlo narastá, hlavne kvôli odvodzovaniu čísiel.
 Preto sa v praxi často používa tzv. \textit{lexer} (\textit{tokenizer}). Lexer rozdelí vstupný
 reťazec (slovo) na tzv. \textit{tokeny}, ktoré sú zjednodušenou reprezentáciou častí vstupného
-reťazca. Tieto tokeny sú popísané pomocou regulárnych jazykov (väčšinou pomocou regulárnych
-výrazov, ktoré sú ekvivalentné s regulárnymi gramatikami \cite{rovan2013regex}). Následne sa odvodenie robí nad
-tokenami, čím sa zmenší veľkosť stromu odvodenia a zjednoduší sa nám odvodenie. V našom prípade
+reťazca. Tieto tokeny sú popísané pomocou regulárnych jazykov (väčšinou pomocou regulárnych výrazov,
+ktoré sú ekvivalentné s regulárnymi gramatikami \cite{rovan2013regex}). Následne sa odvodenie robí
+nad tokenami, čím sa zmenší veľkosť stromu odvodenia a zjednoduší sa nám odvodenie. V našom prípade
 definujeme jeden token reprezentujúci celé čísla
 $$\texttt{INT} = \{0\} \cup \{1, 2, 3, 4, 5, 6, 7, 8, 9\} \cdot \{1, 2, 3, 4, 5, 6, 7, 8, 9, 0\}^* \approx \mathbb{N}_0\text{.}$$
+
+Lexer pri čítaní vstupného reťazca postupne rozpoznáva jednotlivé tokeny podľa definovaných
+regulárnych výrazov.  Napríklad pri spracovaní reťazca $(4 + 5)\cdot 123 \cdot 0$ by lexer generoval
+nasledujúci \textit{stream tokenov}:
+$$\texttt{LPAREN}(\texttt{(}),\, \texttt{INT}(4),\, \texttt{PLUS}(\texttt{+}),\, \texttt{INT}(5),\,
+\texttt{RPAREN}(\texttt{)}),\, \texttt{MULT}(\cdot),\, \texttt{INT}(123),\, \texttt{MULT}(\cdot),\,
+\texttt{INT}(0)$$
+
+Každý token obsahuje svoj typ (\texttt{INT}, \texttt{PLUS}, \texttt{LPAREN}, \dots) a prípadne svoju
+hodnotu.  Táto sekvencia tokenov sa potom posiela parseru, ktorý na nej vykonáva syntaktickú
+analýzu.
 
 Potom sa gramatika $G$ zjednoduší na
 \begin{align*}
@@ -230,9 +240,7 @@ Potom sa gramatika $G$ zjednoduší na
                       \, | \, \texttt{INT}\}\text{.}
 \end{align*}
 
-\begin{todo}
-    Lepšie popísať ako funguje lexer.
-\end{todo}
+
 
 Ľavé krajné odvodenie slova $(4 + 5)\cdot 123 \cdot 0$ v gramatike $G'$ by vyzeralo nasledovne:
 \begin{center}

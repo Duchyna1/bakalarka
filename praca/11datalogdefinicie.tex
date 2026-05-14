@@ -2,7 +2,7 @@
 
 \section{Definície}
 V nasledujúcej kapitole formálne definujeme Datalog vo forme, v akej s ním budeme vo zvyšku práce
-pracovať.
+pracovať. Definície sú inšpirované \cite{hedera2022relacna}.
 
 \begin{note}
 $\true$ označuje pravdu (hodnotu \textit{true}). $\false$ označuje nepravdu (hodnotu
@@ -42,7 +42,7 @@ Do \textbf{formúl} patria:
 \item \textit{atomické formuly} $p(t_1, t_2, \dots t_n)$, kde $p$ je $n$-árny predikát a $t_1, t_2,
 \dots t_n$ sú konštanty alebo premenné
 \item ak $A$ a $B$ sú formuly, tak potom aj $A \land B$ a $\lnot A$ sú formuly
-\item nič iné formula nie je.
+\item nič iné formulou nie je.
         \end{enumerate}
     \end{definition}
 \end{samepage}
@@ -133,7 +133,7 @@ Interpretáciu $\inter$ teórie $K_1 \land \dots \land K_n$ nazývame \textbf{mo
 \begin{definition}
 Majme teóriu $K_1 \land \dots \land K_n$ a atomickú formulu $Q$. Potom teóriu $K_1 \land \dots \land
 K_n \land Q$ nazývame \textbf{teória s dotazom $Q$} alebo aj \textbf{program} resp.
-\textbf{datalogový program}.
+\textbf{Datalogový program}.
 \end{definition}
 
 \begin{definition}
@@ -169,7 +169,7 @@ Klauzulu
 $$\forall X_1 \forall X_2 \dots \forall X_n (A_1 \land A_2 \land \cdots A_i \land \lnot A_{i+1}
 \land \lnot A_{i+2} \land \cdots \land \lnot A_m) \Rightarrow B$$ nazývame \textbf{bezpečnou}, ak sa
 každá z premenných $X_1, X_2, \dots, X_n$ vyskytuje v niektorej z pozitívnych atomických formúl
-$A_1, A_2, \dots, A_i$. Teóriu, pozostáva iba z bezpečných klauzúl (spojených konjukciou), nazývame
+$A_1, A_2, \dots, A_i$. Teóriu, ktorá pozostáva iba z bezpečných klauzúl (spojených konjunkciou), nazývame
 \textbf{bezpečnou teóriou}.
 \end{definition}
 
@@ -191,6 +191,6 @@ Príkladom bezpečnej teórie s dotazom je napríklad
 $$\mathcal{T}' = (\forall X r(X) \land \lnot p(X) \Rightarrow q(X)) \land p(X)$$ s interpretáciou
 $\inter'$ takou, že $\forall i \in \mathbb{N}: \inter' \models_\true p(i)$ a $\forall c \in
 \mathbb{R}: \inter' \models_\true r(c)$. V tejto teórii sme obmedzili množinu konštánt, ktoré má
-zmysel dopĺňať do predikátu $p$. Výsledok tohoto dotazu je $\mathbb{R}-\mathbb{N}$, nezávisle od
+zmysel dopĺňať do predikátu $p$. Výsledok tohto dotazu je $\mathbb{R}-\mathbb{N}$, nezávisle od
 domén predikátov.
 \end{note}

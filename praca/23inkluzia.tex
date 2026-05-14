@@ -27,10 +27,12 @@ Projekcia je už zakomponovaná v $\JOIN$ a $\ANTIJOIN$. Ak ale chceme vyjadriť
 použiť $\JOIN$ s pomenovanými vstupnými termami a vymenovanými výstupnými termami, ktoré sú
 podmnožinou vstupných termov. Napríklad $\Pi_{A_1, A_3}(R)$ prepíšeme ako $$\JOIN([R], [[A_1, A_2,
 A_3, \dots, A_n]], [A_1, A_3])\text{.}$$ Treba si ale dávať pozor, že v našej algebre záleží na
-poradí atribútov a v učebnicovej algebre záleží iba na ich názvoch. Preto je rozdiel medzi 
-$$\JOIN([R], [[A_\textit{1}, A_2, A_\textbf{3}]], [A_\textit{1}, A_\textbf{3}])\text{,}$$
-$$\JOIN([R], [[A_\textit{1}, A_\textbf{3}, A_2]], [A_\textit{1}, A_\textbf{3}])\text{ a}$$
-$$\JOIN([R], [[A_\textit{1}, A_2, A_\textbf{3}]], [A_\textbf{3}, A_\textit{1}])\text{.}$$
+poradí atribútov a v učebnicovej algebre záleží iba na ich názvoch. Preto je rozdiel medzi
+\begin{align*}
+    &\JOIN([R], [[A_\textit{1}, A_2, A_\textbf{3}]], [A_\textit{1}, A_\textbf{3}])\text{,}\\
+    &\JOIN([R], [[A_\textit{1}, A_\textbf{3}, A_2]], [A_\textit{1}, A_\textbf{3}])\text{ a}\\
+    &\JOIN([R], [[A_\textit{1}, A_2, A_\textbf{3}]], [A_\textbf{3}, A_\textit{1}])\text{.}
+\end{align*}
 
 \subsection*{Selekcia $\sigma$}
 Pre selekciu využijeme veľkú výpočtovú silu funkčných symbolov. Zoberme si selekciu $\sigma_C(R)$.
@@ -38,7 +40,7 @@ Skonštruujeme funkčný symbol $f_C$ tak, že $f_C(p_1, p_2, \dots, p_n) = \tp$
 podmienka $C$ platí pre záznam $(p_1, p_2, \dots, p_n)$. Pre všetky ostatné vstupy bude $f_C$ vracať
 $\fp$. Potom môžeme selekciu $\sigma_C(R)$ prepísať ako
 $$\JOIN([R, \$true], [[p_1, p_2, \dots, p_n], [f_C(p_1, p_2, \dots, p_n)]], [p_1, p_2, \dots, p_n,
-\tp])\text{.}$$ Výsledná relácia má ale o jeden atribút viac, preto ju treba ešte \textit{obaliť}
+\tp])\text{.}$$ Výsledná relácia má však o jeden atribút viac, preto ju treba ešte \textit{obaliť}
 projekciou (joinom), ktorá nám tento atribút odstráni.
 
 \subsection*{Prirodzený (natural) join $\Join$}
@@ -71,7 +73,7 @@ dokážeme theta-join $R \Join_C S$ prepísať ako
           &[[A_1, \dots, A_n], [B_1, \dots, B_m], [f_C(A_1, \dots, A_n, B_1, \dots, B_m)]], \\
           &[A_1, \dots, A_n, B_1, \dots, B_m, \tp])
 \end{align*}
-Výsledná relácia má ale znovu o jeden atribút viac, preto ju znovu treba \textit{obaliť} projekciou
+Výsledná relácia má však opäť o jeden atribút viac, preto ju opäť treba \textit{obaliť} projekciou
 (joinom), pomocou ktorej tento atribút odstránime.
 
 \subsection*{Premenovanie $\rho$}

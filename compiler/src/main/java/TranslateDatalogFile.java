@@ -6,20 +6,12 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.nio.file.Path;
-
 
 public class TranslateDatalogFile {
     public static void main(String[] args) throws Exception {
-        if (args.length == 0) {
-            throw new IllegalArgumentException("Please provide the path to a Datalog file as an argument.");
-        }
-        String pathArg = args[0];
-        Path inputPath = Path.of(pathArg);
-
         MyErrorListener errorListener = new MyErrorListener();
 
-        CharStream program = CharStreams.fromPath(inputPath);
+        CharStream program = CharStreams.fromStream(System.in);
         datalogLexer lexer = new datalogLexer(program);
         lexer.removeErrorListeners();
         lexer.addErrorListener(errorListener);
@@ -31,7 +23,7 @@ public class TranslateDatalogFile {
 
         ParseTree tree = parser.program();
         if (errorListener.hasErrors()) {
-            throw new IllegalArgumentException("Input contains syntax errors: " + inputPath);
+            throw new IllegalArgumentException("Input contains syntax errors.");
         }
 
         DatalogASTBuilder astBuilder = new DatalogASTBuilder();
@@ -40,8 +32,6 @@ public class TranslateDatalogFile {
         DatalogCompiler compiler = new DatalogCompiler();
         RAExpr compiled = compiler.compile(ast);
 
-        System.out.println("Input file: " + inputPath);
-        System.out.println("--- Compiled relational algebra ---");
         System.out.print(compiled);
     }
 }

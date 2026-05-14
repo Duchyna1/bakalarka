@@ -1,46 +1,71 @@
-# Datalog Compiler
+# Compiler
 
-## Požiadavky
+## Verzie
+- Java 21.0.10
+- ANTLR 4.9.2
+- Maven 3.8.7
 
-### 1. Java Development Kit (JDK) 21
-`sudo apt-get install openjdk-21-jdk`
-
-**Overenie**:
-```bash
-java -version
-javac -version
-```
-
-### 2. Apache Maven
-`sudo apt-get install maven`
-
-**Overenie**:
-```bash
-mvn -version
-```
-
-## Build projektu
+## Vygenerovanie ANTLR kódu
+V priečinku `compiler/src/main/antlr4` spustite príkaz:
 
 ```bash
-cd compiler
-mvn clean compile
+antlr4 datalog.g4 -visitor -package compiler -o .antlr
 ```
-
-- Stiahne ANTLR runtime
-- Vygeneruje parser a lexer zo súborov gramatiky
-- Skompiluje všetky Java zdrojové súbory
 
 ## Spustenie kompilátora
+V priečinku `compiler` spustite príkaz:
 
 ```bash
-mvn compile exec:java -Dexec.args="tests/000_turing_machine.dl"
+mvn exec:java < tests/000_turing_machine.dl
 ```
 
-## Štruktúra projektu
-- `src/main/java/common/`: Spoločné triedy a rozhrania
-- `src/main/java/datalog/`: Triedy reprezentujúce Datalog objekty
-- `src/main/java/ra/`: Triedy reprezentujúce výrazy relačnej algebry
-- `src/main/java/CompiledRAProgram.java`: Trieda reprezenetujúca skompilovaný program v relačnej algebre
-- `src/main/java/DatalogASTBuilder.java`: Trieda pre vytváranie AST z parse stromu
-- `src/main/java/DatalogCompiler.java`: Hlavná trieda pre kompiláciu Datalog programu do relačnej algebry
-- `src/main/java/TranslateDatalogFile.java`: Trieda pre spustenie kompilátora na Datalog súbore (.dl)
+`tests/000_turing_machine.dl` je ukážková cesta k súboru s Datalog programom, ktorý chcete spustiť.
+
+## Vytvorenie .jar
+V priečinku `compiler` spustite príkaz:
+
+```bash
+mvn package
+```
+
+Výsledný súbor `target/compiler.jar` obsahuje všetky závislosti.
+
+## Spustenie .jar
+```bash
+java -jar target/compiler.jar < tests/000_turing_machine.dl
+```
+
+
+## Popis súborov
+- `compiler/target/compiler.jar` - spustiteľný JAR vytvorený príkazom `mvn package`
+- `compiler/src/main/antlr4/datalog.g4` - gramatika Datalogu
+- `compiler/tests/` - vstupné Datalog programy (`.dl`) a očakávané výstupy (`.ra`)
+- `compiler/generate_tests.sh` - skript, ktorý pre každý datalogový program v `compiler/tests/` vygeneruje očakávaný výstup v relačnej algebre pomocou kompilátora
+- `compiler/src/main/java/` - zdrojové kódy kompilátora
+    - `common/` - spoločné triedy pre Datalog a relačnú algebru
+        - `Constant.java`
+        - `FunctionTerm.java`
+        - `Parameter.java`
+        - `Term.java` - abstraktná trieda pre všetky termy (konštanty, funkčné termy, atď.)
+        - `Variable.java`
+    - `datalog/` - triedy špecifické pre Datalog
+        - `Atom.java`
+        - `Clause.java`
+        - `DatalogProgram.java` - reprezentácia Datalog programu ako celku
+        - `Definition.java`
+        - `Predicate.java`
+        - `Query.java`
+    - `ra/` - triedy špecifické pre relačnú algebru
+        - `RAAntiJoin.java`
+        - `RADef.java` - reprezentácia definície v relačnej algebre, ktorá sa následne pretransformuje na niekoľko `RAJoin`-ov
+        - `RAExpr.java` - abstraktná trieda pre všetky výrazy v relačnej algebre
+        - `RAJoin.java`
+        - `RARec.java`
+        - `RAUnion.java`
+        - `RelationRef.java` - odkaz na reláciu
+    - `DatalogASTBuilder.java` - návštevník pre vytváranie AST z ANTLR parse stromu
+    - `DatalogCompiler.java` - hlavná trieda kompilátora zodpovedná za
+      preklad z Datalog AST do relačnej algebry
+    - `MyErrorListener.java` - príprava pre potenciálne vlastné spracovanie
+      chýb počas lexingu/parsing-u
+    - `TranslateDatalogFile.java` - trieda s `main` metódou, ktorá načíta Datalog program zo štandardného vstupu, preloží ho a vypíše výslednú relačnú algebru na štandardný výstup
