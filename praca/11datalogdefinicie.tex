@@ -2,7 +2,7 @@
 
 \section{Definície}
 V nasledujúcej kapitole formálne definujeme Datalog vo forme, v akej s ním budeme vo zvyšku práce
-pracovať. Definície sú inšpirované \cite{hedera2022relacna}.
+pracovať. Definície sú inšpirované prácou \cite{hedera2022relacna}.
 
 \begin{note}
 $\true$ označuje pravdu (hodnotu \textit{true}). $\false$ označuje nepravdu (hodnotu
@@ -29,7 +29,7 @@ $r$.
 \item symbolov všeobecných kvantifikátorov ($\forall$)
 \item symbolov pre definície ($\Rightarrow$)
 \item čiarok (\texttt{,})
-\item zátvoriek (\texttt{(}, \texttt{)})
+\item zátvoriek (\texttt{(}, \texttt{)}).
         \end{enumerate}
     \end{definition}
 \end{samepage}
@@ -42,7 +42,7 @@ Do \textbf{formúl} patria:
 \item \textit{atomické formuly} $p(t_1, t_2, \dots t_n)$, kde $p$ je $n$-árny predikát a $t_1, t_2,
 \dots t_n$ sú konštanty alebo premenné
 \item ak $A$ a $B$ sú formuly, tak potom aj $A \land B$ a $\lnot A$ sú formuly
-\item nič iné formulou nie je.
+\item nič iné formulou nie je
         \end{enumerate}
     \end{definition}
 \end{samepage}
@@ -65,8 +65,8 @@ klauzuly.
 \begin{definition}
     \label{ohodnotenie_premennych_1}
 \textbf{Ohodnotenie premenných} je funkcia, ktorá priradí každej premennej konštantu. Ohodnotenie
-$o$, ktoré premennej $X_i$ priradí konštantu $k_i$ (pre $i \leq n$) označujeme $o(X_1 | k_1, \dots ,
-X_n | k_n)$. Keď vo formule $A$ resp. implikácii $\iota$ resp. teórii $K_1\land \dots \land K_n$
+$o$, ktoré premennej $X_i$ priradí konštantu $k_i$ (pre $i \leq n$), označujeme $o(X_1 | k_1, \dots
+, X_n | k_n)$. Keď vo formule $A$ resp. implikácii $\iota$ resp. teórii $K_1\land \dots \land K_n$
 nahradíme všetky premenné podľa ohodnotenia $o$, výslednú formulu označujeme ako $A[o]$ resp.
 $\iota[o]$ resp. $K_1\land \dots \land K_n[o]$.
 \end{definition}

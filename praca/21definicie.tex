@@ -10,7 +10,7 @@ Potom ich vieme jednoducho reprezentovať pomocou tabuliek.
     \begin{array}{c c}
         \begin{aligned}
             R &\in \textbf{Meno} \times \textbf{Výška} \\
-            R &= \{(\text{Adam}, 175), (\text{Boris}, 183), (\text{Cecil}, 192)\}
+            R &= \{(\text{Adam}, 175), (\text{Boris}, 183), (\text{Cyril}, 192)\}
         \end{aligned}
         &
         \begin{array}{c|c}
@@ -18,7 +18,7 @@ Potom ich vieme jednoducho reprezentovať pomocou tabuliek.
             \textbf{Meno}  & \textbf{Výška} \\ \hline
             \text{Adam}  & 175 \\
             \text{Boris} & 183 \\
-            \text{Cecil} & 192
+            \text{Cyril} & 192
         \end{array}
     \end{array}
     \]
@@ -26,10 +26,10 @@ Potom ich vieme jednoducho reprezentovať pomocou tabuliek.
 
 Na manipuláciu s týmito reláciami existuje niekoľko operátorov:
 
-\subsection*{\textbf{Množinové operátory}} zjednotenie množín $\cup$, rozdiel množín $-$, (prienik
+\subsection*{\textbf{Množinové operátory}} zjednotenie množín $\cup$, rozdiel množín $-$ (prienik
 množín $\cap$, ale ten sa dá vyjadriť aj za pomoci rozdielu $A \cap B = A - (A-B)$)
 
-Pre relácie, na ktoré aplikujeme tieto operátory musí platiť, že majú identické domény atribútov.
+Pre relácie, na ktoré aplikujeme tieto operátory, musí platiť, že majú identické domény atribútov.
 Predtým, ako aplikujeme operátor na dve relácie, musíme usporiadať ich atribúty v jednotlivých
 záznamoch do rovnakého poradia.
 
@@ -87,7 +87,7 @@ Výsledok je stále relácia (čiže aj množina), takže neobsahuje duplicitné
             \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
             \text{Adam}   & \text{Bratislava} & \text{Pes} \\
             \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
-            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Cyril}  & \text{Košice}     & \text{Pes} \\
             \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
             \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
             \text{Fero}   & \text{Košice}     & \text{Mačka} \\
@@ -98,7 +98,7 @@ Výsledok je stále relácia (čiže aj množina), takže neobsahuje duplicitné
             \textbf{Meno} & \textbf{Zviera} \\ \hline
             \text{Adam}   & \text{Pes} \\
             \text{Boris}  & \text{Mačka} \\
-            \text{Cecil}  & \text{Pes} \\
+            \text{Cyril}  & \text{Pes} \\
             \text{Dano}   & \text{Zajac} \\
             \text{Erik}   & \text{Kôň} \\
             \text{Fero}   & \text{Mačka} \\
@@ -129,7 +129,7 @@ spĺňajú podmienku $C$.
             \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
             \text{Adam}   & \text{Bratislava} & \text{Pes} \\
             \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
-            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Cyril}  & \text{Košice}     & \text{Pes} \\
             \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
             \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
             \text{Fero}   & \text{Košice}     & \text{Mačka} \\
@@ -166,7 +166,7 @@ $S$, ktoré sa zhodujú na atribútoch spoločných pre $R$ a $S$. V množinovom
                 \textbf{Meno} & \textbf{Mesto} \\ \hline
                 \text{Adam}   & \text{Bratislava} \\
                 \text{Boris}  & \text{Bratislava} \\
-                \text{Cecil}  & \text{Košice}     \\
+                \text{Cyril}  & \text{Košice}     \\
                 \text{Dano}   & \text{Lučenec}    \\
                 \text{Erik}   & \text{Poprad}     \\
                 \text{Fero}   & \text{Košice}     \\
@@ -186,7 +186,7 @@ $S$, ktoré sa zhodujú na atribútoch spoločných pre $R$ a $S$. V množinovom
                 \textbf{Meno} & \textbf{Mesto}    & \textbf{Rozloha} \\ \hline
                 \text{Adam}   & \text{Bratislava} & \text{368} \\
                 \text{Boris}  & \text{Bratislava} & \text{368} \\
-                \text{Cecil}  & \text{Košice}     & \text{242} \\
+                \text{Cyril}  & \text{Košice}     & \text{242} \\
                 \text{Dano}   & \text{Lučenec}    & \text{47}  \\
                 \text{Erik}   & \text{Poprad}     & \text{63}  \\
                 \text{Fero}   & \text{Košice}     & \text{242} \\
@@ -213,7 +213,7 @@ na spoločných atribútoch. V množinovom zápise:
                 \textbf{Meno} & \textbf{Mesto} \\ \hline
                 \text{Adam}   & \text{Bratislava} \\
                 \text{Boris}  & \text{Bratislava} \\
-                \text{Cecil}  & \text{Košice}     \\
+                \text{Cyril}  & \text{Košice}     \\
                 \text{Dano}   & \text{Lučenec}    \\
                 \text{Erik}   & \text{Poprad}     \\
                 \text{Fero}   & \text{Košice}     \\
@@ -229,7 +229,7 @@ na spoločných atribútoch. V množinovom zápise:
                 \begin{array}{c|c}
                 \multicolumn{2}{c}{Z \Antijoin V} \\ \hline
                 \textbf{Meno} & \textbf{Mesto} \\ \hline
-                \text{Cecil}  & \text{Košice}     \\
+                \text{Cyril}  & \text{Košice}     \\
                 \text{Erik}   & \text{Poprad}     \\
                 \text{Fero}   & \text{Košice}     \\
                 \end{array}
@@ -240,8 +240,8 @@ na spoločných atribútoch. V množinovom zápise:
     
 \subsection*{\textbf{Theta-join $\Join_C$}} $R \Join_C S$, kde $R$ a $S$ sú relácie a $C$ je
 podmienka, v ktorej sa vyskytujú atribúty z $R$ a $S$. Natural join nám povolil spojiť dva záznamy
-iba ak ich spoločné atribúty boli rovnaké. Theta-join popáruje každú dvojicu záznamov z $R$ a $S$,
-ktoré spĺňajú podmienku $C$.
+iba vtedy, ak ich spoločné atribúty boli rovnaké. Theta-join popáruje každú dvojicu záznamov z $R$ a
+$S$, ktoré spĺňajú podmienku $C$.
     \begin{priklad}
     \begin{center}
         \[
@@ -288,7 +288,7 @@ iba atribút $A$ sa premenuje na $B$.
             \textbf{Meno} & \textbf{Mesto}    & \textbf{Zviera} \\ \hline
             \text{Adam}   & \text{Bratislava} & \text{Pes} \\
             \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
-            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Cyril}  & \text{Košice}     & \text{Pes} \\
             \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
             \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
             \text{Fero}   & \text{Košice}     & \text{Mačka} \\
@@ -299,7 +299,7 @@ iba atribút $A$ sa premenuje na $B$.
             \textbf{Meno} & \textbf{Obec}     & \textbf{Zviera} \\ \hline
             \text{Adam}   & \text{Bratislava} & \text{Pes} \\
             \text{Boris}  & \text{Bratislava} & \text{Mačka} \\
-            \text{Cecil}  & \text{Košice}     & \text{Pes} \\
+            \text{Cyril}  & \text{Košice}     & \text{Pes} \\
             \text{Dano}   & \text{Lučenec}    & \text{Zajac} \\
             \text{Erik}   & \text{Poprad}     & \text{Kôň} \\
             \text{Fero}   & \text{Košice}     & \text{Mačka} \\
@@ -432,7 +432,7 @@ Nech $f$ je funkčný symbol, ktorý pre ľubovoľný reťazec vráti jeho prvý
                 \multicolumn{2}{c}{U} \\ \hline
                 \text{Adam}   & \text{Bratislava} \\
                 \text{Boris}  & \text{Bratislava} \\
-                \text{Cecil}  & \text{Košice}     \\
+                \text{Cyril}  & \text{Košice}     \\
                 \text{Dano}   & \text{Lučenec}    \\
                 \text{Erik}   & \text{Poprad}     \\
                 \text{Fero}   & \text{Košice}     \\
@@ -468,7 +468,7 @@ $N$ a dovoľuje použiť v relácii $R$ odkaz na ňu.
 \end{priklad}
 
 \subsection{Vstavané operátory}
-Ako sme si ukázali skôr (definícia \ref{predikat2relacia}), na predikáty a relácie sa vieme
+Ako sme si ukázali predtým (definícia \ref{predikat2relacia}), na predikáty a relácie sa vieme
 pozerať ako na rovnaké objekty. Taktiež na operátory \JOIN, \ANTIJOIN, \UNION\ a \REC\ sa vieme
 pozerať ako na relácie, keďže ich výstupom je vždy relácia. Preto ku každému vstavanému predikátu
 vieme definovať vstavaný operátor, ktorý bude fungovať rovnako a bude mať rovnaké vstupy. Jediný

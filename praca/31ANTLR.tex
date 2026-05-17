@@ -52,8 +52,8 @@ ako prebieha preklad z Datalogu do relačnej algebry.
     \textbf{Regulárna gramatika} je štvorica $G = (N, T, P, \sigma)$, kde $N$ je abeceda
     neterminálov, $T$ je abeceda terminálov, $P \subseteq_{kon} N \times (T^* \cup T^*N)$ je
     \textit{konečná} množina prepisovacích pravidiel a $\sigma \in N$ je počiatočný neterminál.
-    Prepisovacie pravidlá teda prepisujú jeden neterminál na ľubovoľné slovo z terminálov za ktorým
-    môže, ale nemusí, nasledovať jeden neterminál.
+    Prepisovacie pravidlá teda prepisujú jeden neterminál na ľubovoľné slovo z terminálov, za ktorým
+    môže ale nemusí, nasledovať jeden neterminál.
 \end{definition}
 
 \begin{definition}
@@ -88,12 +88,12 @@ ako prebieha preklad z Datalogu do relačnej algebry.
     \textbf{Odvodenie} slova $w$ (v gramatike $G$) $\sigma \Rightarrow w_1 \Rightarrow w_2
     \Rightarrow \cdots \Rightarrow w$ je postupnosť krokov odvodení. Pod \textbf{ľavým}, resp.
     \textbf{pravým krajným odvodením} rozumieme odvodenie, v ktorom sa v každom kroku odvodenia, v
-    ktorom máme viacero neterminálov, ktoré sa dajú prepisovať, vždy prepíše \textit{najľavejší},
+    ktorom máme viacero neterminálov, vždy prepíše \textit{najľavejší},
     resp. \textit{najpravejší} neterminál.
 \end{definition}
 
 \subsection{Syntaktická analýza}
-Na to, aby sme vedeli preložiť Datalog do relačnej algebry potrebujeme vedieť identifikovať a
+Na to, aby sme vedeli preložiť Datalog do relačnej algebry, potrebujeme vedieť identifikovať a
 preložiť jeho jednotlivé jazykové prvky. Tie prvky nájde tzv. \textit{syntaktická analýza}. Ukážeme
 si, ako funguje na jednoduchom príklade, v ktorom budeme prekladať aritmetické výrazy z infixovej
 notácie do postfixovej notácie.
@@ -227,7 +227,7 @@ $$\texttt{LPAREN}(\texttt{(}),\, \texttt{INT}(4),\, \texttt{PLUS}(\texttt{+}),\,
 \texttt{RPAREN}(\texttt{)}),\, \texttt{MULT}(\cdot),\, \texttt{INT}(123),\, \texttt{MULT}(\cdot),\,
 \texttt{INT}(0)$$
 
-Každý token obsahuje svoj typ (\texttt{INT}, \texttt{PLUS}, \texttt{LPAREN}, \dots) a prípadne svoju
+Každý token obsahuje svoj typ (\texttt{INT}, \texttt{PLUS}, \texttt{LPAREN}, \dots), prípadne svoju
 hodnotu.  Táto sekvencia tokenov sa potom posiela parseru, ktorý na nej vykonáva syntaktickú
 analýzu.
 
@@ -277,7 +277,7 @@ Potom sa gramatika $G$ zjednoduší na
 
 
 Na takýto strom odvodenia môžeme aplikovať algoritmus, ktorý nám z infixovej notácie
-vygeneruje postfixovú notáciu. Algoritmus funguje nasledovne: vrcholy stromu (odvodenia)
+vygeneruje postfixovú notáciu. Algoritmus funguje nasledovne. Vrcholy stromu (odvodenia)
 sa transformujú podľa nasledujúcich pravidiel:
 
 \begin{center}
@@ -339,5 +339,5 @@ tokenov.
 
 ANTLR je generátor parserov, ktorý na základe gramatiky, ktorú mu zadáme, vygeneruje parser (a
 lexer), ktorý dokáže pomocou LL($k$) algoritmu zistiť, či dané slovo patrí do jazyka generovaného
-touto gramatikou a v prípade, že áno, vygeneruje k nemu prislúchajúci strom ľavého krajného
+touto gramatikou. V prípade, že existuje, vygeneruje k nemu prislúchajúci strom ľavého krajného
 odvodenia.

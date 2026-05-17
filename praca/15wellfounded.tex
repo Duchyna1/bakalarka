@@ -83,9 +83,9 @@ programu.
 \textit{Well-founded} model môžeme chápať ako niečo, čo je spoločné pre všetky stabilné modely.
 Funguje nasledovne:
 \begin{itemize}
-\item Atómy, ktoré sú $\true$ vo \textbf{všetkých} stabilných modeloch, označíme ako $\true$,
-\item Atómy, ktoré sú $\false$ vo \textbf{všetkých} stabilných modeloch, označíme ako $\false$,
-\item Atómy, ktoré sa v rôznych stabilných modeloch líšia, ponecháme ako $\unknown$.
+\item atómy, ktoré sú $\true$ vo \textbf{všetkých} stabilných modeloch, označíme ako $\true$,
+\item atómy, ktoré sú $\false$ vo \textbf{všetkých} stabilných modeloch, označíme ako $\false$,
+\item atómy, ktoré sa v rôznych stabilných modeloch líšia, ponecháme ako $\unknown$.
 \end{itemize}
 
 V nasledujúcom príklade ukážeme, ako nájsť well-founded model pomocou iteratívneho procesu. 
@@ -137,7 +137,7 @@ Minimálny model tohto programu je $\inter_2$, kde \verb|a| a \verb|b| sú $\tru
 Po tretej aplikácii GLT a následnom nájdení minimálneho modelu dostaneme $\inter_3$, ktorá sa
 zhoduje s $\inter_1$, čiže iterácia sa zastavila. Vo výslednom well-founded modeli $\inter$ budú
 stabilizované atómy \verb|a| a \verb|b| nastavené na $\true$, atómy \verb|u| a \verb|v| nastavené na
-$\false$, a atómy \verb|p| a \verb|q| zostanú $\unknown$, keďže oscilujú medzi $\true$ a $\false$.
+$\false$ a atómy \verb|p| a \verb|q| zostanú $\unknown$, keďže oscilujú medzi $\true$ a $\false$.
 Celý proces je zhrnutý v nasledujúcej tabuľke:
 
 \begin{center}

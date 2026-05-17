@@ -1,12 +1,12 @@
 \section{Rozšírenie Datalogu o funkčné symboly}
-Doteraz sme dosádzali do predikátov iba konštanty a premenné. Rozšírime jazyk logiky o tzv. funkčné
-symboly. Funkčný symbol $f$ (s aritou $n$) reprezentuje ľubovoľnú funkciu $f: D_1 \times D_2 \times
+Doteraz sme dosádzali do predikátov iba konštanty a premenné. Rozšírime jazyk logiky o tzv. \textbf{funkčné
+symboly}. Funkčný symbol $f$ (s aritou $n$) reprezentuje ľubovoľnú funkciu $f: D_1 \times D_2 \times
 \dots \times D_n \to D$.
 
 Funkčné symboly chceme zaviesť preto, že samotné konštanty a premenné nestačia na reprezentáciu
 zložitejších štruktúr. Príkladom zložitejšej štruktúry je zoznam. Zoznam vieme reprezentovať pomocou
-funkčných symbolov \verb|nil| a \verb|list|: \verb|nil|, ktorý reprezentuje prázdny zoznam, a
-\verb|list|, ktorého prvým argumentom je prvý prvok zoznamu, a druhým argumentom je zvyšok zoznamu.
+funkčných symbolov \verb|nil| a \verb|list|: \verb|nil|, ktorý reprezentuje prázdny zoznam a
+\verb|list|, ktorého prvým argumentom je prvý prvok zoznam a druhým argumentom je zvyšok zoznamu.
 Zoznam obsahujúci prvky $a$, $b$ a $c$ (v tomto poradí) potom bude reprezentovať termom
 \verb|list(a, list(b, list(c, nil)))|.
 
@@ -30,7 +30,7 @@ predikátov (\ref{doplnanie} 1.) potom nedosadzujeme premenné a konštanty, ale
 \end{definition}
 
 V definícii pre ohodnotenie premenných (\ref{ohodnotenie_premennych_1}) sa daná funkcia predefinuje
-na funkciu, ktorá priradí každej premennej nie konštantu, ale \textit{ground term}. Taktiež v
+na funk\-ciu, ktorá priradí každej premennej nie konštantu, ale \textit{ground term}. Taktiež v
 definícii interpretácie jazyka (\ref{interpretacia_1}) prepíšeme 4. časť na:
 
 \begin{quote}
