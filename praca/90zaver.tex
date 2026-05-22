@@ -1,8 +1,8 @@
 \chapter*{Záver}
 \addcontentsline{toc}{chapter}{Záver}
 
-Cieľom tejto bakalárskej práce bolo rozšíriť náš experimentálny databázový systém o ďalší dotazovací
-jazyk, konkrétne o Datalog s funkčnými symbolmi a vstavanými predikátmi, a implementovať kompilátor,
+Cieľom tejto bakalárskej práce bolo rozšíriť náš experimentálny databázový systém o deklaratívny
+dotazovací jazyk Datalog s funkčnými symbolmi a vstavanými predikátmi, a implementovať kompilátor,
 ktorý bude tento jazyk prekladať do relačnej algebry. Zároveň sme chceli, aby bol výsledný
 kompilátor použiteľný aj samostatne, bez priamej väzby na konkrétnu databázovú implementáciu. Tento
 cieľ sa podarilo splniť.
@@ -13,14 +13,14 @@ ukázali, aké úpravy sú potrebné na podporu funkčných symbolov a vstavaný
 rozšíreniu o nové operátory. 
 
 Na tomto základe sme navrhli gramatiku jazyka pre ANTLR, spôsob reprezentácie programu pomocou AST a
-samotný viacstupňový algoritmus prekladu do relačnej algebry. Výsledkom je riešenie, ktoré vykonáva
+samotný viacstupňový algoritmus prekladu do relačnej algebry. Výsledkom je kompilátor, ktorý vykonáva
 nielen syntaktickú analýzu, ale aj základnú sémantickú kontrolu programu a následne konštruuje
 ekvivalentný výraz relačnej algebry.
 
-Výsledok práce je kompilátor, ktorý umožňuje používateľovi formulovať dotazy v rozšírenom Datalogu,
-ktorý je prirodzenejší a stručnejší, pričom výsledný výraz relačnej algebry je generovaný
-automaticky. Týmto sme dosiahli cieľ, ktorý sme si stanovili, a zároveň sme vytvorili nástroj, ktorý
-môže byť ďalej rozšírený a integrovaný do rôznych databázových systémov.
+Kompilátor umožňuje používateľovi formulovať dotazy v rozšírenom Datalogu, ktorý je prirodzenejší a
+stručnejší, pričom výsledný výraz relačnej algebry je generovaný automaticky. Týmto sme dosiahli
+stanovený cieľ a zároveň sme vytvorili nástroj, ktorý môže byť ďalej rozšírený a integrovaný do
+rôznych databázových systémov.
 
 Pri práci sa tiež ukázalo niekoľko obmedzení súčasného riešenia. Poradie atómov v klauzulách môže
 ovplyvniť vypočítateľnosť programu, čo môže viesť k neočakávaným výsledkom. Taktiež riešenie
