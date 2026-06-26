@@ -8,3 +8,4 @@ zdroje
 *.synctex.gz
 compiler/tests/*
 !compiler/tests/000*
+*.vrb

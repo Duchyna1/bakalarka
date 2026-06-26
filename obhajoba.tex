@@ -1,0 +1,631 @@
+\documentclass[11pt,aspectratio=169]{beamer}
+
+\usepackage{iftex}
+\ifPDFTeX
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fi
+\usepackage[slovak]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+    \usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{qtree}
+\usepackage{forest}
+
+\usetikzlibrary{arrows.meta,positioning}
+
+\usetheme[numbering=fraction]{metropolis}
+\setbeamertemplate{navigation symbols}{}
+\newcommand{\slidefootnote}{\insertshortauthor\hspace{0.6em}|\hspace{0.6em}\insertshorttitle}
+\setbeamertemplate{frame footer}{\slidefootnote}
+
+\newcommand{\UNION}{\textbf{UNION}} \newcommand{\JOIN}{\textbf{JOIN}}
+\newcommand{\ANTIJOIN}{\textbf{ANTIJOIN}} \newcommand{\REC}{\textbf{REC}}
+\newcommand{\DEF}{\textbf{DEF}} \newcommand{\tp}{\textbf{t}\space}
+
+\title[Kompilátor Datalogu do relačnej algebry]{Kompilátor Datalogu s funkčnými symbolmi do relačnej algebry}
+\author[Matúš Duchyňa]{Matúš Duchyňa}
+\institute[]{%
+    Fakulta matematiky, fyziky a informatiky\\
+    Univerzita Komenského v Bratislave\\[0.4em]
+    Vedúci práce: doc. Mgr. Tomáš Plachetka, Dr.
+}
+\date{8. 6., 2026}
+
+\newcommand{\antijoin}{\mathbin{\triangleright}}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Motivácia}
+    \begin{itemize}
+        \item Experimentálny databázový systém s relačnou algebrou ako dotazovacím jazykom
+        \item Relačná algebra
+        \begin{itemize}
+            \item Umožnuje určiť vykonávací plán
+            \item Nízkoúrovňová
+        \end{itemize}
+        \item Datalog ako nový dotazovací jazyk
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Ciele práce}
+    \begin{block}{Hlavný cieľ}
+        Kompilátor z Datalogu do relačnej algebry
+    \end{block}
+    \begin{itemize}
+        \item Databázový systém môže obsahovať tabuľky
+        \begin{itemize}
+            \item Vymenovaním prvkov
+            \item Popísané nejakým programom
+        \end{itemize}
+        \item Kompilátor ako samostatný nástroj, bez závislosti na konkrétnom databázovom systéme
+        \item Podpora funkčných symbolov
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Datalog}
+    \begin{itemize}
+        \item Tabuľky - predikáty
+        \item Vstavané tabuľky - vstavané predikáty (označené s \$ pred názvom)
+    \end{itemize}
+    
+    Pod pojmom \textbf{parameter} rozumieme:
+    \begin{enumerate}
+        \item ľubovoľný term
+        \item ľubovoľný predikát alebo vstavaný predikát
+        \item ľubovoľný zoznam parametrov, ktorý zapisujeme ako $[P_1, P_2, \dots, P_n]$,\\ kde
+        $P_1, P_2, \dots, P_n$ sú parametre
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Relačná algebra}
+    \begin{itemize}
+        \item Tabuľky - relácie
+        \item Vstavané \textit{jednoduché} tabuľky - vstavané relácie (označené s \$ pred názvom)
+        \item Vstavané \textit{zložité} tabuľky - vstavané operátory (označené s \$ pred názvom)
+    \end{itemize}
+    
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.48\textwidth}
+            \textbf{Klasická relačná algebra}
+            \begin{itemize}
+                \item Množinové operátory, $\times$
+                \item $\Pi, \sigma, \rho$
+                \item $\Join, \antijoin, \Join_{C}$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Naša relačná algebra}
+            \begin{itemize}
+                \item \UNION
+                \item \JOIN
+                \item \ANTIJOIN
+                \item \REC
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+\begin{frame}{Operátory}
+    \textbf{Parameter} (\textit{v kontexte relačnej algebry}) je:
+    \begin{enumerate}
+        \item ľubovoľný term
+        \item ľubovoľnú \textit{reláciu} alebo vstavaný operátor (ktorého výstupom je relácia)
+        \item ľubovoľný zoznam parametrov, ktorý zapisujeme ako $[P_1, P_2, \dots, P_n]$,\\ kde
+        $P_1, P_2, \dots, P_n$ sú parametre
+    \end{enumerate}
+    
+    \medskip
+    
+    \textbf{Operátor} je $\$O(P_1, P_2, \dots, P_n)$, kde $\$O$ je názov operátora a\\
+    $P_1, P_2, \dots, P_n$ sú parametre operátora. Výstupom operátora je relácia.
+\end{frame}
+
+\begin{frame}{Syntaktická analýza}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.25\textwidth}
+            \scriptsize
+            \begin{align*}
+                G &= (N, T, P, \sigma)\text{, kde}\\
+                N &= \{\sigma, \alpha\}\text{,}\\
+                T &= \{\texttt{+}, \cdot, \texttt{(}, \texttt{)}, 0, \dots, 9\}\text{,}\\
+                P &= \{\sigma \rightarrow \texttt{(}\sigma\texttt{)} \, | \, \sigma \texttt{+} \sigma \, | \, \sigma \cdot \sigma\\
+                  &\quad \quad\, | \, 1 \alpha \, | \dots | \, 9 \alpha \, | \, 0,\\
+                  &\quad \quad \alpha \rightarrow 0 \alpha \, | \dots | \, 9 \alpha \, | \, \varepsilon\}
+            \end{align*}
+            \normalsize
+        \end{column}
+        \begin{column}{0.75\textwidth}
+            \begin{center}
+            \scriptsize
+            Odvodenie slova \texttt{(4 + 5) $\cdot$ 123} $\cdot$ 0
+            \[
+            \Tree
+            [.$\sigma$ 
+                [.$\sigma$ 
+                    $\texttt{(}$
+                    [.$\sigma$
+                        [.$\sigma$
+                            $4$
+                            [.$\alpha$
+                                $\varepsilon$
+                            ]
+                        ]
+                        $\texttt{+}$
+                        [.$\sigma$
+                            $5$
+                            [.$\alpha$
+                                $\varepsilon$
+                            ]
+                        ]
+                    ]
+                    $\texttt{)}$
+                ] 
+                $\cdot$ 
+                [.$\sigma$ 
+                    [.$\sigma$
+                        $1$
+                        [.$\alpha$
+                            $2$
+                            [.$\alpha$
+                                $3$
+                                [.$\alpha$
+                                    $\varepsilon$
+                                ]
+                            ]
+                        ]
+                    ]
+                    $\cdot$
+                    [.$\sigma$
+                        $0$
+                    ]
+                ]
+            ]
+            \]
+            \normalsize
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Tokeny}
+    \scriptsize
+    $$\texttt{INT} = \{0\} \cup \{1, 2, 3, 4, 5, 6, 7, 8, 9\} \cdot \{1, 2, 3, 4, 5, 6, 7, 8, 9,
+    0\}^* \approx \mathbb{N}_0$$
+    $$\texttt{LPAREN}(\texttt{(}),\, \texttt{INT}(4),\, \texttt{PLUS}(\texttt{+}),\, \texttt{INT}(5),\,
+\texttt{RPAREN}(\texttt{)}),\, \texttt{MULT}(\cdot),\, \texttt{INT}(123),\, \texttt{MULT}(\cdot),\,
+\texttt{INT}(0)$$
+
+\begin{columns}[T,onlytextwidth]
+        \begin{column}{0.50\textwidth}
+            \begin{align*}
+                    G' &= (N', T', P', \beta)\text{, kde}\\
+                    N' &= \{\beta\}\text{,}\\
+                    T' &= \{\texttt{+}, \cdot, \texttt{(}, \texttt{)}, \mathtt{INT}\}\text{,}\\
+                    P' &= \{\beta \rightarrow \texttt{(}\beta\texttt{)} \, | \, \beta \texttt{+} \beta \, | \, \beta \cdot \beta
+                                    \, | \, \texttt{INT}\}
+            \end{align*}
+        \end{column}
+        \begin{column}{0.50\textwidth}
+            \begin{center}
+                \[
+                \Tree
+                [.$\beta$ 
+                    [.$\beta$ 
+                        $\texttt{(}$
+                        [.$\beta$
+                            [.$\beta$
+                                \qroof{$4$}.$\texttt{INT}$ 
+                            ]
+                            $\texttt{+}$
+                            [.$\beta$
+                                \qroof{$5$}.$\texttt{INT}$ 
+                            ]
+                        ]
+                        $\texttt{)}$
+                    ] 
+                    $\cdot$ 
+                    [.$\beta$ 
+                        [.$\beta$
+                            \qroof{$123$}.$\texttt{INT}$ 
+                        ]
+                        $\cdot$
+                        [.$\beta$
+                            \qroof{$0$}.$\texttt{INT}$ 
+                        ]
+                    ]
+                ]
+                \]
+                \normalsize
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Algoritmus prekladu}
+    \begin{enumerate}
+    \item Vytvorenie lexeru a token streamu
+    \item Vytvorenie parseru a stromu odvodenia
+    \item Generácia AST z odvodenia
+    \item Preklad predikátov do relačnej algebry s nevyplnenými referenciami
+    \begin{enumerate}
+        \item Preklad definícií pomocou \JOIN\ a \UNION\
+        \item Preklad klauzúl pomocou \JOIN\ a \ANTIJOIN\
+        \item Spojenie klauzúl do jednej relácie pomocou \UNION\
+    \end{enumerate}
+    \item Zostavenie výsledného výrazu v relačnej algebre
+    \begin{enumerate}
+        \item Zostavenie grafu závislosti predikátov
+        \item Zabalenie rekurzívnych predikátov do \REC\
+        \item Nahradenie referencií výrazmi, ktoré im prislúchajú
+        \item Zabalenie výsledného výrazu do \JOIN-u reprezentujúceho dotaz
+    \end{enumerate}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{1. a 2. krok}
+    \begin{center}
+        ANTLR
+    \end{center}
+    
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.48\textwidth}
+            \footnotesize
+            \texttt{grammar datalog;\\
+                    QUERY\_MARKER: '?-';\\
+                    BODY\_HEAD\_SEP: ':-';\\
+                    NOT: '\textbackslash+';\\
+                    BUILT\_IN: '\$';\\
+                    program: (clause | definition)* query;\\
+                    query: QUERY\_MARKER predicate EOL;\\
+                    clause: name '(' ')' BODY\_HEAD\_SEP\\
+                    \hspace{2em} predicate (',' predicate)* EOL\\
+                    \hspace{1em} | name '(' term (',' term)* ')' \\
+                    \hspace{2em} BODY\_HEAD\_SEP predicate\\
+                    \hspace{2em} (',' predicate)* EOL;
+            }
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \footnotesize
+            \texttt{definition: name BODY\_HEAD\_SEP\\
+                \hspace{2em} '\{' term\_tuple (',' term\_tuple)* '\}' EOL;\\
+                term: variable\\
+                \hspace{1em} | function '(' term (',' term)* ')';\\
+                name: LOWER (LOWER | NUMBER | '\_')*;\\
+                function: LOWER (LOWER | NUMBER | '\_')*;\\
+                variable: UPPER (UPPER | NUMBER | '\_')*;\\
+                UPPER: [A-Z]+;\\
+                LOWER: [a-z]+;\\
+                NUMBER: [0-9]+;\\
+                WS: [ \textbackslash t\textbackslash r\textbackslash n]+ -\textgreater\ skip\\
+            }
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{3. Generácia AST z odvodenia}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+    \begin{column}{0.25\textwidth}
+        \begin{center}
+        \[
+        \Tree
+        [.\texttt{predicate}
+            [.\texttt{normal\_predicate}
+                \texttt{name}
+                \texttt{(}
+                \textit{possible terms}
+                \texttt{)}
+            ]
+        ]
+        \]
+        \textit{Obyčajný predikát}
+        \end{center}
+    \end{column}
+    \begin{column}{0.60\textwidth}
+        \begin{center}
+        \[
+        \Tree
+        [.\texttt{built\_in\_predicate}
+            [.\texttt{negative\_built\_in\_predicate}
+                \qroof{\texttt{\textbackslash+}}.\texttt{NOT}
+                [.\texttt{normal\_built\_in\_predicate}
+                    \qroof{\texttt{\$}}.\texttt{BUILT\_IN}
+                    \texttt{name}
+                    \texttt{(}
+                    \textit{possible parameters}
+                    \texttt{)}
+                ]
+            ]
+        ]
+        \]
+        \textit{Negovaný vstavaný predikát}
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{AST}
+\centering
+\resizebox{!}{0.85\textheight}{%
+\begin{forest}
+  for tree={
+    draw,
+    align=left,
+    font=\ttfamily\footnotesize,
+    inner sep=5pt,
+    fill=gray!10,
+    edge={-{Stealth[scale=0.8]}},
+    l sep=1.2cm,
+    s sep=0.3cm,
+  }
+  [{\bfseries DatalogProgram\\ - clauses: List<Clause>\\ - definitions: List<Definition>\\ - query: Query}
+  [{\bfseries Clause\\ - head: Predicate\\ - body: List<Atom>}
+    [{\bfseries Predicate\\ - name: String\\ - terms: List<Term>\\ - isBuiltIn: bool}
+        [{\bfseries (Term) Constant\\ - value: String},       edge={dashed,-{Triangle[open,scale=0.8]}}]
+        [{\bfseries (Term) Variable\\ - name: String},        edge={dashed,-{Triangle[open,scale=0.8]}}]
+        [{\bfseries (Term) FunctionTerm\\ - name: String\\ - args: List<Term>}, edge={dashed,-{Triangle[open,scale=0.8]}}]
+        [{\bfseries (Term) Parameter\\ - text: String},       edge={dashed,-{Triangle[open,scale=0.8]}}]
+    ]
+    [{\bfseries Atom\\ - predicate: Predicate\\ - isNegated: boolean}]
+  ]
+  [{\bfseries Definition\\ - name: String\\ - arity: int\\ - tuples: List<List<Term>>}]
+  [{\bfseries Query\\ - predicate: Predicate}]
+  ]
+\end{forest}%
+}
+\end{frame}
+
+\begin{frame}{4. Preklad predikátov do relačnej algebry s nevyplnenými referenciami}
+\scriptsize
+\begin{columns}[T,onlytextwidth]
+    \begin{column}{0.32\textwidth}
+        \textbf{1) Definície}\\
+        \texttt{color :- \{(r()), (b())\}.}
+        
+        \vspace{2,5em}
+        sa preloží ako
+        \vspace{1em}
+        
+        \texttt{UNION([\\
+            \hspace{1em} JOIN([\$true], [[]], [r()]),\\
+            \hspace{1em} JOIN([\$true], [[]], [b()])\\
+            ])
+        }
+    \end{column}
+    \begin{column}{0.32\textwidth}
+        \textbf{2) Klauzuly}\\
+        \texttt{t(X, Z) :- e(X, Y), e(Y, Z),\\
+            \hspace{4em} \textbackslash+fn(Y), \textbackslash+fe(X, Y).
+        }
+        
+        \vspace{1em}
+        sa preloží ako
+        \vspace{1em}
+        
+        \texttt{ANTIJOIN([\\
+            \hspace{1em} JOIN([e, e], \\
+            \hspace{2em} [[X, Y], [Y, Z]], \\
+            \hspace{2em} [X, Y, Z]\\
+            \hspace{1em} ),\\
+            \hspace{1em} fn, fe],\\
+            \hspace{1em} [[X, Y, Z], [Y], [X, Y]],\\
+            \hspace{1em} [X, Z]\\
+            ])
+        }
+    \end{column}
+    \begin{column}{0.32\textwidth}
+        \textbf{3) Zjednotenie výsledkov}\\
+        \texttt{p(X) :- \$a(X).\\
+            p(Y) :- \$b(Y).
+        }
+        
+        \vspace{1em}
+        sa preloží ako
+        \vspace{1em}
+        
+        \texttt{UNION([\\
+            \hspace{1em} JOIN([\$a], [[X]], [X]),\\
+            \hspace{1em} JOIN([\$b], [[Y]], [Y])\\
+            ])
+        }
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Poradie atómov v klauzule}
+    2 sémanticky ekvivalentné programy:
+    \vspace{1em}
+    
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.49\textwidth}
+            \texttt{p(Z) :- \$do10(X), \$do10(Y),\\
+                \hspace{3.5em} \$plus(X, Y, Z).
+            }
+            
+            \vspace{3em}
+            
+            \texttt{JOIN(\\
+                \hspace{1em} [\$do10, \$do10, \$plus],\\
+                \hspace{1em} [[X], [Y], [X, Y, Z]],\\
+                \hspace{1em} [Z]\\
+                )
+            }
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            \texttt{p(Z) :- \$plus(X, Y, Z),\\
+                \hspace{3.5em} \$do10(X), \$do10(Y).
+            }
+            
+            \vspace{3em}
+            
+            \texttt{JOIN(\\
+                \hspace{1em} [\$plus, \$do10, \$do10],\\
+                \hspace{1em} [[X, Y, Z], [X], [Y]],\\
+                \hspace{1em} [Z]\\
+                )
+            }
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{5. Zostavenie výsledného výrazu v relačnej algebre}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.68\textwidth}
+            \begin{itemize}
+                \item \texttt{p -> JOIN([q, r], [[X], [X]], [X])}
+                \item \texttt{q -> JOIN([p, s], [[X], [X]], [X])}
+                \item \texttt{r -> JOIN([t, t], [[X], [X]], [X])}
+                \item \texttt{s -> UNION([...])}
+                \item \texttt{t -> UNION([...])}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.28\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[
+                    node distance=2cm,
+                    every node/.style={draw, align=center, fill=gray!10, font=\ttfamily\footnotesize},
+                    edge/.style={-{Stealth[scale=0.8]}, thick},
+                ]
+                    \node (p) {p};
+                    \node (q) [below left of=p] {q};
+                    \node (r) [below right of=p] {r};
+                    \node (s) [below of=q] {s};
+                    \node (t) [below of=r] {t};
+                    
+                    \draw[edge] (p) -- (q);
+                    \draw[edge] (q) -- (p);
+                    \draw[edge] (p) -- (r);
+                    \draw[edge] (q) -- (s);
+                    \draw[edge] (r) -- (t);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{5. Zostavenie výsledného výrazu v relačnej algebre}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.68\textwidth}
+            \begin{itemize}
+                \item \texttt{p -> REC(p, JOIN([q, r], [[X], [X]], [X]))}
+                \item \texttt{q -> REC(q, JOIN([p, s], [[X], [X]], [X]))}
+                \item \texttt{r -> JOIN([t, t], [[X], [X]], [X])}
+                \item \texttt{s -> UNION([...])}
+                \item \texttt{t -> UNION([...])}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.28\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[
+                    node distance=2cm,
+                    every node/.style={draw, align=center, fill=gray!10, font=\ttfamily\footnotesize},
+                    edge/.style={-{Stealth[scale=0.8]}, thick},
+                ]
+                    \node (p) {p};
+                    \node (q) [below left of=p] {q};
+                    \node (r) [below right of=p] {r};
+                    \node (s) [below of=q] {s};
+                    \node (t) [below of=r] {t};
+                    
+                    \draw[edge] (p) -- (q);
+                    \draw[edge] (q) -- (p);
+                    \draw[edge] (p) -- (r);
+                    \draw[edge] (q) -- (s);
+                    \draw[edge] (r) -- (t);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 1
+\begin{frame}{Zostavenie dotazu \texttt{?- q(f(X)).}}
+    \texttt{REC(q, JOIN([\\
+        \hspace{1em} p,\\
+        \hspace{1em} s\\
+        ], [[X], [X]], [X]))
+    }
+\end{frame}
+
+% 2
+\begin{frame}{Zostavenie dotazu \texttt{?- q(f(X)).}}
+    \texttt{REC(q, JOIN([\\
+        \hspace{1em} p,\\
+        \hspace{1em} UNION([...])\\
+        ], [[X], [X]], [X]))
+    }
+\end{frame}
+
+% 3
+\begin{frame}{Zostavenie dotazu \texttt{?- q(f(X)).}}
+    \texttt{REC(q, JOIN([\\
+        \hspace{1em} REC(p, JOIN([\\
+        \hspace{2em} q,\\
+        \hspace{2em} r\\
+        \hspace{1em} ], [[X], [X]], [X])),\\
+        \hspace{1em} UNION([...])\\
+        ], [[X], [X]], [X]))
+    }
+\end{frame}
+
+% 4
+\begin{frame}{Zostavenie dotazu \texttt{?- q(f(X)).}}
+    \texttt{REC(q, JOIN([\\
+        \hspace{1em} REC(p, JOIN([\\
+        \hspace{2em} q,\\
+        \hspace{2em} JOIN([\\
+        \hspace{3em} t,\\
+        \hspace{3em} t\\
+        \hspace{2em} ]], [[X], [X]], [X])\\
+        \hspace{1em} ], [[X], [X]], [X])),\\
+        \hspace{1em} UNION([...])\\
+        ], [[X], [X]], [X]))
+    }
+\end{frame}
+
+% 5
+\begin{frame}{Zostavenie dotazu \texttt{?- q(f(X)).}}
+    \texttt{REC(q, JOIN([\\
+        \hspace{1em} REC(p, JOIN([\\
+        \hspace{2em} q,\\
+        \hspace{2em} JOIN([\\
+        \hspace{3em} UNION([...]),\\
+        \hspace{3em} UNION([...])\\
+        \hspace{2em} ]], [[X], [X]], [X])\\
+        \hspace{1em} ], [[X], [X]], [X])),\\
+        \hspace{1em} UNION([...])\\
+        ], [[X], [X]], [X]))
+    }
+\end{frame}
+
+% 6
+\begin{frame}{Zostavenie dotazu \texttt{?- q(f(X)).}}
+    \texttt{JOIN([\\
+        \hspace{1em} REC(q, JOIN([\\
+        \hspace{2em} REC(p, JOIN([\\
+        \hspace{3em} q,\\
+        \hspace{3em} JOIN([\\
+        \hspace{4em} UNION([...]),\\
+        \hspace{4em} UNION([...])\\
+        \hspace{3em} ]], [[X], [X]], [X])\\
+        \hspace{2em} ], [[X], [X]], [X])),\\
+        \hspace{2em} UNION([...])\\
+        \hspace{1em} ], [[X], [X]], [X]))\\
+        ], [[f(X)]], [f(X)])
+    }
+\end{frame}
+
+\begin{frame}{}
+    \begin{center}
+        Ďakujem za pozornosť!
+    \end{center}
+\end{frame}
+
+\end{document}
